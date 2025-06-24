@@ -1,0 +1,126 @@
+model: Prospect
+
+behaviours:
+  - name: getProspectByNumber
+    description: Retrieve a prospect by its unique number
+    entities:
+      - Prospect
+    preconditions:
+      - Prospect.potentialSaleNumber is provided
+    effects:
+      - return Prospect data
+
+  - name: getProspectsByAssignee
+    description: Retrieve all prospects assigned to a specific person
+    entities:
+      - Prospect
+    preconditions:
+      - Prospect.assignee is provided
+    effects:
+      - return list of Prospects
+
+  - name: getProspectsBySites
+    description: Retrieve all prospects for specific sites
+    entities:
+      - Prospect
+    preconditions:
+      - Prospect.siteNumber is provided
+    effects:
+      - return list of Prospects
+
+  - name: createProspect
+    description: Create a new potential sale opportunity
+    entities:
+      - Prospect
+    preconditions:
+      - required fields are provided
+      - potentialSaleNumber is unique
+    effects:
+      - new Prospect is created
+      - prospectStatus is set to Open
+
+  - name: updateProspectStatus
+    description: Update the status of a prospect
+    entities:
+      - Prospect
+    preconditions:
+      - Prospect exists
+      - new status is valid
+    effects:
+      - prospectStatus is updated
+
+  - name: scheduleFollowUp
+    description: Schedule a follow-up for a prospect
+    entities:
+      - Prospect
+    preconditions:
+      - Prospect exists
+      - follow-up date is in the future
+    effects:
+      - salesFollowUpDate is set
+      - salesFollowUpDescription is updated
+
+  - name: provideQuote
+    description: Mark that a quote has been provided to the prospect
+    entities:
+      - Prospect
+    preconditions:
+      - Prospect exists
+      - quote information is provided
+    effects:
+      - quoteProvided is set to true
+      - quotedProvidedDate is set
+      - quoteProvidedDescription is updated
+
+scenarios:
+  - name: create new prospect from lead
+    given:
+      - a new sales lead is identified
+      - required prospect information is available
+    when:
+      - createProspect is called
+    then:
+      - new Prospect is created with Open status
+      - potentialSaleNumber is generated
+      - assignee is set
+
+  - name: follow up on prospect
+    given:
+      - Prospect exists with Open status
+      - follow-up date has arrived
+    when:
+      - scheduleFollowUp is called
+    then:
+      - salesFollowUpDate is updated
+      - salesFollowUpDescription contains next actions
+
+  - name: provide quote to interested prospect
+    given:
+      - Prospect exists
+      - interest is Yes or Maybe
+    when:
+      - provideQuote is called
+    then:
+      - quoteProvided is true
+      - quotedProvidedDate is set to today
+      - quoteProvidedDescription contains quote details
+
+  - name: close prospect as won
+    given:
+      - Prospect exists
+      - customer has agreed to contract
+    when:
+      - updateProspectStatus is called with Won
+    then:
+      - prospectStatus is Won
+      - prospect is no longer in active pipeline
+
+  - name: close prospect as lost
+    given:
+      - Prospect exists
+      - customer has declined or gone with competitor
+    when:
+      - updateProspectStatus is called with Lost
+    then:
+      - prospectStatus is Lost
+      - prospect is no longer in active pipeline

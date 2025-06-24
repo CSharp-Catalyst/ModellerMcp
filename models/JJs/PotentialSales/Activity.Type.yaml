@@ -1,0 +1,40 @@
+model: Activity
+summary: Defines the activities for a potential sale
+description: Activities and interactions related to managing prospects through the sales pipeline
+ownedBy: Prospect
+
+attributeUsages:
+  - name: activityId
+    type: primaryKey
+    required: true
+    summary: The unique identifier for the activity
+
+  - name: prospectId
+    type: primaryKey
+    required: true
+    summary: The prospect this activity is associated with
+
+  - name: type
+    type: ActivityType
+    required: true
+    summary: The current activity type set on this potential sale
+
+  - name: method
+    type: ActivityMethod
+    required: true
+    summary: The current activity method set on this potential sale
+
+  - name: contactName
+    type: mediumString
+    required: true
+    summary: The display value of the contact name managing the potential
+
+  - name: date
+    type: dateField
+    required: true
+    summary: The date and time the record was created
+
+  - name: description
+    type: veryLongString
+    required: false
+    summary: A detailed activity description of the case

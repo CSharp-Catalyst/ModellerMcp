@@ -1,0 +1,25 @@
+model: IdentifiedCompetitor
+summary: Defines all potential sales competitors within the system
+description: Competitors identified for specific prospects
+ownedBy: Prospect
+
+attributeUsages:
+  - name: identifiedCompetitorId
+    type: primaryKey
+    required: true
+    summary: The unique identifier for the identified competitor
+
+  - name: prospectId
+    type: primaryKey
+    required: true
+    summary: The prospect this competitor is associated with
+
+  - name: competitorName
+    type: baseString
+    required: true
+    summary: The name of the competitor
+
+  - name: agreementEndDate
+    type: dateField
+    required: true
+    summary: The date the agreement with the competitor ends

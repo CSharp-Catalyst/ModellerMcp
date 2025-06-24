@@ -1,0 +1,20 @@
+model: IdentifiedCompetitorWasteProduct
+summary: Defines all waste products associated with a competitor
+description: Junction table linking competitors to their waste products
+ownedBy: IdentifiedCompetitor
+
+attributeUsages:
+  - name: identifiedCompetitorWasteProductId
+    type: primaryKey
+    required: true
+    summary: The unique identifier for the competitor waste product relationship
+
+  - name: identifiedCompetitorId
+    type: primaryKey
+    required: true
+    summary: The competitor this waste product is associated with
+
+  - name: wasteProductId
+    type: primaryKey
+    required: true
+    summary: The waste product associated with the competitor

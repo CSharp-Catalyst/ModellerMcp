@@ -1,0 +1,20 @@
+name: PotentialSales
+summary: The Potential Sales Management System
+description: >
+  A robust platform designed to streamline and optimize the entire sales process. 
+  It integrates key services such as managing prospective sales opportunities, 
+  retrieving and synchronizing essential data from external sources, and overseeing 
+  the organizational structure and operations. Together, these components provide 
+  a cohesive and efficient environment for tracking leads, managing sales pipelines, 
+  and ensuring data consistency and organizational alignment throughout the sales lifecycle.
+owners:
+  - potentialsales-team@jjswaste.com.au
+tags:
+  - sales
+  - prospects
+  - lead-management
+  - sales-pipeline
+dependencies: []
+version: 1.0.0
+status: active
+lastReviewed: 2025-06-24

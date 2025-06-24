@@ -1,0 +1,67 @@
+model: Activity
+
+behaviours:
+  - name: createActivity
+    description: Create a new activity for a prospect
+    entities:
+      - Activity
+      - Prospect
+    preconditions:
+      - Prospect exists
+      - activity details are provided
+    effects:
+      - new Activity is created
+      - activity is linked to prospect
+
+  - name: updateActivityDescription
+    description: Update the description of an existing activity
+    entities:
+      - Activity
+    preconditions:
+      - Activity exists
+      - new description is provided
+    effects:
+      - Activity.description is updated
+
+  - name: getActivitiesForProspect
+    description: Retrieve all activities for a specific prospect
+    entities:
+      - Activity
+      - Prospect
+    preconditions:
+      - Prospect exists
+    effects:
+      - return list of Activities for the prospect
+
+scenarios:
+  - name: log follow-up call activity
+    given:
+      - Prospect exists
+      - sales person makes follow-up call
+    when:
+      - createActivity is called with PhoneCall method
+    then:
+      - new Activity is created
+      - type is set to SalesFollowUp
+      - method is set to PhoneCall
+      - date is set to today
+
+  - name: log quote provision activity
+    given:
+      - Prospect exists
+      - quote is provided to customer
+    when:
+      - createActivity is called with Quote type
+    then:
+      - new Activity is created
+      - type is set to Quote
+      - description contains quote details
+
+  - name: update activity with additional details
+    given:
+      - Activity exists
+      - additional information becomes available
+    when:
+      - updateActivityDescription is called
+    then:
+      - Activity.description is updated with new information

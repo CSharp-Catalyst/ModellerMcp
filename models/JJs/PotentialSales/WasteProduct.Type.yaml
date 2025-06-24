@@ -1,0 +1,20 @@
+model: WasteProduct
+summary: Defines all waste products within the system
+description: Waste products that can be associated with prospects and competitors
+
+attributeUsages:
+  - name: wasteProductId
+    type: primaryKey
+    required: true
+    summary: The unique identifier for the waste product
+
+  - name: name
+    type: shortString
+    required: true
+    summary: The display value of the waste product
+
+  - name: active
+    type: isActive
+    required: true
+    default: true
+    summary: Determines if the record is active or not

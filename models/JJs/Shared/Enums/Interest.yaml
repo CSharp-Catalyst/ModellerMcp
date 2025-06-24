@@ -1,0 +1,12 @@
+enum: Interest
+summary: The interest level of the customer in a potential sale
+items:
+  - name: No
+    display: No
+    value: 1
+  - name: Yes
+    display: Yes  
+    value: 2
+  - name: Maybe
+    display: Maybe
+    value: 3

@@ -1,0 +1,77 @@
+attributeTypes:
+  - name: baseString
+    type: string
+    constraints:
+      maxLength: 512
+
+  - name: shortString
+    extends: baseString
+    constraints:
+      maxLength: 50
+      minLength: 3
+
+  - name: mediumString
+    extends: baseString
+    constraints:
+      maxLength: 100
+
+  - name: longString
+    extends: baseString
+    constraints:
+      maxLength: 200
+
+  - name: veryLongString
+    extends: baseString
+    constraints:
+      maxLength: 8000
+
+  - name: addressString
+    extends: baseString
+    constraints:
+      maxLength: 500
+
+  - name: prospectNumber
+    type: string
+    constraints:
+      maxLength: 10
+      minLength: 10
+      pattern: ^[A-Z0-9]{10}$
+    summary: A unique identifier for prospects
+    example: "PSL0001234"
+
+  - name: customerNumber
+    type: string
+    constraints:
+      maxLength: 50
+    summary: A unique identifier for customers
+
+  - name: siteNumber
+    type: string
+    summary: The site identifier
+
+  - name: isActive
+    type: boolean
+    constraints:
+      default: true
+    summary: Indicates whether the record is active
+
+  - name: primaryKey
+    type: integer
+    format: int32
+    summary: Primary key identifier
+
+  - name: dateField
+    type: string
+    format: date
+    summary: Date field
+
+  - name: emailAddress
+    extends: mediumString
+    format: email
+    constraints:
+      pattern: ^[^@\s]+@[^@\s]+\.[^@\s]+$
+    summary: Email address format
+
+  - name: phoneNumber
+    extends: mediumString
+    summary: Phone number field

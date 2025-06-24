@@ -1,0 +1,119 @@
+model: Prospect
+summary: A potential sale opportunity
+description: >
+  A potential sale refers to a prospective transaction or business opportunity where there is an 
+  expressed interest or likelihood that a product or service may be purchased by a customer or client. 
+  This typically involves leads or inquiries that have shown some level of engagement, but the sale 
+  has not yet been finalized or converted. Potential sales are key indicators in the sales pipeline, 
+  representing opportunities that require further nurturing, follow-up, and negotiation to convert into actual sales.
+
+attributeUsages:
+  - name: prospectId
+    type: primaryKey
+    required: true
+    summary: The unique identifier for the prospect
+
+  - name: potentialSaleNumber
+    type: prospectNumber
+    required: true
+    summary: A unique identifier assigned to each potential sale, ensuring traceability and differentiation within the system
+
+  - name: siteNumber
+    type: siteNumber
+    required: true
+    summary: The site associated with the potential sale
+
+  - name: assignee
+    type: mediumString
+    required: true
+    summary: The individual responsible for managing the potential sale, ensuring accountability and clear ownership within the sales team
+
+  - name: prospectTypeId
+    type: primaryKey
+    required: true
+    summary: The classification of the potential sale, which could include categories like 'New Business', 'Renewal', or 'Upsell'
+
+  - name: sourceId
+    type: primaryKey
+    required: true
+    summary: The origin or channel through which the potential sale was initiated, such as 'Referral', 'Website', or 'Campaign'
+
+  - name: customerStatus
+    type: CustomerStatus
+    required: true
+    summary: The status of the customer
+
+  - name: customerNumber
+    type: customerNumber
+    required: false
+    summary: A unique identifier assigned to each customer, used to accurately reference and track customer-related information
+
+  - name: tradingName
+    type: baseString
+    required: true
+    summary: The trading name of the customer
+
+  - name: prospectStatus
+    type: ProspectStatus
+    required: true
+    summary: The current state of the potential sale, indicating progress or actions needed
+
+  - name: interest
+    type: Interest
+    required: true
+    summary: The interest of the customer in the potential sale, indicating the likelihood of conversion
+
+  - name: salesFollowUpDate
+    type: dateField
+    required: false
+    summary: The scheduled date for the sales team to follow up on the potential sale
+
+  - name: salesFollowUpDescription
+    type: longString
+    required: false
+    summary: A detailed note or plan regarding the follow-up actions to be taken on the specified date
+
+  - name: quoteProvided
+    type: boolean
+    required: false
+    summary: A flag indicating whether a quote has been provided to the customer
+
+  - name: quotedProvidedDate
+    type: dateField
+    required: false
+    summary: The specific date when a quote was delivered to the customer
+
+  - name: quoteProvidedDescription
+    type: longString
+    required: false
+    summary: A summary or explanation of the quote provided, including key details or terms
+
+  - name: addressLine
+    type: addressString
+    required: true
+    summary: The address associated with the customer, this maybe a new address or an existing customer address
+
+  - name: contactFirstName
+    type: mediumString
+    required: false
+    summary: The first name of the contact person managing the potential sale
+
+  - name: contactLastName
+    type: mediumString
+    required: false
+    summary: The last name of the contact person managing the potential sale
+
+  - name: contactPhone
+    type: phoneNumber
+    required: false
+    summary: The phone number of the contact person managing the potential sale
+
+  - name: contactEmail
+    type: emailAddress
+    required: false
+    summary: The email address of the contact person managing the potential sale
+
+  - name: description
+    type: veryLongString
+    required: false
+    summary: A detailed description of the potential sale, including key information, requirements, and objectives

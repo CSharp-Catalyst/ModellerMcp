@@ -1,0 +1,20 @@
+model: ProspectWasteProduct
+summary: Defines all waste products associated with a prospect
+description: Junction table linking prospects to their associated waste products
+ownedBy: Prospect
+
+attributeUsages:
+  - name: prospectWasteProductId
+    type: primaryKey
+    required: true
+    summary: The unique identifier for the prospect waste product relationship
+
+  - name: prospectId
+    type: primaryKey
+    required: true
+    summary: The prospect this waste product is associated with
+
+  - name: wasteProductId
+    type: primaryKey
+    required: true
+    summary: The waste product associated with the prospect

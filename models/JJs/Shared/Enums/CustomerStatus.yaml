@@ -1,0 +1,9 @@
+enum: CustomerStatus
+summary: The status of the customer
+items:
+  - name: New
+    display: New
+    value: 1
+  - name: Existing
+    display: Existing
+    value: 2

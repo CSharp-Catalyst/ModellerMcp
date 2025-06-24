@@ -1,0 +1,20 @@
+model: ProspectType
+summary: Defines all types of prospects within the system
+description: Classification categories for potential sales such as 'New Business', 'Renewal', or 'Upsell'
+
+attributeUsages:
+  - name: prospectTypeId
+    type: primaryKey
+    required: true
+    summary: The unique identifier for the prospect type
+
+  - name: name
+    type: shortString
+    required: true
+    summary: The display value of the prospect type
+
+  - name: active
+    type: isActive
+    required: true
+    default: true
+    summary: Determines if the record is active or not
