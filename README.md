@@ -1,4 +1,4 @@
-# ModellerMcp
+﻿# ModellerMcp
 
 Behaviour-Driven Development (BDD) Model Definition & Validation Framework
 
@@ -22,20 +22,22 @@ ModellerMcp is a framework for defining, validating, and managing domain models 
 ---
 
 ## Folder Structure Example
+```
 models/
-??? YourCompany/
-    ??? Sales/
-    ?   ??? _meta.yaml
-    ?   ??? Customer.Type.yaml
-    ?   ??? Customer.Behaviour.yaml
-    ?   ??? ...
-    ??? Shared/
-        ??? AttributeTypes/
-        ?   ??? CommonAttributes.yaml
-        ??? Enums/
-        ?   ??? Status.yaml
-        ??? ValueTypes/
-            ??? Address.yaml
+└── YourCompany/
+    ├── Sales/
+    │   ├── _meta.yaml
+    │   ├── Customer.Type.yaml
+    │   ├── Customer.Behaviour.yaml
+    │   └── ...
+    └── Shared/
+        ├── AttributeTypes/
+        │   └── CommonAttributes.yaml
+        ├── Enums/
+        │   └── Status.yaml
+        └── ValueTypes/
+            └── Address.yaml
+```
 ---
 
 ## Getting Started
@@ -81,7 +83,10 @@ dotnet run --project src/Modeller.Domain -- ValidateModel --path "models/YourCom
 
 ## CI/CD Integration Example
 
-**GitHub Actions:**name: Model Validation
+GitHub Actions:
+
+``` yaml
+name: Model Validation
 on:
   pull_request:
     paths:
@@ -98,6 +103,7 @@ jobs:
     - name: Validate Models
       run: |
         dotnet run --project src/Modeller.Domain -- ValidateStructure --modelsPath "models"
+```
 ---
 
 ## References & Further Reading
