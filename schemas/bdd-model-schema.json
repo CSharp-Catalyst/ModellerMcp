@@ -1,0 +1,168 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://modeller.jjs.com/schemas/bdd-model-schema.json",
+  "title": "BDD Model Schema",
+  "description": "Schema for .Type.yaml and .Behaviour.yaml model files",
+  "type": "object",
+  "properties": {
+    "model": {
+      "type": "string",
+      "description": "The name of the model",
+      "pattern": "^[A-Z][a-zA-Z0-9]*$"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief description of what this model represents",
+      "minLength": 10
+    },
+    "remarks": {
+      "type": "string",
+      "description": "Additional detailed information about the model"
+    },
+    "ownedBy": {
+      "type": "string",
+      "description": "Team or person responsible for this model"
+    },
+    "attributeUsages": {
+      "type": "array",
+      "description": "List of attributes used by this model",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The attribute name (camelCase)",
+            "pattern": "^[a-z][a-zA-Z0-9]*$"
+          },
+          "type": {
+            "type": "string",
+            "description": "The attribute type from shared definitions",
+            "enum": [
+              "baseString", "shortString", "mediumString", "longString", "veryLongString",
+              "addressString", "prospectNumber", "customerNumber", "siteNumber", 
+              "isActive", "primaryKey", "dateField", "emailAddress", "phoneNumber", "boolean",
+              "ActivityType", "ActivityMethod", "CustomerStatus", "ProspectStatus", "Interest"
+            ]
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether this attribute is required",
+            "default": false
+          },
+          "unique": {
+            "type": "boolean",
+            "description": "Whether this attribute must be unique",
+            "default": false
+          },
+          "default": {
+            "description": "Default value for this attribute"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Brief description of this attribute usage",
+            "minLength": 5
+          },
+          "remarks": {
+            "type": "string",
+            "description": "Additional details about this attribute usage"
+          },
+          "constraints": {
+            "type": "object",
+            "description": "Additional constraints for this attribute",
+            "properties": {
+              "minLength": { "type": "integer", "minimum": 0 },
+              "maxLength": { "type": "integer", "minimum": 1 },
+              "minimum": { "type": "number" },
+              "maximum": { "type": "number" },
+              "pattern": { "type": "string" },
+              "decimalPlaces": { "type": "integer", "minimum": 0 },
+              "enum": { "type": "array", "items": {} },
+              "nullable": { "type": "boolean" },
+              "unit": { "type": "string" },
+              "example": {}
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": ["name", "type", "summary"],
+        "additionalProperties": false
+      }
+    },
+    "behaviours": {
+      "type": "array",
+      "description": "List of behaviors defined for this model",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The behavior name (camelCase)",
+            "pattern": "^[a-z][a-zA-Z0-9]*$"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Brief description of this behavior",
+            "minLength": 5
+          },
+          "remarks": {
+            "type": "string",
+            "description": "Additional details about this behavior"
+          },
+          "entities": {
+            "type": "array",
+            "description": "Entities involved in this behavior",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "preconditions": {
+            "type": "array",
+            "description": "Conditions that must be true before this behavior executes",
+            "items": { "type": "string" }
+          },
+          "effects": {
+            "type": "array",
+            "description": "Changes that occur as a result of this behavior",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["name", "summary", "entities"],
+        "additionalProperties": false
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "description": "BDD scenarios for testing this model",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The scenario name"
+          },
+          "given": {
+            "type": "array",
+            "description": "Given conditions (setup)",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "when": {
+            "type": "array",
+            "description": "When actions (trigger)",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "then": {
+            "type": "array",
+            "description": "Then assertions (expected outcomes)",
+            "items": { "type": "string" },
+            "minItems": 1
+          }
+        },
+        "required": ["name", "given", "when", "then"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["model", "summary"],
+  "additionalProperties": false
+}

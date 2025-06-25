@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://modeller.jjs.com/schemas/attribute-types-schema.json",
+  "title": "Attribute Types Schema",
+  "description": "Schema for attribute type definition files in Shared/AttributeTypes/",
+  "type": "object",
+  "properties": {
+    "attributeTypes": {
+      "type": "array",
+      "description": "List of attribute type definitions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The attribute type name (camelCase)",
+            "pattern": "^[a-z][a-zA-Z0-9]*$"
+          },
+          "type": {
+            "type": "string",
+            "description": "The base data type",
+            "enum": ["string", "integer", "number", "boolean", "array", "object"]
+          },
+          "extends": {
+            "type": "string",
+            "description": "Base attribute type this extends from",
+            "pattern": "^[a-z][a-zA-Z0-9]*$"
+          },
+          "format": {
+            "type": "string",
+            "description": "Format specification (e.g., date, email, int32)",
+            "enum": ["date", "date-time", "email", "uri", "int32", "int64", "float", "double"]
+          },
+          "summary": {
+            "type": "string",
+            "description": "Optional description of this attribute type",
+            "minLength": 5
+          },
+          "remarks": {
+            "type": "string",
+            "description": "Additional details about this attribute type"
+          },
+          "constraints": {
+            "type": "object",
+            "description": "Validation constraints for this attribute type",
+            "properties": {
+              "minLength": {
+                "type": "integer",
+                "description": "Minimum string length",
+                "minimum": 0
+              },
+              "maxLength": {
+                "type": "integer",
+                "description": "Maximum string length",
+                "minimum": 1
+              },
+              "minimum": {
+                "type": "number",
+                "description": "Minimum numeric value"
+              },
+              "maximum": {
+                "type": "number",
+                "description": "Maximum numeric value"
+              },
+              "pattern": {
+                "type": "string",
+                "description": "Regular expression pattern for validation"
+              },
+              "decimalPlaces": {
+                "type": "integer",
+                "description": "Number of decimal places for numeric types",
+                "minimum": 0
+              },
+              "enum": {
+                "type": "array",
+                "description": "List of allowed values",
+                "items": {}
+              },
+              "nullable": {
+                "type": "boolean",
+                "description": "Whether null values are allowed"
+              },
+              "unit": {
+                "type": "string",
+                "description": "Unit of measurement (e.g., 'kg', 'cm', 'USD')"
+              },
+              "default": {
+                "description": "Default value for this attribute type"
+              }
+            },
+            "additionalProperties": false
+          },
+          "example": {
+            "description": "Example value for this attribute type"
+          }
+        },
+        "required": ["name", "type"],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": ["attributeTypes"],
+  "additionalProperties": false
+}

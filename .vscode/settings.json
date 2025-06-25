@@ -1,0 +1,40 @@
+{
+  "yaml.schemas": {
+    "./schemas/bdd-model-schema.json": [
+      "models/**/*.Type.yaml",
+      "models/**/*.Behaviour.yaml"
+    ],
+    "./schemas/enum-schema.json": [
+      "models/**/Enums/*.yaml"
+    ],
+    "./schemas/attribute-types-schema.json": [
+      "models/**/AttributeTypes/*.yaml"
+    ],
+    "./schemas/metadata-schema.json": [
+      "models/**/_meta.yaml"
+    ],
+    "./schemas/validation-profiles-schema.json": [
+      "models/**/*validation-profiles*.yaml"
+    ]
+  },
+  "yaml.validate": true,
+  "yaml.hover": true,
+  "yaml.completion": true,
+  "yaml.format.enable": true,
+  "yaml.format.singleQuote": false,
+  "yaml.format.bracketSpacing": true,
+  
+  // Additional helpful settings for the Modeller project
+  "files.associations": {
+    "*.Type.yaml": "yaml",
+    "*.Behaviour.yaml": "yaml",
+    "_meta.yaml": "yaml"
+  },
+  
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  
+  "editor.suggest.showWords": false,
+  "editor.wordBasedSuggestions": "off"
+}

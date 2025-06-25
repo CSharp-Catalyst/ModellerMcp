@@ -1,4 +1,4 @@
-﻿🔍 **Model Discovery Results for:** Modeller
+﻿🔍 **Model Discovery Results for:** ModellerMcp
 
 **Total Files Found:** 17
 

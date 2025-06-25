@@ -1,26 +1,25 @@
 namespace Modeller.McpServer.McpValidatorServer.Models;
 
-// BDD Model Definition Types (New Format)
 public record ModelDefinition
 {
-    public string Model { get; set; } = string.Empty;
+    public required string Model { get; set; }
     public List<AttributeUsage> AttributeUsages { get; set; } = [];
     public List<Behaviour> Behaviours { get; set; } = [];
     public List<Scenario> Scenarios { get; set; } = [];
     public string? OwnedBy { get; set; }
-    public string? Summary { get; set; }
-    public string? Description { get; set; }
+    public required string Summary { get; set; }
+    public string? Remarks { get; set; }
 }
 
 public record AttributeTypeDefinition
 {
-    public string Name { get; set; } = string.Empty;
-    public string Type { get; set; } = string.Empty;
+    public required string Name { get; set; }
+    public required string Type { get; set; }
     public string? Extends { get; set; }
     public string? Format { get; set; }
     public AttributeConstraints? Constraints { get; set; }
-    public string? Summary { get; set; }
-    public string? Description { get; set; }
+    public required string Summary { get; set; }
+    public string? Remarks { get; set; }
 }
 
 public record AttributeTypesWrapper
@@ -30,11 +29,12 @@ public record AttributeTypesWrapper
 
 public record AttributeUsage
 {
-    public string? Name { get; set; }
-    public string Type { get; set; } = string.Empty;
+    public required string Name { get; set; }
+    public required string Type { get; set; }
     public bool Required { get; set; }
+    public bool Unique { get; set; }
     public object? Default { get; set; }
-    public string? Summary { get; set; }
+    public required string Summary { get; set; }
     public string? Remarks { get; set; }
     public AttributeConstraints? Constraints { get; set; }
 }
@@ -55,8 +55,9 @@ public record AttributeConstraints
 
 public record Behaviour
 {
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
+    public required string Name { get; set; }
+    public required string Summary { get; set; }
+    public string? Remarks { get; set; }
     public List<string> Entities { get; set; } = [];
     public List<string> Preconditions { get; set; } = [];
     public List<string> Effects { get; set; } = [];
@@ -64,7 +65,7 @@ public record Behaviour
 
 public record Scenario
 {
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
     public List<string> Given { get; set; } = [];
     public List<string> When { get; set; } = [];
     public List<string> Then { get; set; } = [];
@@ -72,7 +73,7 @@ public record Scenario
 
 public record ValidationProfile
 {
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
     public List<Claim> Claims { get; set; } = [];
     public Dictionary<string, AttributeRule> AttributeRules { get; set; } = [];
     public Dictionary<string, BehaviourRule> BehaviourRules { get; set; } = [];
@@ -80,8 +81,8 @@ public record ValidationProfile
 
 public record Claim
 {
-    public string Action { get; set; } = string.Empty;
-    public string Resource { get; set; } = string.Empty;
+    public required string Action { get; set; }
+    public required string Resource { get; set; }
 }
 
 public record AttributeRule
@@ -97,24 +98,24 @@ public record BehaviourRule
 
 public record EnumDefinition
 {
-    public string Enum { get; set; } = string.Empty;
+    public required string Enum { get; set; }
     public List<EnumItem> Items { get; set; } = [];
-    public string? Summary { get; set; }
-    public string? Description { get; set; }
+    public required string Summary { get; set; }
+    public string? Remarks { get; set; }
 }
 
 public record EnumItem
 {
-    public string Name { get; set; } = string.Empty;
-    public string Display { get; set; } = string.Empty;
+    public required string Name { get; set; }
+    public required string Display { get; set; }
     public int Value { get; set; }
 }
 
 public record FolderMetadata
 {
-    public string Name { get; set; } = string.Empty;
-    public string? Summary { get; set; }
-    public string? Description { get; set; }
+    public required string Name { get; set; }
+    public required string Summary { get; set; }
+    public string? Remarks { get; set; }
     public List<string> Owners { get; set; } = [];
     public List<string> Tags { get; set; } = [];
     public List<string> Dependencies { get; set; } = [];

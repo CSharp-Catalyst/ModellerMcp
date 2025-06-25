@@ -1,6 +1,6 @@
 name: PotentialSales
 summary: The Potential Sales Management System
-description: >
+remarks: >
   A robust platform designed to streamline and optimize the entire sales process. 
   It integrates key services such as managing prospective sales opportunities, 
   retrieving and synchronizing essential data from external sources, and overseeing 

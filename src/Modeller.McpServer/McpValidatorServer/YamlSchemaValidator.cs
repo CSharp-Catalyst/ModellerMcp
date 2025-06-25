@@ -10,123 +10,14 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Modeller.McpServer.McpValidatorServer;
 
-public class McpYamlSchemaValidator(ModelStructureValidator structureValidator) : IMcpModelValidator
+public class YamlSchemaValidator(ModelStructureValidator structureValidator) : IMcpModelValidator
 {
     private readonly IDeserializer _yamlDeserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
             .IgnoreUnmatchedProperties()
             .Build();
 
-    public async Task<IReadOnlyList<ValidationResult>> ValidateAsync(string filePath, CancellationToken cancellationToken)
-    {
-        var results = new List<ValidationResult>();
-
-        try
-        {
-            if (Directory.Exists(filePath))
-            {
-                // Validate directory structure
-                var structureResults = await structureValidator.ValidateStructureAsync(filePath, cancellationToken);
-                results.AddRange(structureResults);
-
-                // Validate all YAML files in the directory
-                var yamlFiles = Directory.GetFiles(filePath, "*.yaml", SearchOption.AllDirectories)
-                    .Concat(Directory.GetFiles(filePath, "*.yml", SearchOption.AllDirectories));
-
-                foreach (var yamlFile in yamlFiles)
-                {
-                    var fileResults = await ValidateFileAsync(yamlFile, cancellationToken);
-                    results.AddRange(fileResults);
-                }
-            }
-            else if (File.Exists(filePath))
-            {
-                // Validate single file
-                var fileResults = await ValidateFileAsync(filePath, cancellationToken);
-                results.AddRange(fileResults);
-            }
-            else
-            {
-                results.Add(new ValidationResult(filePath, "File or directory does not exist", ValidationSeverity.Error));
-            }
-        }
-        catch (Exception ex)
-        {
-            results.Add(new ValidationResult(filePath, $"Validation failed: {ex.Message}", ValidationSeverity.Error));
-        }
-
-        return results;
-    }
-
-    private async Task<List<ValidationResult>> ValidateFileAsync(string filePath, CancellationToken cancellationToken)
-    {
-        var results = new List<ValidationResult>();
-
-        try
-        {
-            var yaml = await File.ReadAllTextAsync(filePath, cancellationToken);
-
-            if (string.IsNullOrWhiteSpace(yaml))
-            {
-                results.Add(new ValidationResult(filePath, "File is empty", ValidationSeverity.Warning));
-                return results;
-            }
-
-            // Basic YAML parsing
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StringReader(yaml));
-
-            if (yamlStream.Documents.Count == 0)
-            {
-                results.Add(new ValidationResult(filePath, "Empty YAML document", ValidationSeverity.Warning));
-                return results;
-            }
-
-            // Determine file type and validate accordingly
-            var fileType = DetermineFileType(yaml, filePath);
-
-            switch (fileType)
-            {
-                case ModelFileType.BddModel:
-                    ValidateBddModel(filePath, yaml, results);
-                    break;
-                case ModelFileType.AttributeTypes:
-                    ValidateAttributeTypes(filePath, yaml, results);
-                    break;
-                case ModelFileType.Enum:
-                    ValidateEnum(filePath, yaml, results);
-                    break;
-                case ModelFileType.ValidationProfiles:
-                    ValidateValidationProfiles(filePath, yaml, results);
-                    break;
-                case ModelFileType.Metadata:
-                    ValidateMetadata(filePath, yaml, results);
-                    break;
-                case ModelFileType.CopilotInstructions:
-                    results.Add(new ValidationResult(filePath, "Copilot instructions file detected.", ValidationSeverity.Info));
-                    break;
-                case ModelFileType.UserDocumentation:
-                    results.Add(new ValidationResult(filePath, "User-supplied documentation (.md) detected. This file is static and not generated.", ValidationSeverity.Info));
-                    break;
-                default:
-                    results.Add(new ValidationResult(filePath, "Unable to determine file type", ValidationSeverity.Warning));
-                    break;
-            }
-
-            // Validate naming conventions
-            ValidateNamingConventions(filePath, yaml, results);
-        }
-        catch (YamlException yamlEx)
-        {
-            results.Add(new ValidationResult(filePath, $"YAML parsing error: {yamlEx.Message}", ValidationSeverity.Error));
-        }
-        catch (Exception ex)
-        {
-            results.Add(new ValidationResult(filePath, $"Validation error: {ex.Message}", ValidationSeverity.Error));
-        }
-
-        return results;
-    }
+    private Dictionary<string, AttributeTypeDefinition>? _sharedAttributeTypes;
 
     private ModelFileType DetermineFileType(string yaml, string filePath)
     {
@@ -164,7 +55,129 @@ public class McpYamlSchemaValidator(ModelStructureValidator structureValidator) 
         return ModelFileType.Unknown;
     }
 
-    private void ValidateBddModel(string filePath, string yaml, List<ValidationResult> results)
+    public async Task<ModelValidationResponse> ValidateAsync(string filePath, CancellationToken cancellationToken)
+    {
+        var results = new List<ValidationResult>();
+        ModelDefinition? modelDefinition = null;
+
+        try
+        {
+            // Determine solution root for loading shared attribute types
+            var solutionPath = FindSolutionRoot(filePath);
+            if (!string.IsNullOrEmpty(solutionPath))
+            {
+                await LoadSharedAttributeTypesAsync(solutionPath, cancellationToken);
+            }
+
+            if (Directory.Exists(filePath))
+            {
+                // Validate directory structure
+                var structureResults = await structureValidator.ValidateStructureAsync(filePath, cancellationToken);
+                results.AddRange(structureResults);
+
+                // Validate all YAML files in the directory
+                var yamlFiles = Directory.GetFiles(filePath, "*.yaml", SearchOption.AllDirectories)
+                    .Concat(Directory.GetFiles(filePath, "*.yml", SearchOption.AllDirectories));
+
+                foreach (var yamlFile in yamlFiles)
+                {
+                    var fileResponse = await ValidateFileWithModelAsync(yamlFile, cancellationToken);
+                    results.AddRange(fileResponse.Results);
+                    if (fileResponse.Model != null)
+                        modelDefinition = fileResponse.Model;
+                }
+            }
+            else if (File.Exists(filePath))
+            {
+                // Validate single file
+                var fileResponse = await ValidateFileWithModelAsync(filePath, cancellationToken);
+                results.AddRange(fileResponse.Results);
+                modelDefinition = fileResponse.Model;
+            }
+            else
+            {
+                results.Add(new ValidationResult(filePath, "File or directory does not exist", ValidationSeverity.Error));
+            }
+        }
+        catch (Exception ex)
+        {
+            results.Add(new ValidationResult(filePath, $"Validation failed: {ex.Message}", ValidationSeverity.Error));
+        }
+
+        return new ModelValidationResponse { Results = results, Model = modelDefinition };
+    }
+
+    private async Task<ModelValidationResponse> ValidateFileWithModelAsync(string filePath, CancellationToken cancellationToken)
+    {
+        var results = new List<ValidationResult>();
+        ModelDefinition? modelDefinition = null;
+
+        try
+        {
+            var yaml = await File.ReadAllTextAsync(filePath, cancellationToken);
+
+            if (string.IsNullOrWhiteSpace(yaml))
+            {
+                results.Add(new ValidationResult(filePath, "File is empty", ValidationSeverity.Warning));
+                return new ModelValidationResponse { Results = results };
+            }
+
+            // Basic YAML parsing
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StringReader(yaml));
+
+            if (yamlStream.Documents.Count == 0)
+            {
+                results.Add(new ValidationResult(filePath, "Empty YAML document", ValidationSeverity.Warning));
+                return new ModelValidationResponse { Results = results };
+            }
+
+            // Determine file type and validate accordingly
+            var fileType = DetermineFileType(yaml, filePath);
+            switch (fileType)
+            {
+                case ModelFileType.BddModel:
+                    modelDefinition = ValidateModelWithReturn(filePath, yaml, results);
+                    break;
+                case ModelFileType.AttributeTypes:
+                    ValidateAttributeTypes(filePath, yaml, results);
+                    break;
+                case ModelFileType.Enum:
+                    ValidateEnum(filePath, yaml, results);
+                    break;
+                case ModelFileType.ValidationProfiles:
+                    ValidateValidationProfiles(filePath, yaml, results);
+                    break;
+                case ModelFileType.Metadata:
+                    ValidateMetadata(filePath, yaml, results);
+                    break;
+                case ModelFileType.CopilotInstructions:
+                    results.Add(new ValidationResult(filePath, "Copilot instructions file detected.", ValidationSeverity.Info));
+                    break;
+                case ModelFileType.UserDocumentation:
+                    results.Add(new ValidationResult(filePath, "User-supplied documentation (.md) detected. This file is static and not generated.", ValidationSeverity.Info));
+                    break;
+                default:
+                    results.Add(new ValidationResult(filePath, "Unable to determine file type", ValidationSeverity.Warning));
+                    break;
+            }
+
+            // Validate naming conventions
+            ValidateNamingConventions(filePath, yaml, results);
+        }
+        catch (YamlException yamlEx)
+        {
+            results.Add(new ValidationResult(filePath, $"YAML parsing error: {yamlEx.Message}", ValidationSeverity.Error));
+        }
+        catch (Exception ex)
+        {
+            results.Add(new ValidationResult(filePath, $"Validation error: {ex.Message}", ValidationSeverity.Error));
+        }
+
+        return new ModelValidationResponse { Results = results, Model = modelDefinition };
+    }
+
+    private ModelDefinition? ValidateModelWithReturn(string filePath, string yaml, List<ValidationResult> results)
     {
         try
         {
@@ -175,13 +188,10 @@ public class McpYamlSchemaValidator(ModelStructureValidator structureValidator) 
                 results.Add(new ValidationResult(filePath, "Model name is required", ValidationSeverity.Error));
 
             // Validate model name matches file name
-            var expectedFileName = $"{model.Model}.Type";
             var actualFileName = Path.GetFileNameWithoutExtension(filePath);
-            if (!actualFileName.Equals(expectedFileName, StringComparison.OrdinalIgnoreCase))
+            if (!actualFileName.StartsWith(model.Model, StringComparison.OrdinalIgnoreCase))
             {
-                results.Add(new ValidationResult(filePath,
-                    $"Model name '{model.Model}' should match file name '{expectedFileName}'",
-                    ValidationSeverity.Warning));
+                results.Add(new ValidationResult(filePath, $"Model name '{model.Model}' should match start of file name", ValidationSeverity.Warning));
             }
 
             // Validate attribute usages
@@ -192,10 +202,13 @@ public class McpYamlSchemaValidator(ModelStructureValidator structureValidator) 
 
             // Validate scenarios
             ValidateScenarios(filePath, model.Scenarios, results);
+
+            return model;
         }
         catch (Exception ex)
         {
             results.Add(new ValidationResult(filePath, $"BDD model validation error: {ex.Message}", ValidationSeverity.Error));
+            return null;
         }
     }
 
@@ -330,12 +343,26 @@ public class McpYamlSchemaValidator(ModelStructureValidator structureValidator) 
             if (string.IsNullOrWhiteSpace(usage.Type))
                 results.Add(new ValidationResult(filePath, "Attribute usage type is required", ValidationSeverity.Error));
 
+            // Validate that the attribute type exists in shared attribute types
+            if (!string.IsNullOrWhiteSpace(usage.Type) && _sharedAttributeTypes != null && !_sharedAttributeTypes.ContainsKey(usage.Type))
+            {
+                results.Add(new ValidationResult(filePath, $"Attribute usage type '{usage.Type}' is not defined in shared attribute types", ValidationSeverity.Error));
+            }
+
             // Validate camelCase naming for attribute names
             if (!string.IsNullOrWhiteSpace(usage.Name) && !IsCamelCase(usage.Name))
             {
                 results.Add(new ValidationResult(filePath,
                     $"Attribute name '{usage.Name}' should be camelCase",
                     ValidationSeverity.Warning));
+            }
+
+            // Validate unique constraint logic (info level as it's a new feature)
+            if (usage.Unique && !usage.Required)
+            {
+                results.Add(new ValidationResult(filePath,
+                    $"Attribute usage '{usage.Name ?? usage.Type}' is marked as unique but not required. Consider if this is intentional.",
+                    ValidationSeverity.Info));
             }
         }
     }
@@ -414,6 +441,113 @@ public class McpYamlSchemaValidator(ModelStructureValidator structureValidator) 
     }
 
     private static bool IsCamelCase(string input) => !string.IsNullOrEmpty(input) && char.IsLower(input[0]) && input.All(c => char.IsLetterOrDigit(c));
+
+    private async Task<Dictionary<string, AttributeTypeDefinition>> LoadSharedAttributeTypesAsync(string solutionPath, CancellationToken cancellationToken)
+    {
+        if (_sharedAttributeTypes != null)
+            return _sharedAttributeTypes;
+
+        var sharedAttributeTypes = new Dictionary<string, AttributeTypeDefinition>();
+
+        // Look for Shared/AttributeTypes directories
+        var sharedPaths = Directory.GetDirectories(solutionPath, "*", SearchOption.AllDirectories)
+            .Where(d => d.EndsWith("Shared", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        foreach (var sharedPath in sharedPaths)
+        {
+            // Load AttributeTypes
+            var attributeTypePaths = Directory.GetDirectories(sharedPath, "AttributeTypes", SearchOption.TopDirectoryOnly);
+            foreach (var attrTypePath in attributeTypePaths)
+            {
+                var yamlFiles = Directory.GetFiles(attrTypePath, "*.yaml", SearchOption.AllDirectories)
+                    .Concat(Directory.GetFiles(attrTypePath, "*.yml", SearchOption.AllDirectories));
+
+                foreach (var yamlFile in yamlFiles)
+                {
+                    try
+                    {
+                        var yaml = await File.ReadAllTextAsync(yamlFile, cancellationToken);
+                        if (yaml.Contains("attributeTypes:"))
+                        {
+                            var attributeTypesWrapper = _yamlDeserializer.Deserialize<AttributeTypesWrapper>(yaml);
+                            if (attributeTypesWrapper?.AttributeTypes != null)
+                            {
+                                foreach (var attrType in attributeTypesWrapper.AttributeTypes)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(attrType.Name))
+                                    {
+                                        sharedAttributeTypes[attrType.Name] = attrType;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Skip files that can't be parsed
+                        continue;
+                    }
+                }
+            }
+
+            // Load Enums as valid attribute types
+            var enumPaths = Directory.GetDirectories(sharedPath, "Enums", SearchOption.TopDirectoryOnly);
+            foreach (var enumPath in enumPaths)
+            {
+                var yamlFiles = Directory.GetFiles(enumPath, "*.yaml", SearchOption.AllDirectories)
+                    .Concat(Directory.GetFiles(enumPath, "*.yml", SearchOption.AllDirectories));
+
+                foreach (var yamlFile in yamlFiles)
+                {
+                    try
+                    {
+                        var yaml = await File.ReadAllTextAsync(yamlFile, cancellationToken);
+                        if (yaml.Contains("enum:") && yaml.Contains("items:"))
+                        {
+                            var enumDef = _yamlDeserializer.Deserialize<EnumDefinition>(yaml);
+                            if (!string.IsNullOrWhiteSpace(enumDef.Enum))
+                            {
+                                // Create a pseudo attribute type definition for the enum
+                                var enumAsAttributeType = new AttributeTypeDefinition
+                                {
+                                    Name = enumDef.Enum,
+                                    Type = "enum",
+                                    Summary = enumDef.Summary ?? $"Enum type {enumDef.Enum}"
+                                };
+                                sharedAttributeTypes[enumDef.Enum] = enumAsAttributeType;
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Skip files that can't be parsed
+                        continue;
+                    }
+                }
+            }
+        }
+
+        _sharedAttributeTypes = sharedAttributeTypes;
+        return sharedAttributeTypes;
+    }
+
+    private static string FindSolutionRoot(string filePath)
+    {
+        var directory = Directory.Exists(filePath) ? filePath : Path.GetDirectoryName(filePath);
+        
+        while (!string.IsNullOrEmpty(directory))
+        {
+            if (Directory.GetFiles(directory, "*.sln").Any() || 
+                Directory.Exists(Path.Combine(directory, "models")))
+            {
+                return directory;
+            }
+            directory = Path.GetDirectoryName(directory);
+        }
+        
+        return string.Empty;
+    }
 }
 
 public enum ModelFileType

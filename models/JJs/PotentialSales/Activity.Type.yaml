@@ -1,6 +1,6 @@
 model: Activity
 summary: Defines the activities for a potential sale
-description: Activities and interactions related to managing prospects through the sales pipeline
+remarks: Activities and interactions related to managing prospects through the sales pipeline
 ownedBy: Prospect
 
 attributeUsages:

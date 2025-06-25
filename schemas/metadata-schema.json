@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://modeller.jjs.com/schemas/metadata-schema.json",
+  "title": "Folder Metadata Schema",
+  "description": "Schema for _meta.yaml files that describe folder/domain metadata",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the domain or folder",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief description of this domain",
+      "minLength": 10
+    },
+    "remarks": {
+      "type": "string",
+      "description": "Additional detailed information about this domain"
+    },
+    "owners": {
+      "type": "array",
+      "description": "List of people or teams responsible for this domain",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags for categorizing this domain",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$"
+      },
+      "uniqueItems": true
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Other domains this one depends on",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of this domain (semantic versioning recommended)",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9-]+)?$"
+    },
+    "status": {
+      "type": "string",
+      "description": "Current status of this domain",
+      "enum": ["draft", "review", "approved", "deprecated", "archived"]
+    },
+    "lastReviewed": {
+      "type": "string",
+      "description": "Date when this domain was last reviewed",
+      "format": "date"
+    }
+  },
+  "required": ["name", "summary"],
+  "additionalProperties": false
+}

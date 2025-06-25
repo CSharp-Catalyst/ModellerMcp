@@ -1,6 +1,6 @@
 model: ProspectWasteProduct
 summary: Defines all waste products associated with a prospect
-description: Junction table linking prospects to their associated waste products
+remarks: Junction table linking prospects to their associated waste products
 ownedBy: Prospect
 
 attributeUsages:

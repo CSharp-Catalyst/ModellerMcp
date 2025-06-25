@@ -1,6 +1,6 @@
 model: IdentifiedCompetitorWasteProduct
 summary: Defines all waste products associated with a competitor
-description: Junction table linking competitors to their waste products
+remarks: Junction table linking competitors to their waste products
 ownedBy: IdentifiedCompetitor
 
 attributeUsages:

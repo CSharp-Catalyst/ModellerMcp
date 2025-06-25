@@ -1,6 +1,6 @@
 model: IdentifiedCompetitor
 summary: Defines all potential sales competitors within the system
-description: Competitors identified for specific prospects
+remarks: Competitors identified for specific prospects
 ownedBy: Prospect
 
 attributeUsages:

@@ -1,6 +1,6 @@
 model: Source
 summary: Defines the supported sources where potential sales can originate
-description: The origin or channel through which the potential sale was initiated
+remarks: The origin or channel through which the potential sale was initiated
 
 attributeUsages:
   - name: sourceId

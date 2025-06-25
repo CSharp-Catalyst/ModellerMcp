@@ -106,6 +106,11 @@ public class ModelStructureValidator
     {
         var fileName = Path.GetFileNameWithoutExtension(file);
 
+        if(fileName is not null and "_meta")
+        {
+            return;
+        }
+
         // Check for PascalCase
         if (!IsPascalCase(fileName))
         {
@@ -114,8 +119,16 @@ public class ModelStructureValidator
                 ValidationSeverity.Warning));
         }
 
-        // Check for recommended suffixes
-        if (!fileName.EndsWith(".Type") && !fileName.EndsWith(".Behaviour") &&
+        // Check if file is in Enums directory (should not have .Type/.Behaviour suffix)
+        var fileDirectory = Path.GetDirectoryName(file);
+        var dirName = Path.GetFileName(fileDirectory);
+        
+        // Check if this is an Enums directory (direct or under Shared)
+        var isEnums = dirName?.Equals("Enums", StringComparison.OrdinalIgnoreCase) == true;
+        
+        // Check for recommended suffixes (but skip for enum files)
+        if (!isEnums && fileName != null &&
+            !fileName.EndsWith(".Type") && !fileName.EndsWith(".Behaviour") &&
             !fileName.EndsWith(".Behavior") && !fileName.Contains("_meta"))
         {
             _results.Add(new ValidationResult(file,
@@ -201,7 +214,7 @@ public class ModelStructureValidator
         }
     }
 
-    private static bool IsPascalCase(string input)
+    private static bool IsPascalCase(string? input)
     {
         if (string.IsNullOrEmpty(input))
             return false;

@@ -5,27 +5,32 @@ attributeTypes:
       maxLength: 512
 
   - name: shortString
+    type: string
     extends: baseString
     constraints:
       maxLength: 50
       minLength: 3
 
   - name: mediumString
+    type: string
     extends: baseString
     constraints:
       maxLength: 100
 
   - name: longString
+    type: string
     extends: baseString
     constraints:
       maxLength: 200
 
   - name: veryLongString
+    type: string
     extends: baseString
     constraints:
       maxLength: 8000
 
   - name: addressString
+    type: string
     extends: baseString
     constraints:
       maxLength: 500
@@ -66,6 +71,7 @@ attributeTypes:
     summary: Date field
 
   - name: emailAddress
+    type: string
     extends: mediumString
     format: email
     constraints:
@@ -73,5 +79,10 @@ attributeTypes:
     summary: Email address format
 
   - name: phoneNumber
+    type: string
     extends: mediumString
     summary: Phone number field
+
+  - name: boolean
+    type: boolean
+    summary: Boolean true/false value

@@ -16,7 +16,7 @@ builder.Services
     .WithStdioServerTransport()
     .WithToolsFromAssembly();
 builder.Services.AddTransient<ValidationTool>();
-builder.Services.AddTransient<IMcpModelValidator, McpYamlSchemaValidator>();
+builder.Services.AddTransient<IMcpModelValidator, YamlSchemaValidator>();
 builder.Services.AddTransient<ModelDiscoveryService>();
 builder.Services.AddTransient<ModelStructureValidator>();
 
@@ -144,20 +144,20 @@ public class ValidationTool(ModelDiscoveryService discoveryService, IMcpModelVal
     {
         try
         {
-            var results = await validator.ValidateAsync(solutionPath, cancellationToken);
+            var response = await validator.ValidateAsync(solutionPath, cancellationToken);
 
-            if (!results.Any())
+            if (!response.Results.Any())
             {
                 return "✅ Validation completed successfully - no issues found.";
             }
 
-            var errorCount = results.Count(r => r.Severity == ValidationSeverity.Error);
-            var warningCount = results.Count(r => r.Severity == ValidationSeverity.Warning);
-            var infoCount = results.Count(r => r.Severity == ValidationSeverity.Info);
+            var errorCount = response.Results.Count(r => r.Severity == ValidationSeverity.Error);
+            var warningCount = response.Results.Count(r => r.Severity == ValidationSeverity.Warning);
+            var infoCount = response.Results.Count(r => r.Severity == ValidationSeverity.Info);
 
             var summary = $"Validation completed with {errorCount} errors, {warningCount} warnings, and {infoCount} info messages.\n\n";
 
-            var groupedResults = results.GroupBy(r => r.File);
+            var groupedResults = response.Results.GroupBy(r => r.File);
 
             foreach (var fileGroup in groupedResults)
             {
@@ -197,9 +197,9 @@ public class ValidationTool(ModelDiscoveryService discoveryService, IMcpModelVal
                 return $"❌ Directory not found: {modelsPath}";
             }
 
-            var results = await validator.ValidateAsync(modelsPath, cancellationToken);
+            var response = await validator.ValidateAsync(modelsPath, cancellationToken);
 
-            var structureResults = results.Where(r =>
+            var structureResults = response.Results.Where(r =>
                 r.Message.Contains("structure") ||
                 r.Message.Contains("naming") ||
                 r.Message.Contains("PascalCase") ||
@@ -244,21 +244,21 @@ public class ValidationTool(ModelDiscoveryService discoveryService, IMcpModelVal
                 return $"❌ Domain directory not found: {domainPath}";
             }
 
-            var results = await validator.ValidateAsync(domainPath, cancellationToken);
+            var response = await validator.ValidateAsync(domainPath, cancellationToken);
 
-            if (!results.Any())
+            if (!response.Results.Any())
             {
                 return $"✅ Domain validation completed successfully for '{Path.GetFileName(domainPath)}' - no issues found.";
             }
 
-            var errorCount = results.Count(r => r.Severity == ValidationSeverity.Error);
-            var warningCount = results.Count(r => r.Severity == ValidationSeverity.Warning);
+            var errorCount = response.Results.Count(r => r.Severity == ValidationSeverity.Error);
+            var warningCount = response.Results.Count(r => r.Severity == ValidationSeverity.Warning);
 
             var summary = $"🏗️ **Domain '{Path.GetFileName(domainPath)}' Validation Results**\n";
             summary += $"Found {errorCount} errors and {warningCount} warnings.\n\n";
 
             // Group by model/entity
-            var entityResults = results.GroupBy(r => Path.GetDirectoryName(r.File))
+            var entityResults = response.Results.GroupBy(r => Path.GetDirectoryName(r.File))
                 .Where(g => g.Key != null);
 
             foreach (var entityGroup in entityResults)
@@ -360,4 +360,14 @@ public class ValidationTool(ModelDiscoveryService discoveryService, IMcpModelVal
         
         Use the validation tools to check your models before committing!
         """;
+}
+
+[McpServerToolType]
+public class GenerationTool
+{
+    [McpServerTool(Title = "Generate models"), Description("Using the passed model definitions, this will generate the necessary code files.")]
+    public void GenerateModels()
+    {
+        
+    }
 }

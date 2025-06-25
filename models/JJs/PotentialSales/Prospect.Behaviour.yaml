@@ -2,7 +2,7 @@ model: Prospect
 
 behaviours:
   - name: getProspectByNumber
-    description: Retrieve a prospect by its unique number
+    summary: Retrieve a prospect by its unique number
     entities:
       - Prospect
     preconditions:
@@ -11,7 +11,7 @@ behaviours:
       - return Prospect data
 
   - name: getProspectsByAssignee
-    description: Retrieve all prospects assigned to a specific person
+    summary: Retrieve all prospects assigned to a specific person
     entities:
       - Prospect
     preconditions:
@@ -20,7 +20,7 @@ behaviours:
       - return list of Prospects
 
   - name: getProspectsBySites
-    description: Retrieve all prospects for specific sites
+    summary: Retrieve all prospects for specific sites
     entities:
       - Prospect
     preconditions:
@@ -29,7 +29,7 @@ behaviours:
       - return list of Prospects
 
   - name: createProspect
-    description: Create a new potential sale opportunity
+    summary: Create a new potential sale opportunity
     entities:
       - Prospect
     preconditions:
@@ -40,7 +40,7 @@ behaviours:
       - prospectStatus is set to Open
 
   - name: updateProspectStatus
-    description: Update the status of a prospect
+    summary: Update the status of a prospect
     entities:
       - Prospect
     preconditions:
@@ -50,7 +50,7 @@ behaviours:
       - prospectStatus is updated
 
   - name: scheduleFollowUp
-    description: Schedule a follow-up for a prospect
+    summary: Schedule a follow-up for a prospect
     entities:
       - Prospect
     preconditions:
@@ -61,7 +61,7 @@ behaviours:
       - salesFollowUpDescription is updated
 
   - name: provideQuote
-    description: Mark that a quote has been provided to the prospect
+    summary: Mark that a quote has been provided to the prospect
     entities:
       - Prospect
     preconditions:

@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://modeller.jjs.com/schemas/validation-profiles-schema.json",
+  "title": "Validation Profiles Schema",
+  "description": "Schema for validation profile definition files",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "The validation profile name",
+        "pattern": "^[A-Za-z][a-zA-Z0-9_-]*$"
+      },
+      "summary": {
+        "type": "string",
+        "description": "Brief description of this validation profile",
+        "minLength": 10
+      },
+      "claims": {
+        "type": "array",
+        "description": "Security claims required for this profile",
+        "items": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "description": "The action being authorized",
+              "enum": ["read", "write", "delete", "execute", "admin"]
+            },
+            "resource": {
+              "type": "string",
+              "description": "The resource being accessed",
+              "minLength": 1
+            }
+          },
+          "required": ["action", "resource"],
+          "additionalProperties": false
+        },
+        "minItems": 1
+      },
+      "attributeRules": {
+        "type": "object",
+        "description": "Rules for specific attributes",
+        "patternProperties": {
+          "^[a-z][a-zA-Z0-9]*$": {
+            "type": "object",
+            "properties": {
+              "required": {
+                "type": "boolean",
+                "description": "Whether this attribute is required in this profile"
+              },
+              "default": {
+                "description": "Default value for this attribute in this profile"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "behaviourRules": {
+        "type": "object",
+        "description": "Rules for specific behaviors",
+        "patternProperties": {
+          "^[a-z][a-zA-Z0-9]*$": {
+            "type": "object",
+            "properties": {
+              "allowed": {
+                "type": "boolean",
+                "description": "Whether this behavior is allowed in this profile"
+              }
+            },
+            "required": ["allowed"],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": ["name", "claims"],
+    "additionalProperties": false
+  },
+  "minItems": 1
+}

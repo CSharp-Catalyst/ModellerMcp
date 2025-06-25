@@ -2,7 +2,7 @@ model: Activity
 
 behaviours:
   - name: createActivity
-    description: Create a new activity for a prospect
+    summary: Create a new activity for a prospect
     entities:
       - Activity
       - Prospect
@@ -14,7 +14,7 @@ behaviours:
       - activity is linked to prospect
 
   - name: updateActivityDescription
-    description: Update the description of an existing activity
+    summary: Update the description of an existing activity
     entities:
       - Activity
     preconditions:
@@ -24,7 +24,7 @@ behaviours:
       - Activity.description is updated
 
   - name: getActivitiesForProspect
-    description: Retrieve all activities for a specific prospect
+    summary: Retrieve all activities for a specific prospect
     entities:
       - Activity
       - Prospect

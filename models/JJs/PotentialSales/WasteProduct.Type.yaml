@@ -1,6 +1,6 @@
 model: WasteProduct
 summary: Defines all waste products within the system
-description: Waste products that can be associated with prospects and competitors
+remarks: Waste products that can be associated with prospects and competitors
 
 attributeUsages:
   - name: wasteProductId
