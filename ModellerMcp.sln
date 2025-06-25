@@ -14,6 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{208BA388-4
 	ProjectSection(SolutionItems) = preProject
 		docs\bdd_model_definition.md = docs\bdd_model_definition.md
 		docs\BDD_Model_User_Guide.md = docs\BDD_Model_User_Guide.md
+		docs\code-generation-design.md = docs\code-generation-design.md
+		docs\modeller-mcp-prompts-guide.md = docs\modeller-mcp-prompts-guide.md
+		docs\yaml-schema-intellisense-guide.md = docs\yaml-schema-intellisense-guide.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{089100B1-113F-4E66-888A-E83F3999EAFD}"
@@ -56,6 +59,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AttributeTypes", "AttributeTypes", "{1AB74070-FDEE-DBD6-881C-277AB0D06711}"
 	ProjectSection(SolutionItems) = preProject
 		models\JJs\Shared\AttributeTypes\CommonAttributes.yaml = models\JJs\Shared\AttributeTypes\CommonAttributes.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "schemas", "schemas", "{0F30E25C-730E-FC1B-A752-E8466D187ADC}"
+	ProjectSection(SolutionItems) = preProject
+		schemas\attribute-types-schema.json = schemas\attribute-types-schema.json
+		schemas\bdd-model-schema.json = schemas\bdd-model-schema.json
+		schemas\enum-schema.json = schemas\enum-schema.json
+		schemas\metadata-schema.json = schemas\metadata-schema.json
+		schemas\README.md = schemas\README.md
+		schemas\validation-profiles-schema.json = schemas\validation-profiles-schema.json
 	EndProjectSection
 EndProject
 Global

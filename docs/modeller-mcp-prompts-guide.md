@@ -1,16 +1,24 @@
-# Modeller MCP Server - Prompts Guide
+# Modeller MCP Server - Prompts & Tools Guide
 
-This document describes the prompts available in the Modeller MCP (Model Context Protocol) server and how to use them with VS Code GitHub Copilot and other MCP clients.
+This document describes the available prompts and tools in the Modeller MCP (Model Context Protocol) server for AI-powered domain modeling and code generation.
 
 ## Overview
 
-The Modeller MCP server provides 5 specialized prompts designed to help with Modeller domain model development, validation, and maintenance:
+The Modeller MCP server provides intelligent tools for domain model development, validation, and code generation:
 
-1. **Analyze Model Definition** - Deep analysis of individual model files
-2. **Review Domain Models** - Comprehensive review of all models within a domain
-3. **Create Model Template** - Generate templates for new models
-4. **Validate Project Structure** - Check folder organization and naming conventions
-5. **Generate Migration Guide** - Create migration guidance between versions
+### Current Capabilities (Available Now)
+1. **Model Analysis & Validation** - Deep analysis of domain models and structure
+2. **Domain Review** - Comprehensive review of model consistency and best practices  
+3. **Template Creation** - Generate templates for new models following conventions
+4. **Structure Validation** - Verify project organization and naming conventions
+5. **Migration Guidance** - Generate migration strategies between model versions
+
+### Upcoming Capabilities (LLM-Driven Code Generation)
+6. **VSA Code Generation** - Generate complete Vertical Slice Architecture projects
+7. **Intelligent Code Modification** - Update existing code while preserving customizations
+8. **Context-Aware Development** - AI-powered code suggestions based on domain models
+9. **Multi-Stage Generation** - Analysis → Design → Implementation pipeline
+10. **Continuous Learning** - System improves based on developer feedback
 
 ## Available Prompts
 
@@ -102,6 +110,82 @@ The Modeller MCP server provides 5 specialized prompts designed to help with Mod
 ```
 
 **What it does**: Generates a prompt for creating step-by-step migration instructions, including breaking changes, new features, and recommended approaches.
+
+## Upcoming Code Generation Tools (Q3 2025)
+
+### 6. Generate VSA Web API Project (`generate_vsa_webapi`)
+
+**Purpose**: Generate a complete Vertical Slice Architecture Web API project from domain models.
+
+**Parameters**:
+- `domainPath` (required): Path to domain models directory
+- `projectName` (required): Project name (e.g., 'Company.Domain')
+- `outputPath` (optional): Output directory (default: '../src')
+- `llmProvider` (optional): LLM provider to use (openai, anthropic, local)
+
+**Example Usage**:
+```text
+@Modeller generate_vsa_webapi
+- domainPath: "models/JJs/PotentialSales"
+- projectName: "JJs.PotentialSales"
+- outputPath: "./src"
+- llmProvider: "openai"
+```
+
+**What it does**: Generates a complete .NET 9 project with VSA architecture, including:
+- Entity classes with EF Core configuration
+- Service implementations with business logic
+- Minimal API endpoints
+- Comprehensive unit and integration tests
+- .NET Aspire orchestration setup
+
+### 7. Modify Feature Code (`modify_feature_code`)
+
+**Purpose**: Intelligently modify existing code based on model changes while preserving customizations.
+
+**Parameters**:
+- `modelPath` (required): Path to updated model file
+- `codePath` (required): Path to existing feature code
+- `changeDescription` (required): Description of changes needed
+- `llmProvider` (optional): LLM provider to use
+
+**Example Usage**:
+```text
+@Modeller modify_feature_code
+- modelPath: "models/JJs/PotentialSales/Prospect.Type.yaml"
+- codePath: "src/JJs.Api/Features/Prospects"
+- changeDescription: "Added priority field and validation rules"
+- llmProvider: "openai"
+```
+
+**What it does**: Analyzes existing code and model changes, then generates intelligent modifications that:
+- Preserve custom developer code and comments
+- Maintain established patterns and conventions
+- Add new functionality without breaking existing features
+- Provide migration guidance for breaking changes
+
+### 8. Update Project from Domain (`update_project_from_domain`)
+
+**Purpose**: Comprehensively update an entire project based on domain model changes.
+
+**Parameters**:
+- `domainPath` (required): Path to domain models
+- `projectPath` (required): Path to existing project
+- `llmProvider` (optional): LLM provider to use
+
+**Example Usage**:
+```text
+@Modeller update_project_from_domain
+- domainPath: "models/JJs/PotentialSales"
+- projectPath: "src/JJs.Api"
+- llmProvider: "openai"
+```
+
+**What it does**: Performs comprehensive project updates including:
+- Detection of all model changes
+- Impact analysis across the codebase
+- Coordinated updates to related features
+- Validation that all changes compile and pass tests
 
 ## Using with VS Code GitHub Copilot
 

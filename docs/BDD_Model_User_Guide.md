@@ -1,35 +1,42 @@
-# BDD Model Definition User Guide for IT Professionals
+# BDD Model Definition User Guide for Modern Development
 
 ## Table of Contents
 
 1. [Overview](#overview)
 2. [Prerequisites](#prerequisites)
 3. [Getting Started](#getting-started)
-4. [Folder Structure Guide](#folder-structure-guide)
+4. [AI-Powered Development Workflow](#ai-powered-development-workflow)
 5. [Model Definition Best Practices](#model-definition-best-practices)
 6. [Validation and Quality Assurance](#validation-and-quality-assurance)
-7. [Common Patterns and Examples](#common-patterns-and-examples)
-8. [Troubleshooting](#troubleshooting)
-9. [Integration with Build Pipelines](#integration-with-build-pipelines)
+7. [Code Generation (Upcoming)](#code-generation-upcoming)
+8. [Common Patterns and Examples](#common-patterns-and-examples)
+9. [Troubleshooting](#troubleshooting)
 10. [Advanced Scenarios](#advanced-scenarios)
 
 ---
 
 ## Overview
 
-This guide provides comprehensive instructions for **Domain Owners**, **Solution Architects**, and **Developers** on creating, organizing, and validating BDD (Behaviour-Driven Development) model definitions using the Modeller framework.
+This guide provides comprehensive instructions for **Domain Owners**, **Solution Architects**, and **Developers** on creating, validating, and generating code from BDD (Behaviour-Driven Development) model definitions using the Modeller framework with AI assistance.
+
+### Modern Development Approach
+The Modeller framework embraces AI-powered development through:
+- **LLM-Driven Code Generation**: Transform domain models into production-ready code
+- **Intelligent Analysis**: AI-powered model review and optimization suggestions
+- **Context-Aware Development**: Code generation that understands your existing patterns
+- **Continuous Learning**: System improves based on developer feedback
 
 ### Target Audience
-- **Domain Owners**: Business stakeholders responsible for defining domain models
-- **Solution Architects**: Technical leaders designing system architecture
-- **Developers**: Engineers implementing and maintaining the models
+- **Domain Owners**: Business stakeholders defining domain models with AI assistance
+- **Solution Architects**: Technical leaders designing systems with intelligent code generation
+- **Developers**: Engineers implementing and maintaining AI-generated code from models
 
 ### Benefits
-- **Standardized Approach**: Consistent model definition across teams
-- **Living Documentation**: Self-documenting models with BDD scenarios
-- **Code Generation**: Automated generation of APIs, databases, and documentation
-- **Validation**: Built-in quality checks and best practice enforcement
-- **Collaboration**: YAML format accessible to both technical and business stakeholders
+- **Accelerated Development**: Generate complete applications from domain models
+- **Consistent Quality**: AI ensures adherence to patterns and best practices
+- **Living Documentation**: Self-documenting models with generated code
+- **Intelligent Evolution**: AI-assisted model and code maintenance
+- **Developer Control**: AI assists while developers maintain architectural decisions
 
 ---
 
@@ -440,6 +447,87 @@ Before committing your models, ensure:
 - [ ] Shared components are properly utilized
 - [ ] Dependencies are correctly specified
 - [ ] Metadata is up to date
+
+---
+
+## AI-Powered Development Workflow
+
+### Model-First Development with AI Assistance
+
+The Modeller framework supports a modern, AI-enhanced development approach:
+
+#### 1. Domain Model Definition
+- Define your domain models in YAML with IntelliSense support
+- Use AI-powered analysis to validate and improve model definitions
+- Leverage BDD scenarios for business rule specification
+
+#### 2. AI-Powered Model Analysis
+Use the MCP integration with GitHub Copilot for intelligent model review:
+
+```text
+@Modeller analyze_model --modelPath "models/JJs/PotentialSales/Prospect.Type.yaml"
+@Modeller review_domain --domainPath "models/JJs/PotentialSales"
+```
+
+The AI will provide insights on:
+- Model structure and naming conventions
+- Relationship consistency across the domain
+- Best practice recommendations
+- Potential performance considerations
+
+#### 3. Code Generation (Coming Q3 2025)
+Transform validated models into production-ready code:
+
+```text
+@Modeller generate_vsa_webapi 
+  --domainPath "models/JJs/PotentialSales"
+  --projectName "JJs.PotentialSales"
+  --outputPath "./src"
+```
+
+Generated output includes:
+- Complete .NET 9 Web API with Vertical Slice Architecture
+- Entity classes with EF Core configuration
+- Service implementations with business logic
+- Minimal API endpoints with proper routing
+- Comprehensive unit and integration tests
+- .NET Aspire orchestration setup
+
+#### 4. Intelligent Code Evolution
+When models change, AI assists with code updates:
+
+```text
+@Modeller modify_feature_code
+  --modelPath "models/JJs/PotentialSales/Prospect.Type.yaml"
+  --codePath "src/JJs.Api/Features/Prospects"
+  --changeDescription "Added priority field and validation rules"
+```
+
+The AI ensures:
+- Preservation of custom developer code
+- Maintenance of established patterns
+- Backward compatibility where possible
+- Proper migration guidance for breaking changes
+
+### Development Best Practices with AI
+
+#### Iterative Refinement
+1. **Start Simple**: Begin with basic model definitions
+2. **AI Review**: Use AI analysis to identify improvements
+3. **Incremental Enhancement**: Add complexity gradually
+4. **Continuous Validation**: Validate changes with AI assistance
+
+#### Quality Assurance
+- **Multi-Stage Validation**: Schema → Business Rules → AI Analysis
+- **Peer Review**: Combine AI insights with human expertise
+- **Testing Strategy**: Leverage AI-generated tests as a foundation
+- **Documentation**: Maintain living documentation with AI assistance
+
+#### Team Collaboration
+- **Domain Experts**: Focus on business rules and scenarios
+- **Architects**: Leverage AI for pattern consistency
+- **Developers**: Use AI for implementation guidance
+- **QA**: Validate generated code meets requirements
 
 ---
 
