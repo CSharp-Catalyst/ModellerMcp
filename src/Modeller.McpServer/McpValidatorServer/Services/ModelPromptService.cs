@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Modeller.McpServer.McpValidatorServer.Services;
 
-public class ModelPromptService(ILogger<ModelPromptService> logger, ModelDiscoveryService discoveryService)
+public class ModelPromptService(ILogger<ModelPromptService> logger)
 {
     public List<PromptDefinition> GetAvailablePrompts()
     {

@@ -4,6 +4,8 @@ using Modeller.McpServer.McpValidatorServer;
 using Modeller.McpServer.McpValidatorServer.Models;
 using Modeller.McpServer.McpValidatorServer.Services;
 using Modeller.McpServer.CodeGeneration.Security;
+using Modeller.McpServer.CodeGeneration.Prompts;
+using Modeller.McpServer.CodeGeneration;
 using Microsoft.Extensions.Configuration;
 
 using System.ComponentModel;
@@ -26,11 +28,13 @@ builder.Services
 builder.Services.AddSecurityServices(builder.Configuration);
 
 builder.Services.AddTransient<ValidationTool>();
+builder.Services.AddTransient<SdkGenerationTool>();
 builder.Services.AddTransient<ModellerPrompts>();
 builder.Services.AddTransient<IMcpModelValidator, YamlSchemaValidator>();
 builder.Services.AddTransient<ModelDiscoveryService>();
 builder.Services.AddTransient<ModelStructureValidator>();
 builder.Services.AddTransient<ModelPromptService>();
+builder.Services.AddTransient<ISdkGenerationService, SdkGenerationService>();
 
 await builder.Build().RunAsync();
 

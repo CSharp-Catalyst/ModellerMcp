@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Modeller.McpServer.CodeGeneration.Prompts;
 using Modeller.McpServer.CodeGeneration.Security;
 
@@ -11,7 +13,17 @@ public class ProspectSdkGenerationTests
     public ProspectSdkGenerationTests()
     {
         var services = new ServiceCollection();
-        services.AddSecurityServices("c:\\temp\\audit");
+        
+        // Create test configuration
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Security:AuditLogPath"] = "c:\\temp\\audit"
+            })
+            .Build();
+            
+        services.AddLogging(); // Add logging services
+        services.AddSecurityServices(configuration);
         services.AddTransient<IVsaPromptService, VsaPromptService>();
         _serviceProvider = services.BuildServiceProvider();
     }
@@ -76,15 +88,11 @@ public class ProspectSdkGenerationTests
             """;
 
         // Act
-        var prompt = await vsaPromptService.GeneratePromptAsync(
-            "GenerateSDKFromDomainModel",
-            new Dictionary<string, object>
-            {
-                ["FeatureName"] = "Prospects",
-                ["DomainModel"] = domainYaml,
-                ["BehaviourModel"] = behaviourYaml,
-                ["Namespace"] = "JJs.PotentialSales.Sdk"
-            });
+        var combinedYaml = $"{domainYaml}\n\n---\n\n{behaviourYaml}";
+        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(
+            combinedYaml,
+            "Prospects",
+            "JJs.PotentialSales.Sdk");
 
         // Assert
         Assert.NotNull(prompt);
