@@ -2,7 +2,7 @@ namespace Modeller.McpServer.McpValidatorServer.Services;
 
 public class ModelFileGroup
 {
-    public string Directory { get; set; } = string.Empty;
+    public required string Directory { get; set; }
     public List<ModelFileInfo> Files { get; set; } = [];
     public bool HasMetadata { get; set; }
     public string? MetadataPath { get; set; }

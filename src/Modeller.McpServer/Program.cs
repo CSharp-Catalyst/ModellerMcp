@@ -3,10 +3,15 @@
 using Modeller.McpServer.McpValidatorServer;
 using Modeller.McpServer.McpValidatorServer.Models;
 using Modeller.McpServer.McpValidatorServer.Services;
+using Modeller.McpServer.CodeGeneration.Security;
+using Microsoft.Extensions.Configuration;
 
 using System.ComponentModel;
 
 var builder = Host.CreateApplicationBuilder(args);
+
+// Add security configuration (optional, for enhanced security features)
+builder.Configuration.AddJsonFile("appsettings.Security.json", optional: true, reloadOnChange: true);
 
 builder.Logging.AddConsole(consoleLogOptions =>
     consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Trace);
@@ -16,6 +21,10 @@ builder.Services
     .WithStdioServerTransport()
     .WithToolsFromAssembly()
     .WithPromptsFromAssembly();
+
+// Add security services for LLM-driven code generation
+builder.Services.AddSecurityServices(builder.Configuration);
+
 builder.Services.AddTransient<ValidationTool>();
 builder.Services.AddTransient<ModellerPrompts>();
 builder.Services.AddTransient<IMcpModelValidator, YamlSchemaValidator>();

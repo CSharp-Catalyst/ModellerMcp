@@ -17,6 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{208BA388-4
 		docs\code-generation-design.md = docs\code-generation-design.md
 		docs\modeller-mcp-prompts-guide.md = docs\modeller-mcp-prompts-guide.md
 		docs\yaml-schema-intellisense-guide.md = docs\yaml-schema-intellisense-guide.md
+		docs\documentation-update-summary.md = docs\documentation-update-summary.md
+		docs\llms-full.md = docs\llms-full.md
+		docs\security-implementation-status.md = docs\security-implementation-status.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{089100B1-113F-4E66-888A-E83F3999EAFD}"

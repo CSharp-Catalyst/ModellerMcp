@@ -3,17 +3,8 @@ using System.Text.Json;
 
 namespace Modeller.McpServer.McpValidatorServer.Services;
 
-public class ModelPromptService
+public class ModelPromptService(ILogger<ModelPromptService> logger, ModelDiscoveryService discoveryService)
 {
-    private readonly ILogger<ModelPromptService> _logger;
-    private readonly ModelDiscoveryService _discoveryService;
-
-    public ModelPromptService(ILogger<ModelPromptService> logger, ModelDiscoveryService discoveryService)
-    {
-        _logger = logger;
-        _discoveryService = discoveryService;
-    }
-
     public List<PromptDefinition> GetAvailablePrompts()
     {
         return new List<PromptDefinition>
@@ -216,16 +207,16 @@ Provide a comprehensive analysis with specific recommendations for improvement."
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Could not read model file for prompt: {ModelPath}", modelPath);
+            logger.LogWarning(ex, "Could not read model file for prompt: {ModelPath}", modelPath);
         }
 
         return new PromptResponse { Messages = messages };
     }
 
-    private async Task<PromptResponse> GenerateReviewDomainPrompt(Dictionary<string, object> arguments)
+    private Task<PromptResponse> GenerateReviewDomainPrompt(Dictionary<string, object> arguments)
     {
         var domainPath = arguments["domainPath"].ToString();
-        var includeShared = bool.Parse(arguments.GetValueOrDefault("includeShared", "false").ToString());
+        var includeShared = bool.Parse(arguments.GetValueOrDefault("includeShared", "false").ToString() ?? "false");
 
         var messages = new List<PromptMessage>
         {
@@ -252,10 +243,10 @@ Provide a domain-level analysis with recommendations for improving the overall m
             }
         };
 
-        return new PromptResponse { Messages = messages };
+        return Task.FromResult(new PromptResponse { Messages = messages });
     }
 
-    private async Task<PromptResponse> GenerateCreateModelTemplatePrompt(Dictionary<string, object> arguments)
+    private Task<PromptResponse> GenerateCreateModelTemplatePrompt(Dictionary<string, object> arguments)
     {
         var modelType = arguments["modelType"].ToString();
         var domain = arguments["domain"].ToString();
@@ -320,13 +311,13 @@ Ensure the template follows the proper folder structure for domain: {domain}"
             }
         };
 
-        return new PromptResponse { Messages = messages };
+        return Task.FromResult(new PromptResponse { Messages = messages });
     }
 
-    private async Task<PromptResponse> GenerateValidateStructurePrompt(Dictionary<string, object> arguments)
+    private Task<PromptResponse> GenerateValidateStructurePrompt(Dictionary<string, object> arguments)
     {
         var projectPath = arguments["projectPath"].ToString();
-        var strictMode = bool.Parse(arguments.GetValueOrDefault("strictMode", "false").ToString());
+        var strictMode = bool.Parse(arguments.GetValueOrDefault("strictMode", "false").ToString() ?? "false");
 
         var messages = new List<PromptMessage>
         {
@@ -355,10 +346,10 @@ Provide a detailed report on structure compliance and recommendations for improv
             }
         };
 
-        return new PromptResponse { Messages = messages };
+        return Task.FromResult(new PromptResponse { Messages = messages });
     }
 
-    private async Task<PromptResponse> GenerateMigrationGuidePrompt(Dictionary<string, object> arguments)
+    private Task<PromptResponse> GenerateMigrationGuidePrompt(Dictionary<string, object> arguments)
     {
         var fromVersion = arguments["fromVersion"].ToString();
         var toVersion = arguments["toVersion"].ToString();
@@ -392,23 +383,23 @@ Include specific examples for common migration scenarios."
             }
         };
 
-        return new PromptResponse { Messages = messages };
+        return Task.FromResult(new PromptResponse { Messages = messages });
     }
 }
 
 // Supporting classes for prompts
 public class PromptDefinition
 {
-    public string Name { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public required string Name { get; set; }
+    public required string Title { get; set; }
+    public string Description { get; set; } = string.Empty; // Optional description can default to empty
     public List<PromptArgument> Arguments { get; set; } = new();
 }
 
 public class PromptArgument
 {
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public required string Name { get; set; }
+    public string Description { get; set; } = string.Empty; // Optional description can default to empty
     public bool Required { get; set; }
 }
 
@@ -430,10 +421,15 @@ public abstract class MessageContent
 
 public class TextContent : MessageContent
 {
+    public string Text { get; set; } = string.Empty;
+    
     public TextContent()
     {
         Type = "text";
     }
     
-    public string Text { get; set; } = string.Empty;
+    public TextContent(string text) : this()
+    {
+        Text = text;
+    }
 }

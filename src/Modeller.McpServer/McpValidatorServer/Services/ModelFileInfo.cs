@@ -2,8 +2,8 @@ namespace Modeller.McpServer.McpValidatorServer.Services;
 
 public class ModelFileInfo
 {
-    public string Path { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
+    public required string Path { get; set; }
+    public required string Name { get; set; }
     public ModelFileType Type { get; set; }
 
     public string Extension => System.IO.Path.GetExtension(Name);
