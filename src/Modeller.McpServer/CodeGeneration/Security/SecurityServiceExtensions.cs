@@ -19,6 +19,9 @@ public static class SecurityServiceExtensions
         services.AddSingleton<ISecurePromptBuilder, SecurePromptBuilder>();
         services.AddSingleton<ISecureLlmService, SecureLlmService>();
 
+        // VSA prompt services
+        services.AddSingleton<Prompts.IVsaPromptService, Prompts.VsaPromptService>();
+
         // Audit logging - configure based on settings
         var auditConfig = configuration.GetSection("Security:Audit");
         var auditProvider = auditConfig.GetValue<string>("Provider", "file");
