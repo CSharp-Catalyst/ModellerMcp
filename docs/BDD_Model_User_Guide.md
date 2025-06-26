@@ -8,7 +8,7 @@
 4. [AI-Powered Development Workflow](#ai-powered-development-workflow)
 5. [Model Definition Best Practices](#model-definition-best-practices)
 6. [Validation and Quality Assurance](#validation-and-quality-assurance)
-7. [Code Generation (Upcoming)](#code-generation-upcoming)
+7. [Code Generation (Upcoming)](#3-code-generation-coming-q3-2025)
 8. [Common Patterns and Examples](#common-patterns-and-examples)
 9. [Troubleshooting](#troubleshooting)
 10. [Advanced Scenarios](#advanced-scenarios)
@@ -20,18 +20,22 @@
 This guide provides comprehensive instructions for **Domain Owners**, **Solution Architects**, and **Developers** on creating, validating, and generating code from BDD (Behaviour-Driven Development) model definitions using the Modeller framework with AI assistance.
 
 ### Modern Development Approach
+
 The Modeller framework embraces AI-powered development through:
+
 - **LLM-Driven Code Generation**: Transform domain models into production-ready code
 - **Intelligent Analysis**: AI-powered model review and optimization suggestions
 - **Context-Aware Development**: Code generation that understands your existing patterns
 - **Continuous Learning**: System improves based on developer feedback
 
 ### Target Audience
+
 - **Domain Owners**: Business stakeholders defining domain models with AI assistance
 - **Solution Architects**: Technical leaders designing systems with intelligent code generation
 - **Developers**: Engineers implementing and maintaining AI-generated code from models
 
 ### Benefits
+
 - **Accelerated Development**: Generate complete applications from domain models
 - **Consistent Quality**: AI ensures adherence to patterns and best practices
 - **Living Documentation**: Self-documenting models with generated code
@@ -43,18 +47,21 @@ The Modeller framework embraces AI-powered development through:
 ## Prerequisites
 
 ### Required Tools
+
 - **.NET 9.0 SDK** or later
 - **Visual Studio Code** (recommended) or Visual Studio
 - **YAML extension** for your IDE
 - **Git** for version control
 
 ### Required Knowledge
+
 - Basic understanding of domain modeling
 - Familiarity with YAML syntax
 - Understanding of REST APIs and database concepts
 - Basic knowledge of BDD principles
 
 ### Environment Setup
+
 ```bash
 # Clone the Modeller repository
 git clone <repository-url>
@@ -75,7 +82,7 @@ dotnet run --project src/Modeller.Domain
 
 Start by creating the recommended folder hierarchy:
 
-```
+``` text
 models/
 └── {CompanyName}/
     ├── {BoundedContext}/
@@ -163,35 +170,42 @@ attributeUsages:
 ### Recommended Hierarchy
 
 #### Level 1: Company/Organization
-```
+
+```text
 models/YourCompany/
 ```
+
 - Use your organization's name
 - PascalCase naming convention
 - Single root per organization
 
 #### Level 2: Bounded Context
-```
+
+```text
 models/YourCompany/Sales/
 models/YourCompany/Inventory/
 models/YourCompany/CustomerService/
 ```
+
 - Represents business domains or bounded contexts
 - PascalCase naming convention
 - Should align with team/department boundaries
 
 #### Level 3: Entity Groupings
-```
+
+```text
 models/YourCompany/Sales/Customers/
 models/YourCompany/Sales/Orders/
 models/YourCompany/Sales/Products/
 ```
+
 - Groups related entities
 - PascalCase naming convention
 - Keep groupings focused and cohesive
 
 #### Level 4: Entity Files
-```
+
+```text
 models/YourCompany/Sales/Customers/Customer.Type.yaml
 models/YourCompany/Sales/Customers/Customer.Behaviour.yaml
 models/YourCompany/Sales/Orders/Order.Type.yaml
@@ -200,7 +214,7 @@ models/YourCompany/Sales/Orders/Order.Behaviour.yaml
 
 ### Shared Components Structure
 
-```
+```text
 models/YourCompany/Shared/
 ├── AttributeTypes/
 │   ├── CommonAttributes.yaml       # Basic types (string, int, etc.)
@@ -234,6 +248,7 @@ models/YourCompany/Shared/
 ### Entity Definition Guidelines
 
 #### 1. Use Descriptive Names
+
 ```yaml
 # ✅ Good
 model: Customer
@@ -247,6 +262,7 @@ model: Item
 ```
 
 #### 2. Provide Clear Documentation
+
 ```yaml
 model: Customer
 summary: Represents a customer in the system
@@ -257,6 +273,7 @@ description: >
 ```
 
 #### 3. Use Consistent Attribute Naming
+
 ```yaml
 attributeUsages:
   # ✅ Good - camelCase, descriptive
@@ -273,6 +290,7 @@ attributeUsages:
 ```
 
 #### 4. Leverage Shared Attribute Types
+
 ```yaml
 # ✅ Good - uses shared types
 attributeUsages:
@@ -297,6 +315,7 @@ attributeUsages:
 ### Behaviour Definition Guidelines
 
 #### 1. Define Clear Business Operations
+
 ```yaml
 behaviours:
   - name: createCustomer
@@ -312,6 +331,7 @@ behaviours:
 ```
 
 #### 2. Include Meaningful Scenarios
+
 ```yaml
 scenarios:
   - name: create customer with valid data
@@ -339,6 +359,7 @@ scenarios:
 ### Enumeration Guidelines
 
 #### 1. Use Descriptive Values
+
 ```yaml
 # ✅ Good
 name: CustomerStatus
@@ -365,6 +386,7 @@ items:
 ```
 
 #### 2. Plan for Future Values
+
 ```yaml
 # ✅ Good - leaves room for expansion
 items:
@@ -392,6 +414,7 @@ items:
 ### Using the MCP Validation Tools
 
 #### 1. Discover Models
+
 ```bash
 # Navigate to your solution root
 cd /path/to/your/solution
@@ -401,6 +424,7 @@ dotnet run --project src/Modeller.Domain -- DiscoverModels --solutionPath "."
 ```
 
 #### 2. Validate Domain Structure
+
 ```bash
 # Validate specific domain
 dotnet run --project src/Modeller.Domain -- ValidateDomain --domainPath "models/YourCompany/YourDomain"
@@ -410,6 +434,7 @@ dotnet run --project src/Modeller.Domain -- ValidateStructure --modelsPath "mode
 ```
 
 #### 3. Validate Individual Files
+
 ```bash
 # Validate single model file
 dotnet run --project src/Modeller.Domain -- ValidateModel --path "models/YourCompany/YourDomain/Customer.Type.yaml"
@@ -418,12 +443,14 @@ dotnet run --project src/Modeller.Domain -- ValidateModel --path "models/YourCom
 ### Common Validation Rules
 
 #### File Structure Validation
+
 - ✅ Files use PascalCase naming
 - ✅ Model names match file names
 - ✅ Proper file extensions (.yaml)
 - ✅ Required metadata files present
 
 #### Content Validation
+
 - ✅ Required fields present (model name, attributeUsages)
 - ✅ Attribute names use camelCase
 - ✅ Behaviour names use camelCase
@@ -431,6 +458,7 @@ dotnet run --project src/Modeller.Domain -- ValidateModel --path "models/YourCom
 - ✅ No duplicate enum values
 
 #### Business Rule Validation
+
 - ✅ BDD scenarios follow Given-When-Then pattern
 - ✅ Behaviours have entities, preconditions, and effects
 - ✅ Metadata reviewed within 90 days
@@ -457,11 +485,13 @@ Before committing your models, ensure:
 The Modeller framework supports a modern, AI-enhanced development approach:
 
 #### 1. Domain Model Definition
+
 - Define your domain models in YAML with IntelliSense support
 - Use AI-powered analysis to validate and improve model definitions
 - Leverage BDD scenarios for business rule specification
 
 #### 2. AI-Powered Model Analysis
+
 Use the MCP integration with GitHub Copilot for intelligent model review:
 
 ```text
@@ -470,12 +500,14 @@ Use the MCP integration with GitHub Copilot for intelligent model review:
 ```
 
 The AI will provide insights on:
+
 - Model structure and naming conventions
 - Relationship consistency across the domain
 - Best practice recommendations
 - Potential performance considerations
 
 #### 3. Code Generation (Coming Q3 2025)
+
 Transform validated models into production-ready code:
 
 ```text
@@ -486,6 +518,7 @@ Transform validated models into production-ready code:
 ```
 
 Generated output includes:
+
 - Complete .NET 9 Web API with Vertical Slice Architecture
 - Entity classes with EF Core configuration
 - Service implementations with business logic
@@ -494,6 +527,7 @@ Generated output includes:
 - .NET Aspire orchestration setup
 
 #### 4. Intelligent Code Evolution
+
 When models change, AI assists with code updates:
 
 ```text
@@ -504,6 +538,7 @@ When models change, AI assists with code updates:
 ```
 
 The AI ensures:
+
 - Preservation of custom developer code
 - Maintenance of established patterns
 - Backward compatibility where possible
@@ -512,18 +547,21 @@ The AI ensures:
 ### Development Best Practices with AI
 
 #### Iterative Refinement
+
 1. **Start Simple**: Begin with basic model definitions
 2. **AI Review**: Use AI analysis to identify improvements
 3. **Incremental Enhancement**: Add complexity gradually
 4. **Continuous Validation**: Validate changes with AI assistance
 
 #### Quality Assurance
+
 - **Multi-Stage Validation**: Schema → Business Rules → AI Analysis
 - **Peer Review**: Combine AI insights with human expertise
 - **Testing Strategy**: Leverage AI-generated tests as a foundation
 - **Documentation**: Maintain living documentation with AI assistance
 
 #### Team Collaboration
+
 - **Domain Experts**: Focus on business rules and scenarios
 - **Architects**: Leverage AI for pattern consistency
 - **Developers**: Use AI for implementation guidance
@@ -534,6 +572,7 @@ The AI ensures:
 ## Common Patterns and Examples
 
 ### 1. Aggregate Root Pattern
+
 ```yaml
 # Order.Type.yaml - Aggregate root
 model: Order
@@ -559,6 +598,7 @@ attributeUsages:
 ```
 
 ### 2. Value Object Pattern
+
 ```yaml
 # Address.Type.yaml - Value object
 model: Address
@@ -593,6 +633,7 @@ attributeUsages:
 ```
 
 ### 3. State Machine Pattern
+
 ```yaml
 # Order.Behaviour.yaml
 behaviours:
@@ -621,6 +662,7 @@ scenarios:
 ```
 
 ### 4. Lookup/Reference Data Pattern
+
 ```yaml
 # ProductCategory.Type.yaml - Reference data
 model: ProductCategory
@@ -657,6 +699,7 @@ attributeUsages:
 ### Common Issues and Solutions
 
 #### Issue: "Model name should match file name"
+
 ```yaml
 # ❌ Problem: File named Customer.Type.yaml
 model: Cust
@@ -666,6 +709,7 @@ model: Customer
 ```
 
 #### Issue: "Attribute name should be camelCase"
+
 ```yaml
 # ❌ Problem
 attributeUsages:
@@ -679,6 +723,7 @@ attributeUsages:
 ```
 
 #### Issue: "Empty YAML document"
+
 ```yaml
 # ❌ Problem: Empty or malformed file
 
@@ -688,6 +733,7 @@ attributeUsages: []
 ```
 
 #### Issue: "Metadata has not been reviewed"
+
 ```yaml
 # ❌ Problem: lastReviewed is too old or missing
 lastReviewed: 2024-01-01
@@ -697,6 +743,7 @@ lastReviewed: 2025-06-24
 ```
 
 #### Issue: "Behaviour should specify entities"
+
 ```yaml
 # ❌ Problem
 behaviours:
@@ -715,6 +762,7 @@ behaviours:
 ### Debugging Validation Errors
 
 1. **Run validation with verbose output**:
+
    ```bash
    dotnet run --project src/Modeller.Domain -- ValidateModel --path "your-file.yaml" --verbose
    ```
@@ -732,6 +780,7 @@ behaviours:
 ### CI/CD Pipeline Integration
 
 #### Azure DevOps Example
+
 ```yaml
 # azure-pipelines.yml
 steps:
@@ -751,6 +800,7 @@ steps:
 ```
 
 #### GitHub Actions Example
+
 ```yaml
 # .github/workflows/model-validation.yml
 name: Model Validation
@@ -813,7 +863,8 @@ steps:
 ### Multi-Team Collaboration
 
 #### Team Boundaries
-```
+
+```text
 models/
 ├── SharedKernel/           # Shared across all teams
 │   └── Shared/
@@ -829,6 +880,7 @@ models/
 ```
 
 #### Cross-Domain Dependencies
+
 ```yaml
 # models/Sales/Orders/_meta.yaml
 dependencies:
@@ -839,6 +891,7 @@ dependencies:
 ### Versioning Strategy
 
 #### Semantic Versioning for Domains
+
 ```yaml
 # _meta.yaml
 version: 2.1.0  # Major.Minor.Patch
@@ -849,6 +902,7 @@ version: 2.1.0  # Major.Minor.Patch
 ```
 
 #### Backward Compatibility
+
 ```yaml
 # Old version support
 attributeUsages:
@@ -867,12 +921,14 @@ attributeUsages:
 ### Performance Considerations
 
 #### Large Model Repositories
+
 - Use git LFS for large schema files
 - Implement incremental validation
 - Cache validation results
 - Parallel validation for independent domains
 
 #### Build Optimization
+
 ```yaml
 # Only validate changed files
 - name: Get Changed Files

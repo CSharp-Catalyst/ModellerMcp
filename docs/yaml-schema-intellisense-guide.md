@@ -33,7 +33,7 @@ The Modeller project includes JSON schemas for all YAML file types, providing:
    - Open your workspace settings (`.vscode/settings.json`)
    - Add the following configuration:
 
-```json
+``` json
 {
   "yaml.schemas": {
     "./schemas/bdd-model-schema.json": [
@@ -63,7 +63,7 @@ The Modeller project includes JSON schemas for all YAML file types, providing:
 
 Add schema references directly to your YAML files:
 
-```yaml
+``` yaml
 # yaml-language-server: $schema=../../../schemas/bdd-model-schema.json
 
 model: MyModel
@@ -77,13 +77,15 @@ attributeUsages:
 ### BDD Models (`*.Type.yaml`, `*.Behaviour.yaml`)
 
 **IntelliSense Features:**
+
 - Auto-complete for `model`, `summary`, `remarks`, `attributeUsages`, `behaviours`, `scenarios`
 - Attribute type suggestions from your shared definitions
 - camelCase validation for attribute names
 - Required field validation
 
 **Example with IntelliSense:**
-```yaml
+
+``` yaml
 model: Customer
 summary: Represents a customer in the system
 remarks: Extends the base entity with customer-specific attributes
@@ -104,12 +106,14 @@ attributeUsages:
 ### Enums (`Shared/Enums/*.yaml`)
 
 **IntelliSense Features:**
+
 - PascalCase validation for enum and item names
 - Required fields validation
 - Unique value enforcement
 
 **Example:**
-```yaml
+
+``` yaml
 enum: CustomerStatus
 summary: Represents the current status of a customer
 items:
@@ -124,12 +128,14 @@ items:
 ### Attribute Types (`Shared/AttributeTypes/*.yaml`)
 
 **IntelliSense Features:**
+
 - Base type suggestions (`string`, `integer`, `boolean`, etc.)
 - Format validation (`date`, `email`, `uri`, etc.)
 - Constraint property auto-complete
 
 **Example:**
-```yaml
+
+``` yaml
 attributeTypes:
   - name: customerEmail  # camelCase validation
     type: string         # Dropdown: string, integer, boolean, etc.
@@ -144,12 +150,14 @@ attributeTypes:
 ### Metadata (`_meta.yaml`)
 
 **IntelliSense Features:**
+
 - Status dropdown with predefined values
 - Version pattern validation (semantic versioning)
 - Date format validation
 
 **Example:**
-```yaml
+
+``` yaml
 name: PotentialSales
 summary: Domain for managing potential sales and prospects
 owners:
@@ -163,16 +171,19 @@ lastReviewed: 2025-06-25  # Date format validation
 ## 🚀 Benefits in Action
 
 ### Real-Time Validation
+
 - **Red squiggles** under invalid values
 - **Missing required fields** highlighted immediately
 - **Type mismatches** caught before saving
 
 ### Smart Auto-Completion
+
 - **Ctrl+Space** triggers suggestions
 - **Attribute types** pulled from your shared definitions
 - **Enum values** suggested based on context
 
 ### Documentation on Hover
+
 - **Hover over properties** to see descriptions
 - **Examples** and constraints shown in tooltips
 - **Type information** displayed inline
@@ -180,35 +191,42 @@ lastReviewed: 2025-06-25  # Date format validation
 ## 🔧 Other Editor Support
 
 ### JetBrains IDEs (IntelliJ, WebStorm, etc.)
+
 1. Install the **YAML** plugin
 2. Configure schemas in **Settings > Languages & Frameworks > Schemas and DTDs > JSON Schema Mappings**
 3. Add mappings for each schema file
 
 ### Vim/Neovim
+
 1. Use **coc-yaml** or **vim-lsp** with yaml-language-server
 2. Configure schema associations in your LSP settings
 
 ### Emacs
+
 1. Use **lsp-mode** with yaml-language-server
 2. Configure schema mappings in your LSP configuration
 
 ## 🎯 Best Practices
 
 ### 1. **Keep Schemas Updated**
+
 - Update enum lists in `bdd-model-schema.json` when adding new shared types
 - Regenerate schemas if your model structure changes significantly
 
 ### 2. **Use Consistent Naming**
+
 - Follow camelCase for attribute names and variable names
 - Use PascalCase for model names and enum names
 - Stick to kebab-case for tags and identifiers
 
 ### 3. **Validate Before Committing**
+
 - Use the IntelliSense warnings to catch issues early
 - Run your MCP validator as a final check
 - Consider adding schema validation to your CI/CD pipeline
 
 ### 4. **Documentation First**
+
 - Always provide meaningful `summary` fields
 - Use `remarks` for additional context when needed
 - Keep examples up to date in attribute type definitions
@@ -216,16 +234,19 @@ lastReviewed: 2025-06-25  # Date format validation
 ## 🔍 Troubleshooting
 
 ### Schema Not Loading
+
 1. Check file paths in `settings.json` are correct
 2. Ensure YAML extension is installed and enabled
 3. Reload VS Code window after changing settings
 
 ### Auto-Complete Not Working
+
 1. Verify schema is associated with your file pattern
 2. Check for YAML syntax errors that might break parsing
 3. Use `Ctrl+Space` to manually trigger completion
 
 ### Validation Errors
+
 1. Check that all required fields are present
 2. Verify data types match schema expectations
 3. Ensure enum values match exactly (case-sensitive)

@@ -4,9 +4,9 @@ This directory contains JSON Schema definitions for all Modeller YAML file types
 
 ## Schema Files
 
-- **`bdd-model-schema.json`** - BDD models (*.Type.yaml, *.Behaviour.yaml)
-- **`enum-schema.json`** - Enum definitions (Shared/Enums/*.yaml)  
-- **`attribute-types-schema.json`** - Attribute types (Shared/AttributeTypes/*.yaml)
+- **`bdd-model-schema.json`** - BDD models (\*.Type.yaml, \*.Behaviour.yaml)
+- **`enum-schema.json`** - Enum definitions (Shared/Enums/\*.yaml)  
+- **`attribute-types-schema.json`** - Attribute types (Shared/AttributeTypes/\*.yaml)
 - **`metadata-schema.json`** - Metadata files (_meta.yaml)
 - **`validation-profiles-schema.json`** - Validation profiles
 

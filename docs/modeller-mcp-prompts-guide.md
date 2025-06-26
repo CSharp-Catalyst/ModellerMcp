@@ -7,6 +7,7 @@ This document describes the available prompts and tools in the Modeller MCP (Mod
 The Modeller MCP server provides intelligent tools for domain model development, validation, and code generation:
 
 ### Current Capabilities (Available Now)
+
 1. **Model Analysis & Validation** - Deep analysis of domain models and structure
 2. **Domain Review** - Comprehensive review of model consistency and best practices  
 3. **Template Creation** - Generate templates for new models following conventions
@@ -14,11 +15,12 @@ The Modeller MCP server provides intelligent tools for domain model development,
 5. **Migration Guidance** - Generate migration strategies between model versions
 
 ### Upcoming Capabilities (LLM-Driven Code Generation)
-6. **VSA Code Generation** - Generate complete Vertical Slice Architecture projects
-7. **Intelligent Code Modification** - Update existing code while preserving customizations
-8. **Context-Aware Development** - AI-powered code suggestions based on domain models
-9. **Multi-Stage Generation** - Analysis → Design → Implementation pipeline
-10. **Continuous Learning** - System improves based on developer feedback
+
+1. **VSA Code Generation** - Generate complete Vertical Slice Architecture projects
+2. **Intelligent Code Modification** - Update existing code while preserving customizations
+3. **Context-Aware Development** - AI-powered code suggestions based on domain models
+4. **Multi-Stage Generation** - Analysis → Design → Implementation pipeline
+5. **Continuous Learning** - System improves based on developer feedback
 
 ## Available Prompts
 
@@ -27,11 +29,13 @@ The Modeller MCP server provides intelligent tools for domain model development,
 **Purpose**: Analyze a specific Modeller model definition for potential issues and best practices.
 
 **Parameters**:
+
 - `modelPath` (required): Path to the model file to analyze
 - `analysisType` (optional): Type of analysis - 'structure', 'validation', 'best-practices', or 'all' (default: 'all')
 
 **Example Usage**:
-```
+
+``` yaml
 @Modeller analyze_model
 - modelPath: "c:/path/to/models/JJs/PotentialSales/Prospect.Type.yaml"
 - analysisType: "best-practices"
@@ -44,11 +48,13 @@ The Modeller MCP server provides intelligent tools for domain model development,
 **Purpose**: Review all models within a specific domain for consistency and compliance.
 
 **Parameters**:
+
 - `domainPath` (required): Path to the domain folder (e.g., models/ProjectName/Organisation)
 - `includeShared` (optional): Whether to include shared attribute types and enums (default: true)
 
 **Example Usage**:
-```
+
+``` yaml
 @Modeller review_domain
 - domainPath: "c:/path/to/models/JJs/PotentialSales"
 - includeShared: true
@@ -61,12 +67,14 @@ The Modeller MCP server provides intelligent tools for domain model development,
 **Purpose**: Generate a template for a new Modeller model based on requirements.
 
 **Parameters**:
+
 - `modelType` (required): Type of model - 'Type', 'Behaviour', 'AttributeType', or 'Enum'
 - `domain` (required): Domain/area this model belongs to
 - `description` (optional): Brief description of what this model represents
 
 **Example Usage**:
-```
+
+``` yaml
 @Modeller create_model_template
 - modelType: "Type"
 - domain: "PotentialSales"
@@ -80,11 +88,13 @@ The Modeller MCP server provides intelligent tools for domain model development,
 **Purpose**: Validate the folder structure and naming conventions for a Modeller project.
 
 **Parameters**:
+
 - `projectPath` (required): Path to the project root directory
 - `strictMode` (optional): Whether to apply strict validation rules (default: false)
 
 **Example Usage**:
-```
+
+``` yaml
 @Modeller validate_structure
 - projectPath: "c:/path/to/ModellerProject"
 - strictMode: true
@@ -97,12 +107,14 @@ The Modeller MCP server provides intelligent tools for domain model development,
 **Purpose**: Generate guidance for migrating models between versions or updating structure.
 
 **Parameters**:
+
 - `fromVersion` (required): Current version or structure to migrate from
 - `toVersion` (required): Target version or structure to migrate to
 - `modelPath` (optional): Specific model or domain path to focus on
 
 **Example Usage**:
-```
+
+``` yaml
 @Modeller migration_guide
 - fromVersion: "v1.0"
 - toVersion: "v2.0"
@@ -118,13 +130,15 @@ The Modeller MCP server provides intelligent tools for domain model development,
 **Purpose**: Generate a complete Vertical Slice Architecture Web API project from domain models.
 
 **Parameters**:
+
 - `domainPath` (required): Path to domain models directory
 - `projectName` (required): Project name (e.g., 'Company.Domain')
 - `outputPath` (optional): Output directory (default: '../src')
 - `llmProvider` (optional): LLM provider to use (openai, anthropic, local)
 
 **Example Usage**:
-```text
+
+``` yaml
 @Modeller generate_vsa_webapi
 - domainPath: "models/JJs/PotentialSales"
 - projectName: "JJs.PotentialSales"
@@ -133,6 +147,7 @@ The Modeller MCP server provides intelligent tools for domain model development,
 ```
 
 **What it does**: Generates a complete .NET 9 project with VSA architecture, including:
+
 - Entity classes with EF Core configuration
 - Service implementations with business logic
 - Minimal API endpoints
@@ -144,13 +159,15 @@ The Modeller MCP server provides intelligent tools for domain model development,
 **Purpose**: Intelligently modify existing code based on model changes while preserving customizations.
 
 **Parameters**:
+
 - `modelPath` (required): Path to updated model file
 - `codePath` (required): Path to existing feature code
 - `changeDescription` (required): Description of changes needed
 - `llmProvider` (optional): LLM provider to use
 
 **Example Usage**:
-```text
+
+``` yaml
 @Modeller modify_feature_code
 - modelPath: "models/JJs/PotentialSales/Prospect.Type.yaml"
 - codePath: "src/JJs.Api/Features/Prospects"
@@ -159,6 +176,7 @@ The Modeller MCP server provides intelligent tools for domain model development,
 ```
 
 **What it does**: Analyzes existing code and model changes, then generates intelligent modifications that:
+
 - Preserve custom developer code and comments
 - Maintain established patterns and conventions
 - Add new functionality without breaking existing features
@@ -169,12 +187,14 @@ The Modeller MCP server provides intelligent tools for domain model development,
 **Purpose**: Comprehensively update an entire project based on domain model changes.
 
 **Parameters**:
+
 - `domainPath` (required): Path to domain models
 - `projectPath` (required): Path to existing project
 - `llmProvider` (optional): LLM provider to use
 
 **Example Usage**:
-```text
+
+``` yaml
 @Modeller update_project_from_domain
 - domainPath: "models/JJs/PotentialSales"
 - projectPath: "src/JJs.Api"
@@ -182,6 +202,7 @@ The Modeller MCP server provides intelligent tools for domain model development,
 ```
 
 **What it does**: Performs comprehensive project updates including:
+
 - Detection of all model changes
 - Impact analysis across the codebase
 - Coordinated updates to related features
@@ -204,7 +225,7 @@ The Modeller MCP server provides intelligent tools for domain model development,
 
 ### Sample Conversation Flow
 
-```
+``` yaml
 # Step 1: Discover models
 @Modeller DiscoverModels solutionPath="C:/path/to/your/project"
 
@@ -222,7 +243,7 @@ The Modeller MCP server provides intelligent tools for domain model development,
 
 Your `.vscode/mcp.json` should include all available prompts in the `inputs` section:
 
-```json
+``` json
 {
   "inputs": [
     {"type": "promptString", "id": "discover_models", "description": "Discover the models within the solution"},
@@ -258,6 +279,7 @@ Your `.vscode/mcp.json` should include all available prompts in the `inputs` sec
 ## Integration with Other Tools
 
 The Modeller MCP server works seamlessly with:
+
 - VS Code GitHub Copilot (primary integration)
 - Claude Desktop
 - Continue extension
@@ -266,6 +288,7 @@ The Modeller MCP server works seamlessly with:
 ## Troubleshooting
 
 If prompts aren't working:
+
 1. Verify the MCP server is running (`dotnet run --project path/to/Modeller.McpServer.csproj`)
 2. Check the `mcp.json` configuration
 3. Ensure GitHub Copilot has access to the MCP server
@@ -274,6 +297,7 @@ If prompts aren't working:
 ## Future Enhancements
 
 Potential future prompt additions:
+
 - **Performance Analysis**: Analyze model performance implications
 - **Documentation Generation**: Generate comprehensive model documentation
 - **Test Generation**: Create test scenarios for model validation
