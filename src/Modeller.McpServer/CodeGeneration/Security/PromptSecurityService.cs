@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 
 namespace Modeller.McpServer.CodeGeneration.Security;

@@ -1,4 +1,4 @@
-﻿namespace Modeller.McpServer.McpValidatorServer.Models;
+﻿namespace Modeller.Mcp.Shared.Models;
 
 public enum ValidationSeverity
 {

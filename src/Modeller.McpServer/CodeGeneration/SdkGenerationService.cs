@@ -1,7 +1,6 @@
+using Modeller.Mcp.Shared.Services;
 using Modeller.McpServer.CodeGeneration.Prompts;
 using Modeller.McpServer.CodeGeneration.Security;
-using Modeller.McpServer.McpValidatorServer.Services;
-using Microsoft.Extensions.Logging;
 
 namespace Modeller.McpServer.CodeGeneration;
 

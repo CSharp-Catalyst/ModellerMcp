@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+
 using Modeller.McpServer.CodeGeneration.Prompts;
 using Modeller.McpServer.CodeGeneration.Security;
 

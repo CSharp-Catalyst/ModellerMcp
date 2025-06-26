@@ -1,5 +1,5 @@
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+
 using System.Text.Json;
 
 namespace Modeller.McpServer.CodeGeneration.Security;

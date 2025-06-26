@@ -1,4 +1,4 @@
-using Modeller.McpServer.McpValidatorServer.Models;
+using Modeller.Mcp.Shared.Models;
 
 using System.Text.RegularExpressions;
 
@@ -119,15 +119,19 @@ public class ModelStructureValidator
                 ValidationSeverity.Warning));
         }
 
-        // Check if file is in Enums directory (should not have .Type/.Behaviour suffix)
+        // Check if file is in shared directories (should not have .Type/.Behaviour suffix)
         var fileDirectory = Path.GetDirectoryName(file);
         var dirName = Path.GetFileName(fileDirectory);
+        var parentDir = Path.GetFileName(Path.GetDirectoryName(fileDirectory));
         
-        // Check if this is an Enums directory (direct or under Shared)
+        // Check if this is a shared component directory (Enums or AttributeTypes, direct or under Shared)
         var isEnums = dirName?.Equals("Enums", StringComparison.OrdinalIgnoreCase) == true;
+        var isAttributeTypes = dirName?.Equals("AttributeTypes", StringComparison.OrdinalIgnoreCase) == true;
+        var isUnderShared = parentDir?.Equals("Shared", StringComparison.OrdinalIgnoreCase) == true;
+        var isSharedComponent = isEnums || isAttributeTypes || (isUnderShared && (isEnums || isAttributeTypes));
         
-        // Check for recommended suffixes (but skip for enum files)
-        if (!isEnums && fileName != null &&
+        // Check for recommended suffixes (but skip for shared component files)
+        if (!isSharedComponent && fileName != null &&
             !fileName.EndsWith(".Type") && !fileName.EndsWith(".Behaviour") &&
             !fileName.EndsWith(".Behavior") && !fileName.Contains("_meta"))
         {
@@ -171,16 +175,7 @@ public class ModelStructureValidator
                         $"File name '{fileName}' should be in PascalCase",
                         ValidationSeverity.Warning));
                 }
-                if (isAttributeTypes || isSharedAttributeTypes)
-                {
-                    // Warn if file name does not contain 'Type' (optional, for clarity)
-                    if (!fileName.Contains("Type"))
-                    {
-                        _results.Add(new ValidationResult(file,
-                            $"AttributeTypes file '{fileName}' should include 'Type' in the name for clarity.",
-                            ValidationSeverity.Info));
-                    }
-                }
+                // No additional naming requirements for AttributeTypes files - they are correctly named as-is
                 if (isEnums || isSharedEnums)
                 {
                     // Warn if file name contains .Type or .Behaviour (should just be the enum name)

@@ -1,9 +1,0 @@
-enum: ActivityMethod
-summary: The method of activity in a potential sale
-items:
-  - name: InPerson
-    display: In Person
-    value: 1
-  - name: PhoneCall
-    display: Phone Call
-    value: 2

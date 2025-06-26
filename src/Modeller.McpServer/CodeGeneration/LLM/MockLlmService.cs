@@ -1,6 +1,4 @@
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
-using Modeller.McpServer.CodeGeneration.Security;
 
 namespace Modeller.McpServer.CodeGeneration.LLM;
 

@@ -1,4 +1,4 @@
-namespace Modeller.McpServer.McpValidatorServer.Services;
+namespace Modeller.Mcp.Shared.Services;
 
 public class ModelDiscoveryResult
 {

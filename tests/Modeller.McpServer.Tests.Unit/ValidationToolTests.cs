@@ -1,4 +1,6 @@
-﻿using Modeller.McpServer.McpValidatorServer;
+﻿using Modeller.Mcp.Shared;
+using Modeller.Mcp.Shared.Services;
+using Modeller.McpServer.McpValidatorServer;
 using Modeller.McpServer.McpValidatorServer.Services;
 
 namespace Modeller.McpServer.Tests.Unit;

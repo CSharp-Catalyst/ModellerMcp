@@ -1,42 +1,13 @@
-﻿🔍 **Model Discovery Results for:** ModellerMcp
+﻿🔍 No Modeller model definitions found in: {SolutionDirectory}
 
-**Total Files Found:** 17
+**Searched for:**
+• /models/ directory
+• /Models/ directory
+• /Definitions/ directory
+• /src/Models/ directory
+• *.yaml and *.yml files throughout the solution
 
-📁 **Structured Model Directories:**
-
-🏗️ **models**
-   📍 {SolutionDirectory}models
-
-   📦 **PotentialSales**
-      📍 {SolutionDirectory}models\JJs\PotentialSales
-      ✅ Has metadata (_meta.yaml)
-      ✅ Has type definition
-      ✅ Has behaviour definition
-      🎯 Activity.Behaviour.yaml (BddModel)
-      🎯 Activity.Type.yaml (BddModel)
-      🎯 IdentifiedCompetitor.Type.yaml (BddModel)
-      🎯 IdentifiedCompetitorWasteProduct.Type.yaml (BddModel)
-      🎯 Prospect.Behaviour.yaml (BddModel)
-      🎯 Prospect.Type.yaml (BddModel)
-      🎯 ProspectType.Type.yaml (BddModel)
-      🎯 ProspectWasteProduct.Type.yaml (BddModel)
-      🎯 Source.Type.yaml (BddModel)
-      🎯 WasteProduct.Type.yaml (BddModel)
-      📝 _meta.yaml (Metadata)
-
-   📦 **AttributeTypes**
-      📍 {SolutionDirectory}models\JJs\Shared\AttributeTypes
-      🔤 CommonAttributes.yaml (AttributeTypes)
-
-   📦 **Enums**
-      📍 {SolutionDirectory}models\JJs\Shared\Enums
-      📋 ActivityMethod.yaml (Enum)
-      📋 ActivityType.yaml (Enum)
-      📋 CustomerStatus.yaml (Enum)
-      📋 Interest.yaml (Enum)
-      📋 ProspectStatus.yaml (Enum)
-
-💡 **Next Steps:**
-• Use `ValidateModel` to check your model definitions
-• Use `ValidateStructure` to verify folder organization
-• Use `ValidateDomain` to check specific bounded contexts
+**To get started:**
+1. Create a /models/ directory in your solution root
+2. Follow the recommended folder structure from the BDD documentation
+3. Use the validation tools to ensure your models are correct

@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using Modeller.McpServer.CodeGeneration.LLM;
 
 namespace Modeller.McpServer.CodeGeneration.Security;
@@ -48,9 +47,9 @@ public class SecureLlmService(
             var contextValidation = await ValidateSecurityContextAsync(request.SecurityContext, cancellationToken);
             if (!contextValidation.IsValid)
             {
-                return await CreateFailureResponseAsync(request, operationId, 
-                    $"Security context validation failed: {string.Join(", ", contextValidation.Issues)}", 
-                    startTime, cancellationToken);
+                return await CreateFailureResponseAsync(request, operationId,
+                    $"Security context validation failed: {string.Join(", ", contextValidation.Issues)}",
+                    startTime);
             }
 
             // Phase 2: Prompt Security Validation & Sanitization
@@ -79,8 +78,8 @@ public class SecureLlmService(
                     request.SecurityContext.UserId, injectionRisk.Level, string.Join(", ", injectionRisk.RiskFactors));
 
                 return await CreateFailureResponseAsync(request, operationId,
-                    $"Prompt rejected due to security risk: {injectionRisk.Level}", 
-                    startTime, cancellationToken);
+                    $"Prompt rejected due to security risk: {injectionRisk.Level}",
+                    startTime);
             }
 
             // Phase 3: Secure Prompt Building
@@ -119,16 +118,14 @@ public class SecureLlmService(
 
             if (!llmResponse.IsSuccess)
             {
-                return await CreateFailureResponseAsync(request, operationId,
-                    $"LLM generation failed: {llmResponse.ErrorMessage}", 
-                    startTime, cancellationToken);
+                return await CreateFailureResponseAsync(request, operationId, $"LLM generation failed: {llmResponse.ErrorMessage}", startTime);
             }
 
             // Phase 5: Post-Generation Security Validation
             var postValidation = await ValidateGeneratedContentAsync(llmResponse.Content, request.SecurityContext, cancellationToken);
 
             // Phase 6: Create Immutable Response Snapshot
-            var responseSnapshot = await CreateResponseSnapshotAsync(llmResponse, securePrompt, postValidation, cancellationToken);
+            var responseSnapshot = await CreateResponseSnapshotAsync(llmResponse, securePrompt, postValidation);
 
             // Phase 7: Audit Logging
             var llmAuditEntry = new LlmAuditEntry
@@ -180,12 +177,11 @@ public class SecureLlmService(
             logger.LogError(ex, "Secure LLM generation {OperationId} failed for user {UserId}", 
                 operationId, request.SecurityContext.UserId);
 
-            return await CreateFailureResponseAsync(request, operationId, 
-                $"Internal error: {ex.Message}", startTime, cancellationToken);
+            return await CreateFailureResponseAsync(request, operationId, $"Internal error: {ex.Message}", startTime);
         }
     }
 
-    public async Task<SecurityValidationResult> ValidateSecurityContextAsync(SecurityContext context, CancellationToken cancellationToken = default)
+    public Task<SecurityValidationResult> ValidateSecurityContextAsync(SecurityContext context, CancellationToken cancellationToken = default)
     {
         var issues = new List<string>();
 
@@ -209,15 +205,15 @@ public class SecureLlmService(
         // - User permission checks
         // - Session validation
 
-        return new SecurityValidationResult
+        return Task.FromResult(new SecurityValidationResult
         {
             IsValid = issues.Count == 0,
             Issues = issues,
             ValidatedAt = DateTime.UtcNow
-        };
+        });
     }
 
-    public async Task<PostGenerationValidationResult> ValidateGeneratedContentAsync(string content, SecurityContext context, CancellationToken cancellationToken = default)
+    public Task<PostGenerationValidationResult> ValidateGeneratedContentAsync(string content, SecurityContext context, CancellationToken cancellationToken = default)
     {
         var issues = new List<string>();
         var warnings = new List<string>();
@@ -257,7 +253,7 @@ public class SecureLlmService(
                 issues.Add("Generated content is empty or whitespace only");
             }
 
-            return new PostGenerationValidationResult
+            return Task.FromResult(new PostGenerationValidationResult
             {
                 IsValid = issues.Count == 0,
                 Issues = issues,
@@ -265,13 +261,13 @@ public class SecureLlmService(
                 ContentLength = content.Length,
                 ValidatedAt = DateTime.UtcNow,
                 SecurityLevel = context.RequiredSecurityLevel
-            };
+            });
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Post-generation validation failed for user {UserId}", context.UserId);
-            
-            return new PostGenerationValidationResult
+
+            return Task.FromResult(new PostGenerationValidationResult
             {
                 IsValid = false,
                 Issues = new List<string> { $"Validation error: {ex.Message}" },
@@ -279,11 +275,11 @@ public class SecureLlmService(
                 ContentLength = content?.Length ?? 0,
                 ValidatedAt = DateTime.UtcNow,
                 SecurityLevel = context.RequiredSecurityLevel
-            };
+            });
         }
     }
 
-    private async Task<SecureLlmResponse> CreateFailureResponseAsync(SecureLlmRequest request, Guid operationId, string errorMessage, DateTime startTime, CancellationToken cancellationToken)
+    private async Task<SecureLlmResponse> CreateFailureResponseAsync(SecureLlmRequest request, Guid operationId, string errorMessage, DateTime startTime)
     {
         // Log the failure for audit purposes
         var failureAuditEntry = new LlmAuditEntry
@@ -361,13 +357,13 @@ public class SecureLlmService(
         };
     }
 
-    private async Task<ResponseSnapshot> CreateResponseSnapshotAsync(LlmResponse response, SecurePrompt prompt, PostGenerationValidationResult validation, CancellationToken cancellationToken)
+    private Task<ResponseSnapshot> CreateResponseSnapshotAsync(LlmResponse response, SecurePrompt prompt, PostGenerationValidationResult validation)
     {
         using var sha256 = System.Security.Cryptography.SHA256.Create();
         var contentHash = Convert.ToHexString(sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(response.Content)));
         var promptHash = Convert.ToHexString(sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(prompt.Content)));
 
-        return new ResponseSnapshot
+        return Task.FromResult(new ResponseSnapshot
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
@@ -379,7 +375,7 @@ public class SecureLlmService(
             ValidationPassed = validation.IsValid,
             SecurityLevel = prompt.Context?.SecurityLevel ?? SecurityLevel.Standard,
             IsImmutable = true
-        };
+        });
     }
 
     private bool ShouldRejectPrompt(InjectionRiskAssessment risk, SecurityLevel securityLevel)

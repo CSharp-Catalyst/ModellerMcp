@@ -20,4 +20,8 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Modeller.Mcp.Shared\Modeller.Mcp.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
-﻿using Modeller.McpServer.McpValidatorServer.Models;
+﻿using Modeller.Mcp.Shared;
+using Modeller.Mcp.Shared.Models;
 using Modeller.McpServer.McpValidatorServer.Services;
 
 using System.Text.RegularExpressions;
@@ -195,7 +196,7 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator) : I
             }
 
             // Validate attribute usages
-            ValidateAttributeUsages(filePath, model.AttributeUsages, results);
+            ValidateAttributeUsages(filePath, model.Model, model.AttributeUsages, results);
 
             // Validate behaviours
             ValidateBehaviours(filePath, model.Behaviours, results);
@@ -336,24 +337,35 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator) : I
         }
     }
 
-    private void ValidateAttributeUsages(string filePath, List<AttributeUsage> attributeUsages, List<ValidationResult> results)
+    private void ValidateAttributeUsages(string filePath, string modelName, List<AttributeUsage> attributeUsages, List<ValidationResult> results)
     {
         foreach (var usage in attributeUsages)
         {
+            // Create identifier for clearer error messages
+            var attributeIdentifier = !string.IsNullOrWhiteSpace(usage.Name) ? $"'{usage.Name}'" : 
+                                     !string.IsNullOrWhiteSpace(usage.Type) ? $"(type: {usage.Type})" : 
+                                     "(unnamed attribute)";
+
             if (string.IsNullOrWhiteSpace(usage.Type))
-                results.Add(new ValidationResult(filePath, "Attribute usage type is required", ValidationSeverity.Error));
+                results.Add(new ValidationResult(filePath, $"Model '{modelName}': Attribute usage {attributeIdentifier} type is required", ValidationSeverity.Error));
+
+            if (string.IsNullOrWhiteSpace(usage.Name))
+                results.Add(new ValidationResult(filePath, $"Model '{modelName}': Attribute usage {attributeIdentifier} name is required", ValidationSeverity.Error));
+
+            if (string.IsNullOrWhiteSpace(usage.Summary))
+                results.Add(new ValidationResult(filePath, $"Model '{modelName}': Attribute usage {attributeIdentifier} summary is required", ValidationSeverity.Error));
 
             // Validate that the attribute type exists in shared attribute types
             if (!string.IsNullOrWhiteSpace(usage.Type) && _sharedAttributeTypes != null && !_sharedAttributeTypes.ContainsKey(usage.Type))
             {
-                results.Add(new ValidationResult(filePath, $"Attribute usage type '{usage.Type}' is not defined in shared attribute types", ValidationSeverity.Error));
+                results.Add(new ValidationResult(filePath, $"Model '{modelName}': Attribute usage type '{usage.Type}' is not defined in shared attribute types", ValidationSeverity.Error));
             }
 
             // Validate camelCase naming for attribute names
             if (!string.IsNullOrWhiteSpace(usage.Name) && !IsCamelCase(usage.Name))
             {
                 results.Add(new ValidationResult(filePath,
-                    $"Attribute name '{usage.Name}' should be camelCase",
+                    $"Model '{modelName}': Attribute name '{usage.Name}' should be camelCase",
                     ValidationSeverity.Warning));
             }
 
@@ -361,7 +373,7 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator) : I
             if (usage.Unique && !usage.Required)
             {
                 results.Add(new ValidationResult(filePath,
-                    $"Attribute usage '{usage.Name ?? usage.Type}' is marked as unique but not required. Consider if this is intentional.",
+                    $"Model '{modelName}': Attribute usage '{usage.Name ?? usage.Type}' is marked as unique but not required. Consider if this is intentional.",
                     ValidationSeverity.Info));
             }
         }
@@ -548,16 +560,4 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator) : I
         
         return string.Empty;
     }
-}
-
-public enum ModelFileType
-{
-    Unknown,
-    BddModel,
-    AttributeTypes,
-    Enum,
-    ValidationProfiles,
-    Metadata,
-    CopilotInstructions,
-    UserDocumentation
 }

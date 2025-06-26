@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -66,7 +65,7 @@ public class SecurePromptBuilder : ISecurePromptBuilder
         try
         {
             // 1. Validate the request
-            await ValidatePromptRequestAsync(request, cancellationToken);
+            await ValidatePromptRequestAsync(request);
 
             // 2. Create secure context
             var secureContext = CreateSecureContext(request.SecurityLevel, request.UserId, request.SessionId);
@@ -95,7 +94,7 @@ public class SecurePromptBuilder : ISecurePromptBuilder
 
             // 4. Build the secure prompt using templates
             var promptTemplate = GetSecureTemplate(request.PromptType);
-            var securePromptContent = await BuildPromptFromTemplateAsync(promptTemplate, sanitizedInputs, secureContext, cancellationToken);
+            var securePromptContent = await BuildPromptFromTemplateAsync(promptTemplate, sanitizedInputs, secureContext);
 
             // 5. Apply final security boundaries
             var finalPrompt = ApplySecurityBoundaries(securePromptContent, secureContext);
@@ -180,12 +179,12 @@ public class SecurePromptBuilder : ISecurePromptBuilder
         if (context.SecurityLevel >= SecurityLevel.Enhanced)
         {
             // Aggressive sanitization for high-security contexts
-            sanitizedContent = await ApplyAggressiveSanitizationAsync(sanitizedContent, context, modifications, cancellationToken);
+            sanitizedContent = await ApplyAggressiveSanitizationAsync(sanitizedContent, context, modifications);
         }
         else
         {
             // Standard sanitization
-            sanitizedContent = await ApplyStandardSanitizationAsync(sanitizedContent, context, modifications, cancellationToken);
+            sanitizedContent = await ApplyStandardSanitizationAsync(sanitizedContent, context, modifications);
         }
 
         // 4. Final risk assessment
@@ -219,7 +218,7 @@ public class SecurePromptBuilder : ISecurePromptBuilder
         };
     }
 
-    private async Task ValidatePromptRequestAsync(PromptBuildRequest request, CancellationToken cancellationToken)
+    private async Task ValidatePromptRequestAsync(PromptBuildRequest request)
     {
         if (string.IsNullOrEmpty(request.UserId))
             throw new ArgumentException("UserId is required for secure prompt building");
@@ -247,7 +246,7 @@ public class SecurePromptBuilder : ISecurePromptBuilder
         }
     }
 
-    private async Task<string> ApplyStandardSanitizationAsync(string content, SanitizationContext context, List<string> modifications, CancellationToken cancellationToken)
+    private Task<string> ApplyStandardSanitizationAsync(string content, SanitizationContext context, List<string> modifications)
     {
         var sanitized = content;
 
@@ -271,12 +270,12 @@ public class SecurePromptBuilder : ISecurePromptBuilder
             modifications.Add($"Truncated to {maxLength} characters");
         }
 
-        return sanitized;
+        return Task.FromResult(sanitized);
     }
 
-    private async Task<string> ApplyAggressiveSanitizationAsync(string content, SanitizationContext context, List<string> modifications, CancellationToken cancellationToken)
+    private async Task<string> ApplyAggressiveSanitizationAsync(string content, SanitizationContext context, List<string> modifications)
     {
-        var sanitized = await ApplyStandardSanitizationAsync(content, context, modifications, cancellationToken);
+        var sanitized = await ApplyStandardSanitizationAsync(content, context, modifications);
 
         // Additional aggressive measures
         foreach (var keyword in DangerousKeywords)
@@ -390,7 +389,7 @@ public class SecurePromptBuilder : ISecurePromptBuilder
         return _secureTemplates.GetValueOrDefault(promptType, _secureTemplates["ModelAnalysis"]);
     }
 
-    private async Task<string> BuildPromptFromTemplateAsync(string template, Dictionary<string, string> inputs, SecurePromptContext context, CancellationToken cancellationToken)
+    private Task<string> BuildPromptFromTemplateAsync(string template, Dictionary<string, string> inputs, SecurePromptContext context)
     {
         var prompt = template;
 
@@ -408,7 +407,7 @@ public class SecurePromptBuilder : ISecurePromptBuilder
         prompt += $"- Max Tokens: {context.MaxTokens}\n";
         prompt += $"- Session: {context.SessionId}\n";
 
-        return prompt;
+        return Task.FromResult(prompt);
     }
 
     private string ApplySecurityBoundaries(string prompt, SecurePromptContext context)

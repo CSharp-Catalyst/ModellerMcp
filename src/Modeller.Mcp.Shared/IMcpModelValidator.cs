@@ -1,6 +1,6 @@
-using Modeller.McpServer.McpValidatorServer.Models;
+using Modeller.Mcp.Shared.Models;
 
-namespace Modeller.McpServer.McpValidatorServer;
+namespace Modeller.Mcp.Shared;
 
 public interface IMcpModelValidator
 {

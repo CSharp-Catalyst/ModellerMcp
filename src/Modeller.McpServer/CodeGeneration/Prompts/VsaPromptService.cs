@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using System.Text;
 
 namespace Modeller.McpServer.CodeGeneration.Prompts;

@@ -1,6 +1,5 @@
-﻿Validation completed with 0 errors, 0 warnings, and 2 info messages.
+﻿Validation completed with 0 errors, 1 warnings, and 0 info messages.
 
-📄 **CommonAttributes.yaml**
-  ℹ️ File name 'CommonAttributes' should end with '.Type' or '.Behaviour' for clarity
-  ℹ️ AttributeTypes file 'CommonAttributes' should include 'Type' in the name for clarity.
+📄 **ModellerMcp**
+  ⚠️ No model directories found
 
