@@ -1,0 +1,33 @@
+model: Order
+summary: Order processing and management operations
+behaviours:
+  - name: createOrder
+    summary: Create a new customer order
+    entities:
+      - Order
+      - Customer
+    preconditions:
+      - Customer exists
+      - order details are valid
+    effects:
+      - new Order is created
+      - orderStatus is set to Pending
+  - name: getOrdersByCustomer
+    summary: Retrieve all orders for a specific customer
+    entities:
+      - Order
+      - Customer
+    preconditions:
+      - Customer.customerId is provided
+    effects:
+      - return list of Customer Orders
+  - name: updateOrderStatus
+    summary: Update the status of an existing order
+    entities:
+      - Order
+    preconditions:
+      - Order exists
+      - new status is valid
+    effects:
+      - Order.orderStatus is updated
+      - status change is logged

@@ -1,8 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Modeller.McpServer.CodeGeneration.Security;
-using Modeller.McpServer.CodeGeneration.Prompts;
+using Modeller.Mcp.Shared.CodeGeneration.Security;
+using Modeller.Mcp.Shared.CodeGeneration.Prompts;
+using Modeller.Mcp.Shared.CodeGeneration.Prompts.VSA;
 
 namespace Modeller.McpServer.Tests.Unit;
 
@@ -70,44 +71,18 @@ public class VsaPromptServiceTests : IDisposable
     {
         // Arrange
         var vsaPromptService = _serviceProvider.GetRequiredService<IVsaPromptService>();
-        
-        var sampleYaml = @"
-name: Prospect
-summary: Represents a potential customer in the sales pipeline
-attributes:
-  name:
-    type: string
-    required: true
-    maxLength: 100
-    summary: The prospect's full name
-  email:
-    type: email
-    required: true
-    summary: Primary email address
-  phone:
-    type: string
-    maxLength: 20
-    summary: Contact phone number
-  status:
-    type: ProspectStatus
-    required: true
-    summary: Current status in the sales pipeline";
 
         // Act
-        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(
-            sampleYaml, 
-            "Prospects", 
-            "JJs.PotentialSales.Sdk");
+        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(@"c:\jjs\set\dev\ModellerMcp\models\Business\CustomerManagement");
 
         // Assert
         Assert.NotNull(prompt);
         Assert.NotEmpty(prompt);
-        Assert.Contains("JJs.PotentialSales.Sdk", prompt);
-        Assert.Contains("Prospects", prompt);
-        Assert.Contains("Prospect", prompt);
-        Assert.Contains("System Context", prompt);
-        Assert.Contains("Generation Request", prompt);
-        Assert.Contains("Domain Model YAML", prompt);
+        Assert.Contains("Business.CustomerManagement.Sdk", prompt);
+        Assert.Contains("Customer", prompt);
+        Assert.Contains("Task Overview", prompt);
+        Assert.Contains("Project Configuration", prompt);
+        Assert.Contains("Domain Model Definitions", prompt);
         Assert.Contains("Vertical Slice Architecture", prompt);
     }
 
@@ -116,107 +91,40 @@ attributes:
     {
         // Arrange
         var vsaPromptService = _serviceProvider.GetRequiredService<IVsaPromptService>();
-        
-        var simpleYaml = @"
-name: TestEntity
-summary: A test entity
-attributes:
-  id:
-    type: integer
-    required: true";
 
         // Act
-        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(
-            simpleYaml, 
-            "TestEntities", 
-            "Test.Sdk");
+        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(@"c:\jjs\set\dev\ModellerMcp\models\Business\CustomerManagement");
 
         // Assert
-        Assert.Contains("# System Context", prompt);
-        Assert.Contains("# Generation Request", prompt);
-        Assert.Contains("**Target Namespace**: Test.Sdk", prompt);
-        Assert.Contains("**Feature Name**: TestEntities", prompt);
-        Assert.Contains("# Domain Model YAML", prompt);
-        Assert.Contains("# Instructions", prompt);
-        Assert.Contains("Generate a complete SDK vertical slice", prompt);
+        Assert.Contains("## Task Overview", prompt);
+        Assert.Contains("## Project Configuration", prompt);
+        Assert.Contains("Business.CustomerManagement.Sdk", prompt);
+        Assert.Contains("CustomerManagement", prompt);
+        Assert.Contains("## Domain Model Definitions", prompt);
+        Assert.Contains("## VSA Template Instructions", prompt);
+        Assert.Contains("feature-based vertical slices", prompt);
     }
 
     [Fact]
-    public async Task GenerateProspectSdkCode_ShouldReturnValidPrompt()
+    public async Task GenerateCustomerSdkCode_ShouldReturnValidPrompt()
     {
         // Arrange
         var vsaPromptService = _serviceProvider.GetRequiredService<IVsaPromptService>();
-        
-        var domainYaml = """
-            model: Prospect
-            summary: A potential sale opportunity
-            attributeUsages:
-              - name: prospectId
-                type: primaryKey
-                required: true
-                summary: The unique identifier for the prospect
-              - name: potentialSaleNumber
-                type: prospectNumber
-                required: true
-                summary: A unique identifier assigned to each potential sale
-              - name: tradingName
-                type: baseString
-                required: true
-                summary: The trading name of the customer
-              - name: prospectStatus
-                type: ProspectStatus
-                required: true
-                summary: The current state of the potential sale
-              - name: interest
-                type: Interest
-                required: true
-                summary: The interest of the customer in the potential sale
-              - name: contactEmail
-                type: emailAddress
-                required: false
-                summary: The email address of the contact person
-            """;
-
-        var behaviourYaml = """
-            model: Prospect
-            behaviours:
-              - name: getProspectByNumber
-                summary: Retrieve a prospect by its unique number
-                entities:
-                  - Prospect
-                preconditions:
-                  - Prospect.potentialSaleNumber is provided
-                effects:
-                  - return Prospect data
-              - name: createProspect
-                summary: Create a new potential sale opportunity
-                entities:
-                  - Prospect
-                preconditions:
-                  - required fields are provided
-                  - potentialSaleNumber is unique
-                effects:
-                  - new Prospect is created
-                  - prospectStatus is set to Open
-            """;
 
         // Act
-        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(
-            $"{domainYaml}\n\n---\n\n{behaviourYaml}",
-            "Prospects",
-            "JJs.PotentialSales.Sdk");
+        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(@"c:\jjs\set\dev\ModellerMcp\models\Business\CustomerManagement");
 
         // Assert
         Assert.NotNull(prompt);
-        Assert.Contains("Prospects", prompt);
+        Assert.Contains("Customer", prompt);
         Assert.Contains("FluentValidation", prompt);
-        Assert.Contains("JJs.PotentialSales.Sdk", prompt);
-        Assert.Contains("prospectId", prompt);
-        Assert.Contains("getProspectByNumber", prompt);
-        Assert.Contains("createProspect", prompt);
+        Assert.Contains("Business.CustomerManagement.Sdk", prompt);
+        Assert.Contains("customerId", prompt);
+        Assert.Contains("getCustomerByNumber", prompt);
+        Assert.Contains("createCustomer", prompt);
         
         // Output the generated prompt for manual review
-        Console.WriteLine("=== GENERATED PROSPECT SDK PROMPT ===");
+        Console.WriteLine("=== GENERATED CUSTOMER SDK PROMPT ===");
         Console.WriteLine(prompt);
         Console.WriteLine("=== END PROMPT ===");
     }

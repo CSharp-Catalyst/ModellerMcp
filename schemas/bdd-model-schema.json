@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://modeller.jjs.com/schemas/bdd-model-schema.json",
+  "$id": "https://modeller-mcp.example.com/schemas/bdd-model-schema.json",
   "title": "BDD Model Schema",
   "description": "Schema for .Type.yaml and .Behaviour.yaml model files",
   "type": "object",
@@ -39,9 +39,9 @@
             "description": "The attribute type from shared definitions",
             "enum": [
               "baseString", "shortString", "mediumString", "longString", "veryLongString",
-              "addressString", "prospectNumber", "customerNumber", "siteNumber", 
+              "addressString", "customerNumber", "orderNumber", "siteNumber", 
               "isActive", "primaryKey", "dateField", "emailAddress", "phoneNumber", "boolean",
-              "ActivityType", "ActivityMethod", "CustomerStatus", "ProspectStatus", "Interest"
+              "ActivityType", "ActivityMethod", "CustomerStatus", "OrderStatus", "Interest"
             ]
           },
           "required": {

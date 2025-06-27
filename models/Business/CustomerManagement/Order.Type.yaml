@@ -1,0 +1,31 @@
+model: Order
+summary: A customer order for products or services
+attributeUsages:
+  - name: orderId
+    type: primaryKey
+    required: true
+    summary: The unique identifier for the order
+  - name: orderNumber
+    type: baseString
+    required: true
+    summary: A unique business identifier assigned to each order
+  - name: customerId
+    type: primaryKey
+    required: true
+    summary: Reference to the customer who placed the order
+  - name: orderDate
+    type: dateField
+    required: true
+    summary: The date when the order was placed
+  - name: orderTotal
+    type: baseString
+    required: true
+    summary: The total monetary value of the order
+  - name: orderStatus
+    type: baseString
+    required: true
+    summary: The current status of the order (e.g., Pending, Processing, Shipped, Delivered)
+  - name: notes
+    type: longString
+    required: false
+    summary: Additional notes or special instructions for the order

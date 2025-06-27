@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Modeller.McpServer.CodeGeneration.Security;
-using Modeller.McpServer.CodeGeneration.LLM;
+using Modeller.Mcp.Shared.CodeGeneration.Security;
+using Modeller.Mcp.Shared.CodeGeneration.LLM;
 
 namespace Modeller.McpServer.Tests.Unit;
 

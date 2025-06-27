@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 
 using Modeller.Mcp.Shared;
+using Modeller.Mcp.Shared.CodeGeneration;
 using Modeller.Mcp.Shared.Services;
-using Modeller.McpServer.CodeGeneration;
-using Modeller.McpServer.CodeGeneration.Security;
+using Modeller.Mcp.Shared.CodeGeneration.Security;
 using Modeller.McpServer.McpValidatorServer;
 using Modeller.McpServer.McpValidatorServer.Services;
 

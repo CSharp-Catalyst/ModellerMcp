@@ -8,7 +8,7 @@
 4. [AI-Powered Development Workflow](#ai-powered-development-workflow)
 5. [Model Definition Best Practices](#model-definition-best-practices)
 6. [Validation and Quality Assurance](#validation-and-quality-assurance)
-7. [Code Generation (Upcoming)](#3-code-generation-coming-q3-2025)
+7. [Code Generation (Available)](#3-code-generation-available)
 8. [Common Patterns and Examples](#common-patterns-and-examples)
 9. [Troubleshooting](#troubleshooting)
 10. [Advanced Scenarios](#advanced-scenarios)
@@ -48,7 +48,7 @@ The Modeller framework embraces AI-powered development through:
 
 ### Required Tools
 
-- **.NET 9.0 SDK** or later
+- **.NET SDK** (latest stable LTS version) or later
 - **Visual Studio Code** (recommended) or Visual Studio
 - **YAML extension** for your IDE
 - **Git** for version control
@@ -506,7 +506,7 @@ The AI will provide insights on:
 - Best practice recommendations
 - Potential performance considerations
 
-#### 3. Code Generation (Coming Q3 2025)
+#### 3. Code Generation (Available)
 
 Transform validated models into production-ready code:
 
@@ -519,7 +519,7 @@ Transform validated models into production-ready code:
 
 Generated output includes:
 
-- Complete .NET 9 Web API with Vertical Slice Architecture
+- Complete .NET Web API with Vertical Slice Architecture
 - Entity classes with EF Core configuration
 - Service implementations with business logic
 - Minimal API endpoints with proper routing

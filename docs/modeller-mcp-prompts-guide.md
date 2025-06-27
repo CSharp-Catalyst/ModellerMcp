@@ -37,7 +37,7 @@ The Modeller MCP server provides intelligent tools for domain model development,
 
 ``` yaml
 @Modeller analyze_model
-- modelPath: "c:/path/to/models/JJs/PotentialSales/Prospect.Type.yaml"
+- modelPath: "c:/path/to/models/Business/CustomerManagement/Customer.Type.yaml"
 - analysisType: "best-practices"
 ```
 
@@ -56,7 +56,7 @@ The Modeller MCP server provides intelligent tools for domain model development,
 
 ``` yaml
 @Modeller review_domain
-- domainPath: "c:/path/to/models/JJs/PotentialSales"
+- domainPath: "c:/path/to/models/Business/CustomerManagement"
 - includeShared: true
 ```
 
@@ -77,7 +77,7 @@ The Modeller MCP server provides intelligent tools for domain model development,
 ``` yaml
 @Modeller create_model_template
 - modelType: "Type"
-- domain: "PotentialSales"
+- domain: "CustomerManagement"
 - description: "A customer inquiry about waste collection services"
 ```
 
@@ -118,12 +118,12 @@ The Modeller MCP server provides intelligent tools for domain model development,
 @Modeller migration_guide
 - fromVersion: "v1.0"
 - toVersion: "v2.0"
-- modelPath: "models/JJs/PotentialSales"
+- modelPath: "models/Business/CustomerManagement"
 ```
 
 **What it does**: Generates a prompt for creating step-by-step migration instructions, including breaking changes, new features, and recommended approaches.
 
-## Upcoming Code Generation Tools (Q3 2025)
+## Upcoming Code Generation Tools
 
 ### 6. Generate VSA Web API Project (`generate_vsa_webapi`)
 
@@ -140,13 +140,13 @@ The Modeller MCP server provides intelligent tools for domain model development,
 
 ``` yaml
 @Modeller generate_vsa_webapi
-- domainPath: "models/JJs/PotentialSales"
-- projectName: "JJs.PotentialSales"
+- domainPath: "models/Business/CustomerManagement"
+- projectName: "Business.CustomerManagement"
 - outputPath: "./src"
 - llmProvider: "openai"
 ```
 
-**What it does**: Generates a complete .NET 9 project with VSA architecture, including:
+**What it does**: Generates a complete .NET project with VSA architecture, including:
 
 - Entity classes with EF Core configuration
 - Service implementations with business logic
@@ -169,8 +169,8 @@ The Modeller MCP server provides intelligent tools for domain model development,
 
 ``` yaml
 @Modeller modify_feature_code
-- modelPath: "models/JJs/PotentialSales/Prospect.Type.yaml"
-- codePath: "src/JJs.Api/Features/Prospects"
+- modelPath: "models/Business/CustomerManagement/Customer.Type.yaml"
+- codePath: "src/Business.Api/Features/Customers"
 - changeDescription: "Added priority field and validation rules"
 - llmProvider: "openai"
 ```

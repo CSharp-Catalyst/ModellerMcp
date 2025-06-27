@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://modeller.jjs.com/schemas/validation-profiles-schema.json",
+  "$id": "https://modeller-mcp.example.com/schemas/validation-profiles-schema.json",
   "title": "Validation Profiles Schema",
   "description": "Schema for validation profile definition files",
   "type": "array",

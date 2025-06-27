@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://modeller.jjs.com/schemas/attribute-types-schema.json",
+  "$id": "https://modeller-mcp.example.com/schemas/attribute-types-schema.json",
   "title": "Attribute Types Schema",
   "description": "Schema for attribute type definition files in Shared/AttributeTypes/",
   "type": "object",

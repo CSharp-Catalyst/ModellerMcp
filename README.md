@@ -9,7 +9,7 @@ AI-Powered Domain Modeling with LLM-Driven Code Generation
 Modeller MCP is an advanced domain modeling and code generation platform
 that combines Behaviour-Driven Development (BDD) principles with Large Language
 Model (LLM) intelligence. Transform your domain models into production-ready
-.NET 9 applications using Vertical Slice Architecture (VSA) patterns.
+modern .NET applications using Vertical Slice Architecture (VSA) patterns.
 
 ### Key Capabilities
 
@@ -48,7 +48,7 @@ rollback capabilities
 ### Advanced Features (Ready for Integration)
 
 - ✅ **Intelligent Code Generation**: Transform models into production-ready
-  .NET 9 code
+  .NET code
 - ✅ **Security Context Validation**: Multi-level security validation and
   sanitization
 - ✅ **Prompt Injection Prevention**: Advanced protection against malicious
@@ -65,7 +65,7 @@ rollback capabilities
 
 ### Prerequisites
 
-- .NET 9.0 SDK or later
+- .NET SDK (latest stable LTS version) or later
 - Visual Studio Code (recommended)
 - YAML extension for VS Code
 - Git for version control
@@ -93,7 +93,7 @@ dotnet run --project src/Modeller.McpServer
 dotnet run --project src/Modeller.McpServer -- DiscoverModels --solutionPath "."
 
 # Validate a specific domain
-dotnet run --project src/Modeller.McpServer -- ValidateDomain --domainPath "models/JJs/PotentialSales"
+dotnet run --project src/Modeller.McpServer -- ValidateDomain --domainPath "models/Business/CustomerManagement"
 
 # Validate project structure
 dotnet run --project src/Modeller.McpServer -- ValidateStructure --modelsPath "models"
@@ -104,8 +104,8 @@ dotnet run --project src/Modeller.McpServer -- ValidateStructure --modelsPath "m
 Use with VS Code and GitHub Copilot:
 
 ```text
-@Modeller analyze_model --modelPath "models/JJs/PotentialSales/Prospect.Type.yaml"
-@Modeller review_domain --domainPath "models/JJs/PotentialSales"
+@Modeller analyze_model --modelPath "models/Business/CustomerManagement/Customer.Type.yaml"
+@Modeller review_domain --domainPath "models/Business/CustomerManagement"
 @Modeller create_template --modelType "Type" --domain "Sales"
 ```
 
@@ -113,10 +113,10 @@ Use with VS Code and GitHub Copilot:
 
 ```bash
 # Generate complete VSA project from domain models
-modeller generate --project WebAPI --output ./src --models ./models/JJs
+modeller generate --project WebAPI --output ./src --models ./models/Business
 
 # Update existing code based on model changes  
-modeller update --project ./src --models ./JJs --diff
+modeller update --project ./src --models ./Business --diff
 ```
 
 ---
@@ -126,10 +126,10 @@ modeller update --project ./src --models ./JJs --diff
 ```text
 ModellerMcp/
 ├── models/                          # Domain model definitions
-│   └── JJs/
-│       ├── PotentialSales/         # Example domain
+│   └── Business/                   # Organization namespace
+│       ├── CustomerManagement/    # Example domain
 │       │   ├── _meta.yaml
-│       │   ├── Prospect.Type.yaml
+│       │   ├── Customer.Type.yaml
 │       │   ├── Activity.Type.yaml
 │       │   └── ...
 │       └── Shared/                 # Shared types and enums
@@ -163,7 +163,7 @@ ModellerMcp/
 
 ### 3. Secure Code Generation (Production Ready)
 
-- Generate production-ready .NET 9 applications with security controls
+- Generate production-ready .NET applications with security controls
 - LLM-driven code generation with comprehensive security framework
 - Enterprise-grade audit logging and compliance tracking
 - Multi-level security validation and prompt injection prevention
@@ -218,7 +218,7 @@ This project uses advanced AI-driven development practices. When contributing:
 
 ## Roadmap
 
-### Current (Q2 2025) - COMPLETED
+### Current Release - COMPLETED
 
 - ✅ YAML schema validation and IntelliSense
 - ✅ MCP server integration with AI tools
@@ -228,14 +228,14 @@ This project uses advanced AI-driven development practices. When contributing:
 - ✅ Prompt injection prevention and security validation
 - ✅ Immutable response tracking and compliance support
 
-### Next (Q3 2025)
+### Next Release
 
 - 🎯 Production deployment and integration testing
 - 🎯 Vertical Slice Architecture template library
 - 🎯 Advanced code modification with safety checks
 - 🎯 Developer workflow and tooling integration
 
-### Future (Q4 2025+)
+### Future Releases
 
 - 🔮 Multi-language code generation support
 - 🔮 Advanced AI code optimization and learning

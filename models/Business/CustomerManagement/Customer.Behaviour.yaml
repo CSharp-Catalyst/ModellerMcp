@@ -1,0 +1,31 @@
+model: Customer
+summary: Customer business operations and workflows
+behaviours:
+  - name: getCustomerByNumber
+    summary: Retrieve a customer by their unique customer number
+    entities:
+      - Customer
+    preconditions:
+      - Customer.customerNumber is provided
+    effects:
+      - return Customer data
+  - name: createCustomer
+    summary: Create a new customer record
+    entities:
+      - Customer
+    preconditions:
+      - required fields are provided
+      - customerNumber is unique
+    effects:
+      - new Customer is created
+      - customerStatus is set to Active
+  - name: updateCustomerStatus
+    summary: Update the status of an existing customer
+    entities:
+      - Customer
+    preconditions:
+      - Customer exists
+      - new status is valid
+    effects:
+      - Customer.customerStatus is updated
+      - status change is logged

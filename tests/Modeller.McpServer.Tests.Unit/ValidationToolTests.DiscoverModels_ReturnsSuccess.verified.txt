@@ -1,13 +1,32 @@
-﻿🔍 No Modeller model definitions found in: {SolutionDirectory}
+﻿🔍 **Model Discovery Results for:** ModellerMcp
 
-**Searched for:**
-• /models/ directory
-• /Models/ directory
-• /Definitions/ directory
-• /src/Models/ directory
-• *.yaml and *.yml files throughout the solution
+**Total Files Found:** 7
 
-**To get started:**
-1. Create a /models/ directory in your solution root
-2. Follow the recommended folder structure from the BDD documentation
-3. Use the validation tools to ensure your models are correct
+📁 **Structured Model Directories:**
+
+🏗️ **models**
+   📍 {SolutionDirectory}models
+
+   📦 **CustomerManagement**
+      📍 {SolutionDirectory}models\Business\CustomerManagement
+      ✅ Has metadata (_meta.yaml)
+      ✅ Has type definition
+      ✅ Has behaviour definition
+      🎯 Customer.Behaviour.yaml (BddModel)
+      🎯 Customer.Type.yaml (BddModel)
+      🎯 Order.Behaviour.yaml (BddModel)
+      🎯 Order.Type.yaml (BddModel)
+      📝 _meta.yaml (Metadata)
+
+   📦 **AttributeTypes**
+      📍 {SolutionDirectory}models\Shared\AttributeTypes
+      🔤 CommonAttributes.yaml (AttributeTypes)
+
+   📦 **Enums**
+      📍 {SolutionDirectory}models\Shared\Enums
+      📋 CustomerStatus.yaml (Enum)
+
+💡 **Next Steps:**
+• Use `ValidateModel` to check your model definitions
+• Use `ValidateStructure` to verify folder organization
+• Use `ValidateDomain` to check specific bounded contexts

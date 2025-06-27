@@ -30,38 +30,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "models", "models", "{7E5E3D99-03B0-3438-6A3D-D9E8D97DA366}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jjs", "Jjs", "{E1FF4E5B-394F-BECA-AC0E-BEACE774EECF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{E1FF4E5B-394F-BECA-AC0E-BEACE774EECF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PotentialSales", "PotentialSales", "{6194A28E-A847-AA1A-06D7-947FAB42F425}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomerManagement", "CustomerManagement", "{6194A28E-A847-AA1A-06D7-947FAB42F425}"
 	ProjectSection(SolutionItems) = preProject
-		models\JJs\PotentialSales\Activity.Behaviour.yaml = models\JJs\PotentialSales\Activity.Behaviour.yaml
-		models\JJs\PotentialSales\Activity.Type.yaml = models\JJs\PotentialSales\Activity.Type.yaml
-		models\JJs\PotentialSales\CONVERSION_NOTES.md = models\JJs\PotentialSales\CONVERSION_NOTES.md
-		models\JJs\PotentialSales\IdentifiedCompetitor.Type.yaml = models\JJs\PotentialSales\IdentifiedCompetitor.Type.yaml
-		models\JJs\PotentialSales\IdentifiedCompetitorWasteProduct.Type.yaml = models\JJs\PotentialSales\IdentifiedCompetitorWasteProduct.Type.yaml
-		models\JJs\PotentialSales\Prospect.Behaviour.yaml = models\JJs\PotentialSales\Prospect.Behaviour.yaml
-		models\JJs\PotentialSales\Prospect.Type.yaml = models\JJs\PotentialSales\Prospect.Type.yaml
-		models\JJs\PotentialSales\ProspectType.Type.yaml = models\JJs\PotentialSales\ProspectType.Type.yaml
-		models\JJs\PotentialSales\ProspectWasteProduct.Type.yaml = models\JJs\PotentialSales\ProspectWasteProduct.Type.yaml
-		models\JJs\PotentialSales\Source.Type.yaml = models\JJs\PotentialSales\Source.Type.yaml
-		models\JJs\PotentialSales\WasteProduct.Type.yaml = models\JJs\PotentialSales\WasteProduct.Type.yaml
-		models\JJs\PotentialSales\_meta.yaml = models\JJs\PotentialSales\_meta.yaml
+		models\Business\CustomerManagement\Customer.Type.yaml = models\Business\CustomerManagement\Customer.Type.yaml
+		models\Business\CustomerManagement\Customer.Behaviour.yaml = models\Business\CustomerManagement\Customer.Behaviour.yaml
+		models\Business\CustomerManagement\Order.Type.yaml = models\Business\CustomerManagement\Order.Type.yaml
+		models\Business\CustomerManagement\Order.Behaviour.yaml = models\Business\CustomerManagement\Order.Behaviour.yaml
+		models\Business\CustomerManagement\_meta.yaml = models\Business\CustomerManagement\_meta.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{C951D638-4FFA-F4FE-67E4-52C696A4B909}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Enums", "Enums", "{C926E18D-B622-FB75-26C1-06F8A475EF41}"
 	ProjectSection(SolutionItems) = preProject
-		models\JJs\Shared\Enums\ActivityMethod.yaml = models\JJs\Shared\Enums\ActivityMethod.yaml
-		models\JJs\Shared\Enums\ActivityType.yaml = models\JJs\Shared\Enums\ActivityType.yaml
-		models\JJs\Shared\Enums\CustomerStatus.yaml = models\JJs\Shared\Enums\CustomerStatus.yaml
-		models\JJs\Shared\Enums\Interest.yaml = models\JJs\Shared\Enums\Interest.yaml
-		models\JJs\Shared\Enums\ProspectStatus.yaml = models\JJs\Shared\Enums\ProspectStatus.yaml
+		models\Shared\Enums\CustomerStatus.yaml = models\Shared\Enums\CustomerStatus.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AttributeTypes", "AttributeTypes", "{1AB74070-FDEE-DBD6-881C-277AB0D06711}"
 	ProjectSection(SolutionItems) = preProject
-		models\JJs\Shared\AttributeTypes\CommonAttributes.yaml = models\JJs\Shared\AttributeTypes\CommonAttributes.yaml
+		models\Shared\AttributeTypes\CommonAttributes.yaml = models\Shared\AttributeTypes\CommonAttributes.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "schemas", "schemas", "{0F30E25C-730E-FC1B-A752-E8466D187ADC}"

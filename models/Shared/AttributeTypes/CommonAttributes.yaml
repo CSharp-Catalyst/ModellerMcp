@@ -1,0 +1,4 @@
+attributeTypes:
+  - name: customerNumber
+    type: string
+    summary: A unique identifier for customers

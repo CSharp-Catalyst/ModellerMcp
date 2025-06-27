@@ -1,0 +1,35 @@
+model: Customer
+summary: A business customer entity
+attributeUsages:
+  - name: customerId
+    type: primaryKey
+    required: true
+    summary: The unique identifier for the customer
+  - name: customerNumber
+    type: customerNumber
+    required: true
+    summary: A unique business identifier assigned to each customer
+  - name: companyName
+    type: baseString
+    required: true
+    summary: The official company name of the customer
+  - name: customerStatus
+    type: CustomerStatus
+    required: true
+    summary: The current status of the customer relationship
+  - name: customerType
+    type: baseString
+    required: true
+    summary: The classification of the customer
+  - name: contactEmail
+    type: emailAddress
+    required: false
+    summary: The primary email address for customer communication
+  - name: phoneNumber
+    type: phoneNumber
+    required: false
+    summary: The primary phone number for customer communication
+  - name: address
+    type: addressString
+    required: false
+    summary: The primary business address of the customer

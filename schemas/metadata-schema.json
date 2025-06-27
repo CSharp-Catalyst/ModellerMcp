@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://modeller.jjs.com/schemas/metadata-schema.json",
+  "$id": "https://modeller-mcp.example.com/schemas/metadata-schema.json",
   "title": "Folder Metadata Schema",
   "description": "Schema for _meta.yaml files that describe folder/domain metadata",
   "type": "object",
