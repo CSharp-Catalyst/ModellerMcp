@@ -1,6 +1,6 @@
 ﻿# Modeller MCP - Intelligent Domain Modeling & Code Generation
 
-AI-Powered Domain Modeling with LLM-Driven Code Generation
+AI-Powered Domain Modeling with LLM-Driven SDK & API Generation
 
 ---
 
@@ -9,22 +9,17 @@ AI-Powered Domain Modeling with LLM-Driven Code Generation
 Modeller MCP is an advanced domain modeling and code generation platform
 that combines Behaviour-Driven Development (BDD) principles with Large Language
 Model (LLM) intelligence. Transform your domain models into production-ready
-modern .NET applications using Vertical Slice Architecture (VSA) patterns.
+modern .NET SDKs and Minimal APIs using Vertical Slice Architecture (VSA) patterns.
 
 ### Key Capabilities
 
-🤖 **LLM-Driven Code Generation**: Generate production-ready C# code from
-domain models using AI  
-📋 **Domain Model Validation**: Comprehensive YAML schema validation and
-business rule checking  
-🔄 **Intelligent Code Modification**: Update existing code while preserving
-custom developer changes  
-🎯 **Vertical Slice Architecture**: Generate complete feature slices with API,
-business logic, and data access  
-📊 **Model Context Protocol**: Integrate with VS Code, GitHub Copilot, and
-other AI development tools  
-🛡️ **Safety & Quality**: Built-in security guards, validation pipelines, and
-rollback capabilities
+🤖 **LLM-Driven SDK Generation**: Generate complete .NET SDKs from domain models using AI  
+� **Minimal API Generation**: Create full API projects that integrate with generated SDKs  
+�📋 **Domain Model Validation**: Comprehensive YAML schema validation and business rule checking  
+🔄 **Intelligent Code Modification**: Update existing code while preserving custom developer changes  
+🎯 **Vertical Slice Architecture**: Generate complete feature slices with models, validators, and services  
+📊 **Model Context Protocol**: Integrate with VS Code, GitHub Copilot, and other AI development tools  
+🛡️ **Safety & Quality**: Built-in security guards, validation pipelines, and rollback capabilities
 
 ---
 
@@ -33,17 +28,15 @@ rollback capabilities
 ### Current State (Production-Ready)
 
 - ✅ **YAML Schema Validation**: Comprehensive validation of domain models
-- ✅ **Business Rule Checking**: Validation of model constraints and
-  relationships  
+- ✅ **Business Rule Checking**: Validation of model constraints and relationships  
 - ✅ **MCP Integration**: Model Context Protocol server for AI tool integration
 - ✅ **Prompt-Based Analysis**: AI-powered model analysis and recommendations
-- ✅ **VS Code Integration**: IntelliSense and schema support for model
-  authoring
+- ✅ **VS Code Integration**: IntelliSense and schema support for model authoring
 - ✅ **Security Framework**: Enterprise-grade security for LLM interactions
-- ✅ **Audit Logging**: Comprehensive audit trails for compliance and
-  monitoring
-- ✅ **Secure Code Generation**: LLM-driven code generation with security
-  controls
+- ✅ **Audit Logging**: Comprehensive audit trails for compliance and monitoring
+- ✅ **Secure Code Generation**: LLM-driven code generation with security controls
+- ✅ **SDK Generation**: Complete .NET SDK generation from domain models
+- ✅ **Minimal API Generation**: Full API projects with SDK integration
 
 ### Advanced Features (Ready for Integration)
 
@@ -109,14 +102,18 @@ Use with VS Code and GitHub Copilot:
 @Modeller create_template --modelType "Type" --domain "Sales"
 ```
 
-#### 3. Code Generation (Coming Soon)
+#### 3. SDK Generation
 
 ```bash
-# Generate complete VSA project from domain models
-modeller generate --project WebAPI --output ./src --models ./models/Business
+# Generate complete .NET SDK from domain models
+@Modeller GenerateSDK --domainPath "models/Business/CustomerManagement" --featureName "CustomerManagement" --namespaceName "Business.CustomerManagement.Sdk" --outputPath "./generated-sdk"
+```
 
-# Update existing code based on model changes  
-modeller update --project ./src --models ./Business --diff
+#### 4. Minimal API Generation
+
+```bash
+# Generate complete Minimal API project that uses the generated SDK
+@Modeller GenerateMinimalAPI --sdkPath "./generated-sdk" --domainPath "models/Business/CustomerManagement" --projectName "CustomerManagement.Api" --namespaceName "CustomerManagement.Api" --outputPath "./generated-api"
 ```
 
 ---
@@ -136,10 +133,27 @@ ModellerMcp/
 │           ├── AttributeTypes/
 │           └── Enums/
 ├── src/
-│   └── Modeller.McpServer/         # MCP server implementation
+│   ├── Modeller.McpServer/         # MCP server implementation
+│   └── Modeller.Mcp.Shared/       # Shared libraries and services
+│       ├── CodeGeneration/         # SDK and API generation services
+│       ├── Tools/                  # MCP tools for validation and generation
+│       └── Services/               # Core business services
+├── generated-sdk/                  # Generated SDK output (example)
+│   ├── CustomerManagement.Sdk.csproj
+│   ├── Models/                     # Generated entity models
+│   ├── Validators/                 # FluentValidation validators
+│   ├── Enums/                      # Strongly-typed enumerations
+│   └── Common/                     # Result patterns and utilities
+├── generated-api/                  # Generated API output (example)
+│   ├── CustomerManagement.Api.csproj
+│   ├── Program.cs                  # Minimal API setup
+│   ├── Data/                       # Entity Framework context
+│   ├── Services/                   # Business services
+│   └── Endpoints/                  # REST API endpoints
 ├── tests/                          # Unit and integration tests
 ├── docs/                           # Documentation
 │   ├── code-generation-design.md   # LLM-driven code generation design
+│   ├── sdk-api-generation-guide.md # Complete generation workflow guide
 │   ├── yaml-schema-intellisense-guide.md
 │   └── modeller-mcp-prompts-guide.md
 └── schemas/                        # JSON schemas for validation
@@ -161,9 +175,10 @@ ModellerMcp/
 - Get intelligent suggestions for model improvements
 - Analyze cross-model consistency and best practices
 
-### 3. Secure Code Generation (Production Ready)
+### 3. SDK & API Generation
 
-- Generate production-ready .NET applications with security controls
+- Generate complete .NET SDKs from domain models with security controls
+- Create Minimal API projects that integrate with generated SDKs
 - LLM-driven code generation with comprehensive security framework
 - Enterprise-grade audit logging and compliance tracking
 - Multi-level security validation and prompt injection prevention
@@ -188,6 +203,8 @@ ModellerMcp/
 
 ### Core Guides
 
+- [SDK & API Generation Guide](docs/sdk-api-generation-guide.md) - Complete
+  workflow from models to running applications
 - [Code Generation Design](docs/code-generation-design.md) - LLM-driven code
   generation architecture
 - [BDD Model User Guide](docs/BDD_Model_User_Guide.md) - Comprehensive
@@ -201,7 +218,8 @@ ModellerMcp/
 
 - [Model Definition Specification](docs/bdd_model_definition.md) - YAML format
   reference
-- [Validation Framework](docs/) - Schema validation and business rules
+- [Security Implementation Status](docs/security-implementation-status.md) -
+  Enterprise security features
 
 ---
 
@@ -227,13 +245,16 @@ This project uses advanced AI-driven development practices. When contributing:
 - ✅ LLM-driven secure code generation with audit logging
 - ✅ Prompt injection prevention and security validation
 - ✅ Immutable response tracking and compliance support
+- ✅ Complete .NET SDK generation from domain models
+- ✅ Minimal API generation with SDK integration
+- ✅ VSA pattern implementation for generated code
 
 ### Next Release
 
 - 🎯 Production deployment and integration testing
-- 🎯 Vertical Slice Architecture template library
-- 🎯 Advanced code modification with safety checks
+- 🎯 Enhanced code modification with safety checks
 - 🎯 Developer workflow and tooling integration
+- 🎯 Advanced template marketplace and community contributions
 
 ### Future Releases
 

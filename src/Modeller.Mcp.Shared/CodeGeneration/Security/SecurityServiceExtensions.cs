@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using Modeller.Mcp.Shared.CodeGeneration.LLM;
 using Modeller.Mcp.Shared.CodeGeneration.Prompts;
 using Modeller.Mcp.Shared.CodeGeneration.Prompts.VSA;
 
@@ -20,6 +21,7 @@ public static class SecurityServiceExtensions
         // Core security services
         services.AddSingleton<IPromptSecurityService, PromptSecurityService>();
         services.AddSingleton<ISecurePromptBuilder, SecurePromptBuilder>();
+        services.AddSingleton<ILlmService, MockLlmService>(); // Register the LLM service implementation
         services.AddSingleton<ISecureLlmService, SecureLlmService>();
 
         // VSA prompt services

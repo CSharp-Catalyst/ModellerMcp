@@ -1,5 +1,6 @@
 ﻿using Modeller.Mcp.Shared;
 using Modeller.Mcp.Shared.Services;
+using Modeller.Mcp.Shared.Resources;
 using Modeller.McpServer.McpValidatorServer;
 using Modeller.McpServer.McpValidatorServer.Services;
 
@@ -13,7 +14,8 @@ public class ValidationToolTests
         // Arrange
         var service = new ModelDiscoveryService();
         var structureValidator = new ModelStructureValidator();
-        var validator = new YamlSchemaValidator(structureValidator);
+        var modelResources = new ModelDefinitionResources(service);
+        var validator = new YamlSchemaValidator(structureValidator, modelResources);
         var tool = new ValidationTool(service, validator);
         var path = Helper.GetSolutionFolder();
 
@@ -30,7 +32,8 @@ public class ValidationToolTests
         // Arrange
         var service = new ModelDiscoveryService();
         var structureValidator = new ModelStructureValidator();
-        var validator = new YamlSchemaValidator(structureValidator);
+        var modelResources = new ModelDefinitionResources(service);
+        var validator = new YamlSchemaValidator(structureValidator, modelResources);
         var tool = new ValidationTool(service, validator);
         var path = Helper.GetSolutionFolder();
 

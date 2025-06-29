@@ -1,4 +1,22 @@
-name: Customer Management System
-summary: A sample business domain for customer and order management
-version: 1.0.0
-lastReviewed: 2025-06-27
+name: CustomerManagement
+summary: Customer management domain containing customer, order, and contact models with BDD modeling patterns
+remarks: |
+  This domain encompasses all customer-related business entities and operations including:
+  - Customer registration and profile management
+  - Order creation and lifecycle management  
+  - Customer contact and interaction tracking
+  
+  The domain follows BDD modeling patterns with separate Type and Behaviour definitions
+  for each business entity.
+
+version: "1.0.0"
+owners:
+  - Business Team
+  - Development Team
+tags:
+  - customer-management
+  - business-domain
+  - bdd-models
+dependencies:
+  - Shared/AttributeTypes
+status: approved

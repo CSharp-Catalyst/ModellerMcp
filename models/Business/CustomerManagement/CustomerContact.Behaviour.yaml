@@ -1,0 +1,45 @@
+model: CustomerContact
+summary: Customer contact business behaviors and scenarios
+remarks: Defines the business behaviors and BDD scenarios for customer contact management operations
+
+behaviours:
+  - name: recordCustomerContact
+    summary: Records a new customer contact interaction
+    entities:
+      - CustomerContact
+      - Customer
+    
+  - name: scheduleFollowUp
+    summary: Schedules a follow-up action for a customer contact
+    entities:
+      - CustomerContact
+      
+  - name: completeFollowUp
+    summary: Marks a follow-up action as completed
+    entities:
+      - CustomerContact
+
+scenarios:
+  - name: CustomerCallLogging
+    given:
+      - A customer service representative talks to a customer
+    when:
+      - The call details need to be recorded
+    then:
+      - A new contact record is created with call details
+    
+  - name: FollowUpScheduling
+    given:
+      - A customer contact requires follow-up action
+    when:
+      - Follow-up date and requirements are determined
+    then:
+      - The contact record is updated with follow-up information
+    
+  - name: FollowUpCompletion
+    given:
+      - A follow-up action is scheduled
+    when:
+      - The follow-up action is completed
+    then:
+      - The contact record is updated to reflect completion

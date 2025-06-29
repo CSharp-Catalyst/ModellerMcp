@@ -1,31 +1,44 @@
 model: Customer
-summary: Customer business operations and workflows
+summary: Customer business behaviors and scenarios
+remarks: Defines the business behaviors and BDD scenarios for customer management operations
+
 behaviours:
-  - name: getCustomerByNumber
-    summary: Retrieve a customer by their unique customer number
+  - name: registerNewCustomer
+    summary: Registers a new customer in the system
     entities:
       - Customer
-    preconditions:
-      - Customer.customerNumber is provided
-    effects:
-      - return Customer data
-  - name: createCustomer
-    summary: Create a new customer record
+    
+  - name: updateCustomerInformation
+    summary: Updates existing customer information
     entities:
       - Customer
-    preconditions:
-      - required fields are provided
-      - customerNumber is unique
-    effects:
-      - new Customer is created
-      - customerStatus is set to Active
-  - name: updateCustomerStatus
-    summary: Update the status of an existing customer
+      
+  - name: deactivateCustomer
+    summary: Deactivates a customer account
     entities:
       - Customer
-    preconditions:
-      - Customer exists
-      - new status is valid
-    effects:
-      - Customer.customerStatus is updated
-      - status change is logged
+
+scenarios:
+  - name: NewCustomerRegistration
+    given:
+      - A prospective customer provides registration information
+    when:
+      - The registration process is completed
+    then:
+      - A new customer record is created with active status
+    
+  - name: CustomerInformationUpdate
+    given:
+      - An active customer wants to update their profile
+    when:
+      - Valid updated information is provided
+    then:
+      - The customer record is updated with new information
+    
+  - name: CustomerAccountDeactivation
+    given:
+      - An active customer account exists
+    when:
+      - Deactivation is requested
+    then:
+      - The customer account is marked as inactive

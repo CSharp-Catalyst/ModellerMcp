@@ -1,35 +1,58 @@
 model: Customer
-summary: A business customer entity
+summary: Represents a customer entity in the business system
+remarks: Core customer entity containing essential customer information and relationships
+
 attributeUsages:
   - name: customerId
     type: primaryKey
     required: true
-    summary: The unique identifier for the customer
+    unique: true
+    summary: Unique identifier for the customer
+    
   - name: customerNumber
     type: customerNumber
     required: true
-    summary: A unique business identifier assigned to each customer
-  - name: companyName
+    unique: true
+    summary: Business-friendly customer number
+    
+  - name: firstName
     type: baseString
     required: true
-    summary: The official company name of the customer
-  - name: customerStatus
-    type: CustomerStatus
-    required: true
-    summary: The current status of the customer relationship
-  - name: customerType
+    summary: Customer's first name
+    
+  - name: lastName
     type: baseString
     required: true
-    summary: The classification of the customer
-  - name: contactEmail
+    summary: Customer's last name
+    
+  - name: email
     type: emailAddress
-    required: false
-    summary: The primary email address for customer communication
-  - name: phoneNumber
+    required: true
+    unique: true
+    summary: Primary email address for the customer
+    
+  - name: phone
     type: phoneNumber
     required: false
-    summary: The primary phone number for customer communication
+    summary: Primary phone number for the customer
+    
   - name: address
     type: addressString
     required: false
-    summary: The primary business address of the customer
+    summary: Primary postal address
+    
+  - name: dateOfBirth
+    type: dateField
+    required: false
+    summary: Customer's date of birth
+    
+  - name: registrationDate
+    type: dateField
+    required: true
+    summary: Date when the customer was registered in the system
+    
+  - name: isActive
+    type: baseString
+    required: true
+    default: "true"
+    summary: Indicates if the customer account is active

@@ -13,14 +13,85 @@ The Modeller MCP server provides intelligent tools for domain model development,
 3. **Template Creation** - Generate templates for new models following conventions
 4. **Structure Validation** - Verify project organization and naming conventions
 5. **Migration Guidance** - Generate migration strategies between model versions
+6. **SDK Generation** - Generate complete .NET SDKs from domain models
+7. **API Generation** - Create Minimal API projects with SDK integration
 
-### Upcoming Capabilities (LLM-Driven Code Generation)
+### LLM-Driven Code Generation (Production Ready)
 
 1. **VSA Code Generation** - Generate complete Vertical Slice Architecture projects
 2. **Intelligent Code Modification** - Update existing code while preserving customizations
 3. **Context-Aware Development** - AI-powered code suggestions based on domain models
 4. **Multi-Stage Generation** - Analysis → Design → Implementation pipeline
 5. **Continuous Learning** - System improves based on developer feedback
+6. **Enterprise Security** - Comprehensive security controls for code generation
+
+## Available Tools
+
+### Validation & Analysis Tools
+
+#### 1. Discover Models (`DiscoverModels`)
+Discovers all Modeller definitions in a solution or project directory.
+
+**Parameters**:
+- `solutionPath` (required): Path to the solution or project root directory
+
+#### 2. Validate Model (`ValidateModel`)
+Validates Modeller definitions (single file or entire directory structure).
+
+**Parameters**:
+- `solutionPath` (required): Path to the model file or directory to validate
+
+#### 3. Validate Domain (`ValidateDomain`)
+Validates a specific domain's models within the recommended folder structure.
+
+**Parameters**:
+- `domainPath` (required): Path to the domain folder (e.g., models/ProjectName/Organisation)
+
+#### 4. Validate Structure (`ValidateStructure`)
+Validates the folder structure and naming conventions for Modeller definitions.
+
+**Parameters**:
+- `modelsPath` (required): Path to the root models directory to validate structure
+
+### Code Generation Tools
+
+#### 5. Generate SDK (`GenerateSDK`)
+Generate a complete SDK using VSA patterns from domain models for a specific feature.
+
+**Parameters**:
+- `domainPath` (required): Path to the domain models (e.g., models/Business/CustomerManagement)
+- `featureName` (required): Name of the feature (e.g., 'Customers')
+- `namespaceName` (required): Target namespace for the SDK (e.g., 'Business.CustomerManagement.Sdk')
+- `outputPath` (required): Output directory for generated files
+
+**Example Usage**:
+```text
+@Modeller GenerateSDK 
+  --domainPath "models/Business/CustomerManagement" 
+  --featureName "CustomerManagement" 
+  --namespaceName "Business.CustomerManagement.Sdk" 
+  --outputPath "./generated-sdk"
+```
+
+#### 6. Generate Minimal API (`GenerateMinimalAPI`)
+Generate a complete Minimal API project that uses the generated SDK, following VSA patterns and domain models.
+
+**Parameters**:
+- `sdkPath` (required): Path to the generated SDK (e.g., playschool/generated-sdk)
+- `domainPath` (required): Path to the domain models (e.g., playschool/models/JJs/PotentialSales)
+- `projectName` (required): Name of the API project (e.g., 'JJs.PotentialSales.Api')
+- `namespaceName` (required): Target namespace for the API (e.g., 'JJs.PotentialSales.Api')
+- `outputPath` (required): Output directory for the API project
+
+**Example Usage**:
+```text
+@Modeller GenerateMinimalAPI 
+  --sdkPath "./generated-sdk" 
+  --domainPath "models/Business/CustomerManagement" 
+  --projectName "CustomerManagement.Api" 
+  --namespaceName "CustomerManagement.Api" 
+  --outputPath "./generated-api"
+```
 
 ## Available Prompts
 

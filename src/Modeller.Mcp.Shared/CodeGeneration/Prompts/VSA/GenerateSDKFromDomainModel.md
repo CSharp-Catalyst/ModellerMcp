@@ -29,11 +29,45 @@ from YAML domain models that follows modern .NET best practices.
 - **Extension Methods**: Clean mapping without AutoMapper complexity
 - **Result Pattern**: Success/failure return types
 - **Feature Folders**: Group by business capability, not technical layer
+- **GlobalUsings**: Centralize common using statements to reduce boilerplate
+
+## GlobalUsings Configuration
+
+Create a `GlobalUsings.cs` file at the project root to include commonly used namespaces across all files:
+
+```csharp
+// GlobalUsings.cs
+global using System;
+global using System.Collections.Generic;
+global using System.ComponentModel.DataAnnotations;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+// Note: FluentValidation not included globally due to ValidationResult ambiguity
+// Include FluentValidation only in validator files
+```
+
+This approach eliminates the need to include these using statements in every file, significantly reducing code duplication and maintenance overhead.
+
+### File-Level Using Guidelines
+
+After implementing GlobalUsings, files should only include:
+
+- **Namespace-specific imports**: Only the project's own namespaces (e.g., `using Business.CustomerManagement.Sdk.Common;`)
+- **Specialized imports**: Libraries with potential conflicts (e.g., `FluentValidation`, `FluentValidation.Results`)
+- **Framework-specific imports**: Specialized System namespaces not commonly used (e.g., `System.Text.Json`)
+
+### Important Notes
+
+- **FluentValidation Conflict**: Do not include `FluentValidation` in GlobalUsings due to `ValidationResult` type conflicts with `System.ComponentModel.DataAnnotations.ValidationResult`
+- **Explicit Types**: Use fully qualified type names when conflicts arise (e.g., `FluentValidation.Results.ValidationResult`)
+- **Validator Files**: Include `using FluentValidation;` and `using FluentValidation.Results;` only in validator files
 
 ## Generated Structure
 
 ```text
 {Namespace}/
+├── GlobalUsings.cs                      # Common using statements
 ├── {FeatureName}/
 │   ├── Create{EntityName}Request.cs
 │   ├── Create{EntityName}Response.cs
@@ -61,28 +95,44 @@ separating them into technical layers.
 ### 1. Request Records
 
 ```csharp
+// Only project-specific usings needed (GlobalUsings handles System.*, etc.)
+using Business.CustomerManagement.Sdk.Common;
+
+namespace Business.CustomerManagement.Sdk.{FeatureName};
+
 public record Create{EntityName}Request
 {
     // Properties from YAML attributes
     // Use appropriate C# types (string, int, DateTime, etc.)
     // Include XML documentation from YAML descriptions
+    // DataAnnotation attributes available via GlobalUsings
 }
 ```
 
 ### 2. Response Records
 
 ```csharp
+using Business.CustomerManagement.Sdk.Common;
+
+namespace Business.CustomerManagement.Sdk.{FeatureName};
+
 public record {EntityName}Response
 {
     // Include Id and all entity properties
     // Add audit fields (CreatedAt, UpdatedAt, etc.)
     // Use nullable types where appropriate
+    // System types available via GlobalUsings
 }
 ```
 
 ### 3. FluentValidation Validators
 
 ```csharp
+using FluentValidation;
+using Business.CustomerManagement.Sdk.Common;
+
+namespace Business.CustomerManagement.Sdk.{FeatureName};
+
 public class Create{EntityName}Validator : AbstractValidator<Create{EntityName}Request>
 {
     public Create{EntityName}Validator()
@@ -181,17 +231,19 @@ attributes:
 
 Generate:
 
-1. **CreateCustomerRequest.cs** - Input model for creating customers
-2. **CustomerResponse.cs** - Output model for customer data
-3. **CreateCustomerValidator.cs** - FluentValidation rules
-4. **CustomerExtensions.cs** - Mapping methods
-5. **Common/ApiResult.cs** - Base result pattern
+1. **GlobalUsings.cs** - Common namespace imports to reduce boilerplate
+2. **CreateCustomerRequest.cs** - Input model for creating customers
+3. **CustomerResponse.cs** - Output model for customer data
+4. **CreateCustomerValidator.cs** - FluentValidation rules
+5. **CustomerExtensions.cs** - Mapping methods
+6. **Common/ApiResult.cs** - Base result pattern
 
 ## Output Format
 
 Provide complete, compilable C# files with:
 
-- Proper namespaces
+- **GlobalUsings.cs** with common namespace imports
+- Proper namespaces with minimal file-specific using statements
 - XML documentation
 - FluentValidation rules
 - Extension methods

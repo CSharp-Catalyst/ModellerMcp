@@ -2,3 +2,39 @@ attributeTypes:
   - name: customerNumber
     type: string
     summary: A unique identifier for customers
+  - name: orderNumber
+    type: string
+    summary: A unique identifier for orders
+  - name: primaryKey
+    type: string
+    summary: A unique primary key identifier
+  - name: baseString
+    type: string
+    summary: A basic string field with standard validation
+  - name: shortString
+    type: string
+    summary: A short string field (up to 50 characters)
+  - name: mediumString
+    type: string
+    summary: A medium string field (up to 255 characters)
+  - name: longString
+    type: string
+    summary: A longer text field for extended content
+  - name: veryLongString
+    type: string
+    summary: A very long text field for extended content
+  - name: emailAddress
+    type: string
+    summary: An email address field with email validation
+  - name: phoneNumber
+    type: string
+    summary: A phone number field with phone number validation
+  - name: addressString
+    type: string
+    summary: An address field for storing postal addresses
+  - name: dateField
+    type: string
+    summary: A date field for storing date values
+  - name: boolean
+    type: boolean
+    summary: A boolean field for true/false values

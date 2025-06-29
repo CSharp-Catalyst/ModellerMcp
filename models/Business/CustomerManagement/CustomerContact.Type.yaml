@@ -1,0 +1,51 @@
+model: CustomerContact
+summary: Represents customer contact interactions and communication history
+remarks: Tracks all communication touchpoints with customers including calls, emails, and meetings
+
+attributeUsages:
+  - name: contactId
+    type: primaryKey
+    required: true
+    unique: true
+    summary: Unique identifier for the contact record
+    
+  - name: customerId
+    type: primaryKey
+    required: true
+    summary: Reference to the customer
+    
+  - name: contactDate
+    type: dateField
+    required: true
+    summary: Date of the contact interaction
+    
+  - name: contactType
+    type: baseString
+    required: true
+    summary: Type of contact (email, phone, meeting, etc.)
+    
+  - name: subject
+    type: mediumString
+    required: true
+    summary: Subject or brief description of the contact
+    
+  - name: description
+    type: longString
+    required: true
+    summary: Detailed description of the contact interaction
+    
+  - name: contactedBy
+    type: baseString
+    required: true
+    summary: Name or ID of the person who made the contact
+    
+  - name: followUpRequired
+    type: boolean
+    required: true
+    default: false
+    summary: Indicates if follow-up action is required
+    
+  - name: followUpDate
+    type: dateField
+    required: false
+    summary: Date when follow-up should occur

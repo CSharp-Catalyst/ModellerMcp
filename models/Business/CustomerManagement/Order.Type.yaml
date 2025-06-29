@@ -1,31 +1,47 @@
 model: Order
-summary: A customer order for products or services
+summary: Represents a customer order in the business system
+remarks: Core order entity containing order information and customer relationships
+
 attributeUsages:
   - name: orderId
     type: primaryKey
     required: true
-    summary: The unique identifier for the order
+    unique: true
+    summary: Unique identifier for the order
+    
   - name: orderNumber
-    type: baseString
+    type: orderNumber
     required: true
-    summary: A unique business identifier assigned to each order
+    unique: true
+    summary: Business-friendly order number
+    
   - name: customerId
     type: primaryKey
     required: true
     summary: Reference to the customer who placed the order
+    
   - name: orderDate
     type: dateField
     required: true
-    summary: The date when the order was placed
-  - name: orderTotal
+    summary: Date when the order was placed
+    
+  - name: totalAmount
     type: baseString
     required: true
-    summary: The total monetary value of the order
-  - name: orderStatus
+    summary: Total order amount
+    
+  - name: status
     type: baseString
     required: true
-    summary: The current status of the order (e.g., Pending, Processing, Shipped, Delivered)
+    default: "pending"
+    summary: Current status of the order
+    
+  - name: shippingAddress
+    type: addressString
+    required: true
+    summary: Address where the order should be shipped
+    
   - name: notes
     type: longString
     required: false
-    summary: Additional notes or special instructions for the order
+    summary: Additional notes or special instructions

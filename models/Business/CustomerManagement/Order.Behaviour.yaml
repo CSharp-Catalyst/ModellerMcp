@@ -1,33 +1,46 @@
 model: Order
-summary: Order processing and management operations
+summary: Order business behaviors and scenarios
+remarks: Defines the business behaviors and BDD scenarios for order management operations
+
 behaviours:
   - name: createOrder
-    summary: Create a new customer order
+    summary: Creates a new order for a customer
     entities:
       - Order
       - Customer
-    preconditions:
-      - Customer exists
-      - order details are valid
-    effects:
-      - new Order is created
-      - orderStatus is set to Pending
-  - name: getOrdersByCustomer
-    summary: Retrieve all orders for a specific customer
-    entities:
-      - Order
-      - Customer
-    preconditions:
-      - Customer.customerId is provided
-    effects:
-      - return list of Customer Orders
+    
   - name: updateOrderStatus
-    summary: Update the status of an existing order
+    summary: Updates the status of an existing order
     entities:
       - Order
-    preconditions:
-      - Order exists
-      - new status is valid
-    effects:
-      - Order.orderStatus is updated
-      - status change is logged
+      
+  - name: cancelOrder
+    summary: Cancels an existing order
+    entities:
+      - Order
+
+scenarios:
+  - name: NewOrderCreation
+    given:
+      - A customer wants to place an order
+      - Customer has valid account information
+    when:
+      - Order details are provided and validated
+    then:
+      - A new order record is created with pending status
+    
+  - name: OrderStatusUpdate
+    given:
+      - An existing order is in the system
+    when:
+      - Order status needs to be updated
+    then:
+      - The order status is updated accordingly
+    
+  - name: OrderCancellation
+    given:
+      - An active order exists
+    when:
+      - Cancellation is requested before shipping
+    then:
+      - The order is marked as cancelled

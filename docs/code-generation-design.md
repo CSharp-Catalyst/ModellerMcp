@@ -1,10 +1,10 @@
 # Modeller Code Generation - Implementation Status & Technical Design
 
-## Implementation Status: ✅ COMPLETED (Security Framework)
+## Implementation Status: ✅ COMPLETED (SDK & API Generation)
 
-The core security framework for LLM-driven code generation has been successfully implemented and is production-ready. This includes:
+The comprehensive code generation framework for LLM-driven SDK and API generation has been successfully implemented and is production-ready. This includes:
 
-### ✅ Completed Security Features
+### ✅ Completed Security & Generation Features
 
 - **Prompt Security Service**: Comprehensive validation and sanitization of user prompts
 - **Secure Prompt Builder**: Builds secure prompts with injection prevention and sanitization
@@ -13,11 +13,23 @@ The core security framework for LLM-driven code generation has been successfully
 - **Security Context Validation**: Multi-level security validation for all operations
 - **Immutable Response Tracking**: Tamper-proof recording of all LLM interactions
 - **Post-Generation Validation**: Automated validation of generated content
-- **Dependency Injection Integration**: Full DI support for all security services
+- **SDK Generation Service**: Complete .NET SDK generation from domain models
+- **API Generation Service**: Full Minimal API project generation with SDK integration
+- **VSA Prompt Service**: Template-driven code generation using VSA patterns
+- **Dependency Injection Integration**: Full DI support for all services
+
+### ✅ MCP Tools Available
+
+- **GenerateSDK**: Generate complete .NET SDKs from domain models
+- **GenerateMinimalAPI**: Create full API projects that integrate with generated SDKs
+- **DiscoverModels**: Discover and validate all domain models in a project
+- **ValidateModel**: Validate specific model definitions
+- **ValidateStructure**: Validate project structure and naming conventions
+- **ValidateDomain**: Validate entire domain model collections
 
 ### 🔧 Ready for Integration
 
-The security framework is now ready to be integrated with actual LLM providers (OpenAI, Azure OpenAI, etc.) and can be used for production code generation scenarios.
+The complete generation framework is now ready to be integrated with actual LLM providers (OpenAI, Azure OpenAI, etc.) and can be used for production code generation scenarios.
 
 ---
 
@@ -36,13 +48,18 @@ The security framework is now ready to be integrated with actual LLM providers (
 - **.NET**: Latest stable LTS framework with native capabilities ✅
 - **Security Framework**: Enterprise-grade security for LLM interactions ✅
 - **Audit Logging**: Comprehensive audit trails for compliance ✅
+- **SDK Generation**: Complete .NET SDK generation from domain models ✅
+- **API Generation**: Full Minimal API project generation with SDK integration ✅
+- **VSA Patterns**: Vertical Slice Architecture implementation ✅
+- **Model Validation**: Comprehensive YAML schema and business rule validation ✅
+- **MCP Integration**: Model Context Protocol server with AI tool integration ✅
 - **xUnit v3**: Modern testing framework ✅
 - **VSA Prompts**: Template-driven code generation ✅
 - **ModelContextProtocol**: MCP server implementation ✅
 - **OpenTelemetry (OTEL)**: Comprehensive observability (planned)
 - **.NET Aspire**: Enhanced local development experience (planned)
-- **EF Core**: Data access with minimal configuration (planned)
-- **Minimal APIs**: Lightweight API endpoints (planned)
+- **EF Core**: Data access with minimal configuration (implemented in generated APIs)
+- **Minimal APIs**: Lightweight API endpoints (implemented in generated APIs)
 
 ## LLM-Assisted Code Generation Strategy (Implemented)
 

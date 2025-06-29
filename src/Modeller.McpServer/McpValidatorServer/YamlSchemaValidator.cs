@@ -1,5 +1,6 @@
 ﻿using Modeller.Mcp.Shared;
 using Modeller.Mcp.Shared.Models;
+using Modeller.Mcp.Shared.Resources;
 using Modeller.McpServer.McpValidatorServer.Services;
 
 using System.Text.RegularExpressions;
@@ -11,7 +12,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Modeller.McpServer.McpValidatorServer;
 
-public class YamlSchemaValidator(ModelStructureValidator structureValidator) : IMcpModelValidator
+public class YamlSchemaValidator(ModelStructureValidator structureValidator, ModelDefinitionResources modelResources) : IMcpModelValidator
 {
     private readonly IDeserializer _yamlDeserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
@@ -173,6 +174,19 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator) : I
         catch (Exception ex)
         {
             results.Add(new ValidationResult(filePath, $"Validation error: {ex.Message}", ValidationSeverity.Error));
+        }
+
+        // Register validated models as MCP resources if validation was successful
+        if (modelDefinition != null && !results.Any(r => r.Severity == ValidationSeverity.Error))
+        {
+            var domainPath = ExtractDomainPath(filePath);
+            if (!string.IsNullOrEmpty(domainPath))
+            {
+                modelResources.RegisterValidatedModel(modelDefinition.Model, domainPath, modelDefinition);
+                results.Add(new ValidationResult(filePath, 
+                    $"Model '{modelDefinition.Model}' validated and registered as MCP resource for domain '{domainPath}'", 
+                    ValidationSeverity.Info));
+            }
         }
 
         return new ModelValidationResponse { Results = results, Model = modelDefinition };
@@ -559,5 +573,45 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator) : I
         }
         
         return string.Empty;
+    }
+
+    /// <summary>
+    /// Extracts the domain path from a file path for resource registration
+    /// </summary>
+    private string ExtractDomainPath(string filePath)
+    {
+        try
+        {
+            // Convert to forward slashes for consistency
+            var normalizedPath = filePath.Replace('\\', '/');
+            
+            // Look for the "models" directory in the path
+            var modelsIndex = normalizedPath.LastIndexOf("/models/", StringComparison.OrdinalIgnoreCase);
+            if (modelsIndex == -1)
+            {
+                // If no models directory found, try to extract from the path structure
+                var directoryName = Path.GetDirectoryName(filePath);
+                return directoryName ?? string.Empty;
+            }
+            
+            // Extract everything after "/models/" and before the filename
+            var afterModels = normalizedPath.Substring(modelsIndex + 8); // "/models/".Length = 8
+            var segments = afterModels.Split('/');
+            
+            // Remove the filename from the segments
+            if (segments.Length > 0 && segments[segments.Length - 1].Contains('.'))
+            {
+                segments = segments.Take(segments.Length - 1).ToArray();
+            }
+            
+            // Join the remaining segments to form the domain path
+            return string.Join("/", segments);
+        }
+        catch
+        {
+            // Fallback to directory name if extraction fails
+            var directoryName = Path.GetDirectoryName(filePath);
+            return directoryName ?? string.Empty;
+        }
     }
 }

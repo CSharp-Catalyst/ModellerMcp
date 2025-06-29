@@ -2,7 +2,9 @@
 
 using Modeller.Mcp.Shared;
 using Modeller.Mcp.Shared.CodeGeneration;
+using Modeller.Mcp.Shared.CodeGeneration.Prompts.VSA;
 using Modeller.Mcp.Shared.Services;
+using Modeller.Mcp.Shared.Resources;
 using Modeller.Mcp.Shared.CodeGeneration.Security;
 using Modeller.McpServer.McpValidatorServer;
 using Modeller.McpServer.McpValidatorServer.Services;
@@ -25,14 +27,13 @@ builder.Services
 builder.Services.AddSecurityServices(builder.Configuration);
 
 builder.Services
+    .AddSingleton<ModelDefinitionResources>()
     .AddTransient<IMcpModelValidator, YamlSchemaValidator>()
     .AddTransient<ModelDiscoveryService>()
     .AddTransient<ModelStructureValidator>()
-    .AddTransient<ISdkGenerationService, SdkGenerationService>();
-
-//builder.Services.AddTransient<ValidationTool>();
-//builder.Services.AddTransient<SdkGenerationTool>();
-//builder.Services.AddTransient<ModellerPrompts>();
-//builder.Services.AddTransient<ModelPromptService>();
+    .AddTransient<IVsaPromptService, VsaPromptService>()
+    .AddTransient<ISdkGenerationService, SdkGenerationService>()
+    .AddTransient<IApiGenerationService, ApiGenerationService>()
+    .AddTransient<ModelPromptService>();
 
 await builder.Build().RunAsync();
