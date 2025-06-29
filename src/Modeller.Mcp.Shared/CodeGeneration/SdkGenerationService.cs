@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
 
-using Modeller.Mcp.Shared.CodeGeneration.Prompts;
 using Modeller.Mcp.Shared.CodeGeneration.Prompts.VSA;
 using Modeller.Mcp.Shared.CodeGeneration.Security;
 using Modeller.Mcp.Shared.Services;
@@ -27,17 +26,17 @@ public record SdkGenerationRequest
     /// Path to the domain models (e.g., models/Business/CustomerManagement)
     /// </summary>
     public required string DomainPath { get; init; }
-    
+
     /// <summary>
     /// Name of the feature (e.g., "Customers")
     /// </summary>
     public required string FeatureName { get; init; }
-    
+
     /// <summary>
     /// Target namespace for the SDK (e.g., "Business.CustomerManagement.Sdk")
     /// </summary>
     public required string Namespace { get; init; }
-    
+
     /// <summary>
     /// Output directory for generated files
     /// </summary>
@@ -53,32 +52,32 @@ public record SdkGenerationResult
     /// Whether the generation was successful
     /// </summary>
     public bool IsSuccess { get; init; }
-    
+
     /// <summary>
     /// Generated prompt used for SDK creation
     /// </summary>
     public string? GeneratedPrompt { get; init; }
-    
+
     /// <summary>
     /// Path where files were generated
     /// </summary>
     public string? OutputPath { get; init; }
-    
+
     /// <summary>
     /// List of generated files
     /// </summary>
-    public List<string> GeneratedFiles { get; init; } = new();
-    
+    public List<string> GeneratedFiles { get; init; } = [];
+
     /// <summary>
     /// Error message if generation failed
     /// </summary>
     public string? ErrorMessage { get; init; }
-    
+
     /// <summary>
     /// Validation results from the domain models
     /// </summary>
     public string? ValidationResults { get; init; }
-    
+
     public static SdkGenerationResult Success(string prompt, string outputPath, List<string> files) => new()
     {
         IsSuccess = true,
@@ -86,7 +85,7 @@ public record SdkGenerationResult
         OutputPath = outputPath,
         GeneratedFiles = files
     };
-    
+
     public static SdkGenerationResult Failure(string errorMessage) => new()
     {
         IsSuccess = false,
@@ -107,7 +106,7 @@ public class SdkGenerationService(
     {
         try
         {
-            logger.LogInformation("Starting SDK generation for feature '{FeatureName}' from '{DomainPath}'", 
+            logger.LogInformation("Starting SDK generation for feature '{FeatureName}' from '{DomainPath}'",
                 request.FeatureName, request.DomainPath);
 
             // 1. Validate and discover domain models
@@ -147,12 +146,12 @@ public class SdkGenerationService(
             // 6. Save generated files to output directory
             Directory.CreateDirectory(request.OutputPath);
             var generatedFiles = new List<string>();
-            
+
             // For now, save the prompt and generated code
             var promptPath = Path.Combine(request.OutputPath, "GeneratedPrompt.md");
             await File.WriteAllTextAsync(promptPath, prompt);
             generatedFiles.Add(promptPath);
-            
+
             var codePath = Path.Combine(request.OutputPath, "GeneratedCode.md");
             await File.WriteAllTextAsync(codePath, codeGenerationResult.Content ?? "");
             generatedFiles.Add(codePath);
@@ -173,7 +172,7 @@ public class SdkGenerationService(
         try
         {
             var discoveryResult = modelDiscoveryService.DiscoverModels(request.DomainPath);
-            
+
             if (discoveryResult.Errors.Any())
                 throw new InvalidOperationException($"Failed to discover models: {string.Join(", ", discoveryResult.Errors)}");
 

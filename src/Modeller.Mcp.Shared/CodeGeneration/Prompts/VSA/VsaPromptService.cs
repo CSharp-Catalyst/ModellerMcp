@@ -15,7 +15,7 @@ public interface IVsaPromptService
     /// <param name="domainFolderPath">Absolute path to the domain folder containing model definitions</param>
     /// <returns>Generated SDK prompt as a string</returns>
     Task<string> GenerateSDKFromDomainModelAsync(string domainFolderPath);
-    
+
     /// <summary>
     /// Get available VSA prompt templates
     /// </summary>
@@ -42,7 +42,7 @@ public class VsaPromptService(ILogger<VsaPromptService> logger) : IVsaPromptServ
             // e.g., "C:\path\models\Business\CustomerManagement" -> "Business.CustomerManagement.Sdk"
             var pathParts = domainFolderPath.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
             var modelsIndex = Array.FindLastIndex(pathParts, p => p.Equals("models", StringComparison.OrdinalIgnoreCase));
-            
+
             if (modelsIndex == -1 || modelsIndex >= pathParts.Length - 1)
                 throw new ArgumentException($"Invalid domain path structure. Expected path containing 'models' folder: {domainFolderPath}");
 
@@ -64,11 +64,11 @@ public class VsaPromptService(ILogger<VsaPromptService> logger) : IVsaPromptServ
             foreach (var yamlFile in yamlFiles)
             {
                 var fileName = Path.GetFileNameWithoutExtension(yamlFile);
-                
+
                 // Extract feature name from .Type.yaml files
                 if (fileName.EndsWith(".Type", StringComparison.OrdinalIgnoreCase))
                 {
-                    var featureName = fileName.Substring(0, fileName.Length - 5); // Remove ".Type"
+                    var featureName = fileName[..^5]; // Remove ".Type"
                     featureNames.Add(featureName);
                 }
 
@@ -85,14 +85,14 @@ public class VsaPromptService(ILogger<VsaPromptService> logger) : IVsaPromptServ
 
             // Build the comprehensive SDK generation prompt
             var templatePath = Path.Combine(_promptsPath, "GenerateSDKFromDomainModel.md");
-            
+
             if (!File.Exists(templatePath))
                 throw new FileNotFoundException($"VSA template not found: {templatePath}");
 
             var templateContent = await File.ReadAllTextAsync(templatePath);
-            
+
             var prompt = new StringBuilder();
-            
+
             // Add the template as the system context
             prompt.AppendLine("# Generate Modern .NET SDK Project from Domain Models");
             prompt.AppendLine();
@@ -100,21 +100,21 @@ public class VsaPromptService(ILogger<VsaPromptService> logger) : IVsaPromptServ
             prompt.AppendLine("Create a complete, production-ready .NET SDK project using Vertical Slice Architecture (VSA) patterns from the provided domain model definitions.");
             prompt.AppendLine("Use the **latest stable .NET LTS version** with modern C# language features and current best practices.");
             prompt.AppendLine();
-            
+
             prompt.AppendLine("## Project Configuration");
             prompt.AppendLine($"**Target Namespace**: {namespaceName}");
             prompt.AppendLine($"**Primary Feature**: {primaryFeatureName}");
             prompt.AppendLine($"**All Features**: {string.Join(", ", featureNames)}");
             prompt.AppendLine($"**Domain Path**: {domainFolderPath}");
             prompt.AppendLine();
-            
+
             prompt.AppendLine("## Domain Model Definitions");
             prompt.AppendLine(allModelContent.ToString());
-            
+
             prompt.AppendLine("## VSA Template Instructions");
             prompt.AppendLine(templateContent);
             prompt.AppendLine();
-            
+
             prompt.AppendLine("## Generation Requirements");
             prompt.AppendLine("1. **Create complete project structure** with proper VSA organization");
             prompt.AppendLine("2. **Generate all model files** for each feature found in the YAML definitions");
@@ -125,9 +125,9 @@ public class VsaPromptService(ILogger<VsaPromptService> logger) : IVsaPromptServ
             prompt.AppendLine("7. **Add comprehensive XML documentation** for all public APIs");
             prompt.AppendLine("8. **Follow modern .NET conventions** and latest C# language features");
             prompt.AppendLine();
-            
+
             prompt.AppendLine("Generate the complete SDK project ready for production use.");
-            
+
             return prompt.ToString();
         }
         catch (Exception ex)
@@ -144,7 +144,7 @@ public class VsaPromptService(ILogger<VsaPromptService> logger) : IVsaPromptServ
             if (!Directory.Exists(_promptsPath))
             {
                 logger.LogWarning("VSA prompts directory not found: {Path}", _promptsPath);
-                return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
+                return Task.FromResult<IEnumerable<string>>([]);
             }
 
             var templateFiles = Directory.GetFiles(_promptsPath, "*.md");
@@ -161,7 +161,7 @@ public class VsaPromptService(ILogger<VsaPromptService> logger) : IVsaPromptServ
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to get available VSA templates");
-            return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
+            return Task.FromResult<IEnumerable<string>>([]);
         }
     }
 }

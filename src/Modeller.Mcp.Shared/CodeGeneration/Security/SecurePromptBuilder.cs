@@ -36,14 +36,15 @@ public class SecurePromptBuilder : ISecurePromptBuilder
     private readonly Dictionary<string, string> _secureTemplates;
 
     // Regex patterns for detecting potential injection attempts
-    private static readonly Regex[] InjectionPatterns = {
+    private static readonly Regex[] InjectionPatterns =
+    [
         new(@"\b(ignore|forget|disregard)\s+(previous|above|earlier|all)\s+(instructions?|prompts?|rules?|context)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new(@"\b(you\s+are\s+now|act\s+as|pretend\s+to\s+be|roleplay\s+as)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new(@"\b(system\s+prompt|admin\s+mode|developer\s+mode|debug\s+mode)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new(@"```\s*(python|javascript|sql|bash|powershell|cmd)", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new(@"\b(execute|eval|run|compile|interpret)\s+", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new(@"\b(base64|decode|unescape|html|url|json)\s*(decode|encode|parse)", RegexOptions.IgnoreCase | RegexOptions.Compiled)
-    };
+    ];
 
     // Dangerous keywords that should be filtered or escaped
     private static readonly HashSet<string> DangerousKeywords = new(StringComparer.OrdinalIgnoreCase)
@@ -146,8 +147,8 @@ public class SecurePromptBuilder : ISecurePromptBuilder
             {
                 SanitizedContent = string.Empty,
                 RiskLevel = RiskLevel.Low,
-                RiskFactors = new List<string>(),
-                ModificationsApplied = new List<string>()
+                RiskFactors = [],
+                ModificationsApplied = []
             };
         }
 
@@ -419,11 +420,12 @@ public class SecurePromptBuilder : ISecurePromptBuilder
     {
         return securityLevel switch
         {
-            SecurityLevel.Basic => new HashSet<string> { "analysis", "validation" },
-            SecurityLevel.Standard => new HashSet<string> { "analysis", "validation", "template_generation" },
-            SecurityLevel.Enhanced => new HashSet<string> { "analysis", "validation", "template_generation", "recommendations" },
-            SecurityLevel.Maximum => new HashSet<string> { "analysis", "validation", "template_generation", "recommendations", "migration_guidance" },
-            _ => new HashSet<string> { "analysis" }
+            SecurityLevel.Basic => ["analysis", "validation"],
+            SecurityLevel.Standard => ["analysis", "validation", "template_generation"],
+            SecurityLevel.Enhanced => ["analysis", "validation", "template_generation", "recommendations"],
+            SecurityLevel.Maximum =>
+                ["analysis", "validation", "template_generation", "recommendations", "migration_guidance"],
+            _ => ["analysis"]
         };
     }
 
@@ -524,8 +526,8 @@ public record SanitizationResult
 {
     public required string SanitizedContent { get; init; }
     public RiskLevel RiskLevel { get; init; }
-    public List<string> RiskFactors { get; init; } = new();
-    public List<string> ModificationsApplied { get; init; } = new();
+    public List<string> RiskFactors { get; init; } = [];
+    public List<string> ModificationsApplied { get; init; } = [];
 }
 
 /// <summary>
@@ -538,8 +540,8 @@ public record SecurePromptContext
     public required string UserId { get; init; }
     public required string SessionId { get; init; }
     public DateTime CreatedAt { get; init; }
-    public HashSet<string> AllowedCapabilities { get; init; } = new();
-    public List<string> SecurityBoundaries { get; init; } = new();
+    public HashSet<string> AllowedCapabilities { get; init; } = [];
+    public List<string> SecurityBoundaries { get; init; } = [];
     public int MaxTokens { get; init; }
     public int TimeoutSeconds { get; init; }
 }

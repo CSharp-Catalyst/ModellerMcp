@@ -36,5 +36,9 @@
   },
   
   "editor.suggest.showWords": false,
-  "editor.wordBasedSuggestions": "off"
+  "editor.wordBasedSuggestions": "off",
+  "cSpell.words": [
+    "Behaviour",
+    "behaviours"
+  ]
 }

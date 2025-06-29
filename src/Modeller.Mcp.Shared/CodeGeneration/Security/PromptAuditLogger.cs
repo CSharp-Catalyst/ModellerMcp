@@ -107,7 +107,7 @@ public class PromptAuditLogger : IPromptAuditLogger
                 if (!entry.PostValidationPassed)
                 {
                     _logger.LogWarning("LLM response failed post-generation validation: {ValidationErrors}",
-                        string.Join(", ", entry.ValidationErrors ?? new List<string>()));
+                        string.Join(", ", entry.ValidationErrors ?? []));
                 }
             }
 

@@ -161,7 +161,7 @@ public class SecureLlmService(
                 {
                     PromptAuditId = promptAuditEntry.Id,
                     LlmAuditId = llmAuditEntry.Id,
-                    SecurityValidations = new List<string> { "context", "prompt", "injection_risk", "post_generation" },
+                    SecurityValidations = ["context", "prompt", "injection_risk", "post_generation"],
                     TotalProcessingTime = DateTime.UtcNow - startTime
                 },
                 ErrorMessage = postValidation.IsValid ? null : string.Join("; ", postValidation.Issues)
@@ -260,8 +260,8 @@ public class SecureLlmService(
             return Task.FromResult(new PostGenerationValidationResult
             {
                 IsValid = false,
-                Issues = new List<string> { $"Validation error: {ex.Message}" },
-                Warnings = new List<string>(),
+                Issues = [$"Validation error: {ex.Message}"],
+                Warnings = [],
                 ContentLength = content?.Length ?? 0,
                 ValidatedAt = DateTime.UtcNow,
                 SecurityLevel = context.RequiredSecurityLevel
@@ -283,7 +283,7 @@ public class SecureLlmService(
             TokensUsed = 0,
             GenerationDuration = DateTime.UtcNow - startTime,
             PostValidationPassed = false,
-            ValidationErrors = new List<string> { errorMessage },
+            ValidationErrors = [errorMessage],
             SecurityContext = request.SecurityContext
         };
 
@@ -301,8 +301,8 @@ public class SecureLlmService(
             PostValidationResult = new PostGenerationValidationResult
             {
                 IsValid = false,
-                Issues = new List<string> { errorMessage },
-                Warnings = new List<string>(),
+                Issues = [errorMessage],
+                Warnings = [],
                 ContentLength = 0,
                 ValidatedAt = DateTime.UtcNow,
                 SecurityLevel = request.SecurityContext.RequiredSecurityLevel
@@ -312,7 +312,7 @@ public class SecureLlmService(
             {
                 PromptAuditId = Guid.Empty,
                 LlmAuditId = failureAuditEntry.Id,
-                SecurityValidations = new List<string> { "failed" },
+                SecurityValidations = ["failed"],
                 TotalProcessingTime = DateTime.UtcNow - startTime
             },
             ErrorMessage = errorMessage
@@ -342,7 +342,7 @@ public class SecureLlmService(
             TopP = 0.9,
             FrequencyPenalty = 0.1,
             PresencePenalty = 0.1,
-            Stop = new[] { "SECURITY_BOUNDARY_END", "SYSTEM:", "ADMIN:", "ROOT:" },
+            Stop = ["SECURITY_BOUNDARY_END", "SYSTEM:", "ADMIN:", "ROOT:"],
             Seed = securityLevel >= SecurityLevel.Enhanced ? null : 42 // Reproducible for high security
         };
     }
@@ -494,7 +494,7 @@ public record SecureLlmResponse
 public record SecurityValidationResult
 {
     public bool IsValid { get; init; }
-    public List<string> Issues { get; init; } = new();
+    public List<string> Issues { get; init; } = [];
     public DateTime ValidatedAt { get; init; }
 }
 
@@ -504,8 +504,8 @@ public record SecurityValidationResult
 public record PostGenerationValidationResult
 {
     public bool IsValid { get; init; }
-    public List<string> Issues { get; init; } = new();
-    public List<string> Warnings { get; init; } = new();
+    public List<string> Issues { get; init; } = [];
+    public List<string> Warnings { get; init; } = [];
     public int ContentLength { get; init; }
     public DateTime ValidatedAt { get; init; }
     public SecurityLevel SecurityLevel { get; init; }
@@ -535,6 +535,6 @@ public record AuditTrail
 {
     public Guid PromptAuditId { get; init; }
     public Guid LlmAuditId { get; init; }
-    public List<string> SecurityValidations { get; init; } = new();
+    public List<string> SecurityValidations { get; init; } = [];
     public TimeSpan TotalProcessingTime { get; init; }
 }

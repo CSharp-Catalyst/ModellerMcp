@@ -1,0 +1,24 @@
+enum: CustomerStatus
+summary: Defines the possible status values for a customer account
+remarks: Used to track the lifecycle and state of customer accounts in the system
+
+items:
+  - name: Active
+    display: Active
+    value: 1
+    
+  - name: Inactive
+    display: Inactive
+    value: 2
+    
+  - name: Suspended
+    display: Suspended
+    value: 3
+    
+  - name: Pending
+    display: Pending Verification
+    value: 4
+    
+  - name: Closed
+    display: Closed
+    value: 5

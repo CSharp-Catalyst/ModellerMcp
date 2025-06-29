@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Modeller.Mcp.Shared.CodeGeneration.LLM;
-using Modeller.Mcp.Shared.CodeGeneration.Prompts;
 using Modeller.Mcp.Shared.CodeGeneration.Prompts.VSA;
 
 namespace Modeller.Mcp.Shared.CodeGeneration.Security;
@@ -103,25 +102,13 @@ public class FilePromptAuditLogger : IPromptAuditLogger
         Directory.CreateDirectory(_auditLogPath);
     }
 
-    public async Task LogPromptValidationAsync(PromptAuditEntry entry)
-    {
-        await WriteAuditEntryAsync("prompt_validation", entry);
-    }
+    public async Task LogPromptValidationAsync(PromptAuditEntry entry) => await WriteAuditEntryAsync("prompt_validation", entry);
 
-    public async Task LogLlmInteractionAsync(LlmAuditEntry entry)
-    {
-        await WriteAuditEntryAsync("llm_interaction", entry);
-    }
+    public async Task LogLlmInteractionAsync(LlmAuditEntry entry) => await WriteAuditEntryAsync("llm_interaction", entry);
 
-    public async Task LogSecurityViolationAsync(SecurityViolationEntry entry)
-    {
-        await WriteAuditEntryAsync("security_violation", entry);
-    }
+    public async Task LogSecurityViolationAsync(SecurityViolationEntry entry) => await WriteAuditEntryAsync("security_violation", entry);
 
-    public async Task LogCodeGenerationAsync(CodeGenerationAuditEntry entry)
-    {
-        await WriteAuditEntryAsync("code_generation", entry);
-    }
+    public async Task LogCodeGenerationAsync(CodeGenerationAuditEntry entry) => await WriteAuditEntryAsync("code_generation", entry);
 
     private async Task WriteAuditEntryAsync<T>(string category, T entry)
     {
@@ -151,10 +138,7 @@ public class FilePromptAuditLogger : IPromptAuditLogger
         }
     }
 
-    public void Dispose()
-    {
-        _fileLock?.Dispose();
-    }
+    public void Dispose() => _fileLock?.Dispose();
 }
 
 /// <summary>
@@ -185,7 +169,7 @@ public class SecurityMetricsCollector(ILogger<SecurityMetricsCollector> logger) 
 {
     public async Task RecordSecurityEventAsync(string eventType, Dictionary<string, object> metadata)
     {
-        logger.LogInformation("Security event recorded: {EventType} with metadata: {@Metadata}", 
+        logger.LogInformation("Security event recorded: {EventType} with metadata: {@Metadata}",
             eventType, metadata);
         await Task.CompletedTask;
     }
@@ -207,7 +191,7 @@ public class SecurityMetricsCollector(ILogger<SecurityMetricsCollector> logger) 
 
 public class RateLimitingService : IRateLimitingService
 {
-    private readonly Dictionary<string, List<DateTime>> _requestHistory = new();
+    private readonly Dictionary<string, List<DateTime>> _requestHistory = [];
     private readonly SemaphoreSlim _lock = new(1, 1);
 
     public async Task<bool> IsRequestAllowedAsync(string userId, string operation, CancellationToken cancellationToken = default)
@@ -220,7 +204,7 @@ public class RateLimitingService : IRateLimitingService
             var windowStart = now.AddMinutes(-1); // 1-minute sliding window
 
             if (!_requestHistory.ContainsKey(key))
-                _requestHistory[key] = new List<DateTime>();
+                _requestHistory[key] = [];
 
             // Remove old requests outside the window
             _requestHistory[key].RemoveAll(time => time < windowStart);
@@ -242,7 +226,7 @@ public class RateLimitingService : IRateLimitingService
         {
             var key = $"{userId}:{operation}";
             if (!_requestHistory.ContainsKey(key))
-                _requestHistory[key] = new List<DateTime>();
+                _requestHistory[key] = [];
 
             _requestHistory[key].Add(DateTime.UtcNow);
         }
@@ -257,14 +241,14 @@ public class SecurityTelemetryService(ILogger<SecurityTelemetryService> logger) 
 {
     public async Task SendSecurityAlertAsync(SecurityAlert alert, CancellationToken cancellationToken = default)
     {
-        logger.LogWarning("Security Alert: {AlertType} - {Message} for User {UserId}", 
+        logger.LogWarning("Security Alert: {AlertType} - {Message} for User {UserId}",
             alert.AlertType, alert.Message, alert.UserId);
         await Task.CompletedTask;
     }
 
     public async Task RecordSecurityMetricAsync(string metricName, double value, Dictionary<string, string>? tags = null)
     {
-        logger.LogInformation("Security Metric: {MetricName} = {Value}, Tags: {@Tags}", 
+        logger.LogInformation("Security Metric: {MetricName} = {Value}, Tags: {@Tags}",
             metricName, value, tags);
         await Task.CompletedTask;
     }
@@ -287,7 +271,7 @@ public class SecurityMonitoringService(
             {
                 // Perform periodic security checks
                 await PerformSecurityHealthCheckAsync(stoppingToken);
-                
+
                 // Wait for 5 minutes before next check
                 await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
             }
@@ -333,7 +317,7 @@ public class AuditLogRotationService(
             try
             {
                 await RotateOldAuditLogsAsync(stoppingToken);
-                
+
                 // Run daily at 2 AM
                 var nextRun = DateTime.Today.AddDays(1).AddHours(2);
                 var delay = nextRun - DateTime.Now;
@@ -413,7 +397,7 @@ public record SecurityAlert
     public required string Message { get; init; }
     public required string UserId { get; init; }
     public DateTime Timestamp { get; init; } = DateTime.UtcNow;
-    public Dictionary<string, object> Metadata { get; init; } = new();
+    public Dictionary<string, object> Metadata { get; init; } = [];
 }
 
 /// <summary>

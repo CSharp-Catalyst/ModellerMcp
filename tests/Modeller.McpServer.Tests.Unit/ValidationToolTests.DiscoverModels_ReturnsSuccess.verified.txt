@@ -1,6 +1,6 @@
 ﻿🔍 **Model Discovery Results for:** ModellerMcp
 
-**Total Files Found:** 7
+**Total Files Found:** 9
 
 📁 **Structured Model Directories:**
 
@@ -14,6 +14,8 @@
       ✅ Has behaviour definition
       🎯 Customer.Behaviour.yaml (BddModel)
       🎯 Customer.Type.yaml (BddModel)
+      🎯 CustomerContact.Behaviour.yaml (BddModel)
+      🎯 CustomerContact.Type.yaml (BddModel)
       🎯 Order.Behaviour.yaml (BddModel)
       🎯 Order.Type.yaml (BddModel)
       📝 _meta.yaml (Metadata)

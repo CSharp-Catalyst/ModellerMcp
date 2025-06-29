@@ -104,7 +104,7 @@ public record LlmModelInfo
     public required string Provider { get; init; }
     public int MaxTokens { get; init; }
     public decimal CostPer1kTokens { get; init; }
-    public string[] Capabilities { get; init; } = Array.Empty<string>();
+    public string[] Capabilities { get; init; } = [];
     public bool IsAvailable { get; init; } = true;
     public DateTime? LastUpdated { get; init; }
 }

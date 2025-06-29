@@ -71,9 +71,11 @@ public class VsaPromptServiceTests : IDisposable
     {
         // Arrange
         var vsaPromptService = _serviceProvider.GetRequiredService<IVsaPromptService>();
+        var solutionPath = Helper.GetSolutionFolder();
+        var domainPath = Path.Combine(solutionPath!, "models", "Business", "CustomerManagement");
 
         // Act
-        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(@"c:\jjs\set\dev\ModellerMcp\models\Business\CustomerManagement");
+        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(domainPath);
 
         // Assert
         Assert.NotNull(prompt);
@@ -91,9 +93,11 @@ public class VsaPromptServiceTests : IDisposable
     {
         // Arrange
         var vsaPromptService = _serviceProvider.GetRequiredService<IVsaPromptService>();
+        var solutionPath = Helper.GetSolutionFolder();
+        var domainPath = Path.Combine(solutionPath!, "models", "Business", "CustomerManagement");
 
         // Act
-        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(@"c:\jjs\set\dev\ModellerMcp\models\Business\CustomerManagement");
+        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(domainPath);
 
         // Assert
         Assert.Contains("## Task Overview", prompt);
@@ -110,9 +114,11 @@ public class VsaPromptServiceTests : IDisposable
     {
         // Arrange
         var vsaPromptService = _serviceProvider.GetRequiredService<IVsaPromptService>();
+        var solutionPath = Helper.GetSolutionFolder();
+        var domainPath = Path.Combine(solutionPath!, "models", "Business", "CustomerManagement");
 
         // Act
-        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(@"c:\jjs\set\dev\ModellerMcp\models\Business\CustomerManagement");
+        var prompt = await vsaPromptService.GenerateSDKFromDomainModelAsync(domainPath);
 
         // Assert
         Assert.NotNull(prompt);

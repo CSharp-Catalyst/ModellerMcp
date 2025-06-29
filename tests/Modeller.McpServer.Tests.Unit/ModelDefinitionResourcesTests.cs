@@ -1,8 +1,6 @@
-using Modeller.Mcp.Shared;
 using Modeller.Mcp.Shared.Models;
 using Modeller.Mcp.Shared.Resources;
 using Modeller.Mcp.Shared.Services;
-using System.Text.Json;
 
 namespace Modeller.McpServer.Tests.Unit;
 
@@ -18,10 +16,8 @@ public class ModelDefinitionResourcesTests
         {
             Model = "TestModel",
             Summary = "A test model",
-            AttributeUsages = new List<AttributeUsage>
-            {
-                new() { Name = "TestAttribute", Type = "string", Required = true, Summary = "Test attribute" }
-            }
+            AttributeUsages =
+                [new() { Name = "TestAttribute", Type = "string", Required = true, Summary = "Test attribute" }]
         };
 
         // Act
@@ -78,7 +74,7 @@ public class ModelDefinitionResourcesTests
         // Arrange
         var service = new ModelDiscoveryService();
         var resources = new ModelDefinitionResources(service);
-        
+
         var model1 = new ModelDefinition { Model = "Model1", Summary = "First model" };
         var model2 = new ModelDefinition { Model = "Model2", Summary = "Second model" };
 

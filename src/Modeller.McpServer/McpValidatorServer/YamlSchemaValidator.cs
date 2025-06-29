@@ -42,8 +42,18 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
         }
 
         // Check content patterns
-        if (yaml.Contains("model:") && (yaml.Contains("attributeUsages:") || yaml.Contains("behaviours:")))
-            return ModelFileType.BddModel;
+        if (yaml.Contains("model:"))
+        {
+            bool hasAttributeUsages = yaml.Contains("attributeUsages:");
+            bool hasBehaviours = yaml.Contains("behaviours:");
+            bool hasScenarios = yaml.Contains("scenarios:");
+
+            // If it has model: and any of the BDD components, it's a BDD model
+            if (hasAttributeUsages || hasBehaviours || hasScenarios)
+            {
+                return ModelFileType.BddModel;
+            }
+        }
 
         if (yaml.Contains("attributeTypes:"))
             return ModelFileType.AttributeTypes;
@@ -51,10 +61,7 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
         if (yaml.Contains("enum:") && yaml.Contains("items:"))
             return ModelFileType.Enum;
 
-        if (yaml.Contains("validationProfiles:"))
-            return ModelFileType.ValidationProfiles;
-
-        return ModelFileType.Unknown;
+        return yaml.Contains("validationProfiles:") ? ModelFileType.ValidationProfiles : ModelFileType.Unknown;
     }
 
     public async Task<ModelValidationResponse> ValidateAsync(string filePath, CancellationToken cancellationToken)
@@ -209,14 +216,30 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
                 results.Add(new ValidationResult(filePath, $"Model name '{model.Model}' should match start of file name", ValidationSeverity.Warning));
             }
 
+            // Check for behaviors defined in type files
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            var isTypeFile = fileName?.EndsWith(".Type", StringComparison.OrdinalIgnoreCase) == true;
+            var hasBehaviors = model.Behaviours?.Any() == true;
+            var hasScenarios = model.Scenarios?.Any() == true;
+
+            if (isTypeFile && (hasBehaviors || hasScenarios))
+            {
+                var behaviorCount = (model.Behaviours?.Count ?? 0) + (model.Scenarios?.Count ?? 0);
+                results.Add(new ValidationResult(filePath, 
+                    $"Type file contains {behaviorCount} behavior definition(s). Consider moving behaviors to a separate .Behaviour.yaml file for better separation of concerns.", 
+                    ValidationSeverity.Warning));
+            }
+
             // Validate attribute usages
             ValidateAttributeUsages(filePath, model.Model, model.AttributeUsages, results);
 
             // Validate behaviours
-            ValidateBehaviours(filePath, model.Behaviours, results);
+            if (model.Behaviours != null)
+                ValidateBehaviours(filePath, model.Behaviours, results);
 
             // Validate scenarios
-            ValidateScenarios(filePath, model.Scenarios, results);
+            if (model.Scenarios != null)
+                ValidateScenarios(filePath, model.Scenarios, results);
 
             return model;
         }

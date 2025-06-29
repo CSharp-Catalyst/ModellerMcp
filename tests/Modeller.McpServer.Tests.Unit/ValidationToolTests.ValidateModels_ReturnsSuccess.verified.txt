@@ -1,19 +1,33 @@
-﻿Validation completed with 13 errors, 0 warnings, and 0 info messages.
+﻿Validation completed with 0 errors, 0 warnings, and 13 info messages.
+
+📄 **Business**
+  ℹ️ Namespace directory 'Business' contains model subdirectories - this is a valid organization pattern
+
+📄 **Shared**
+  ℹ️ Namespace directory 'Shared' contains model subdirectories - this is a valid organization pattern
+
+📄 **Customer.Behaviour.yaml**
+  ℹ️ Potential abbreviation 'BDD' found - consider using full words unless domain-specific
+  ℹ️ Model 'Customer' validated and registered as MCP resource for domain 'Business/CustomerManagement'
 
 📄 **Customer.Type.yaml**
-  ❌ Model 'Customer': Attribute usage type 'primaryKey' is not defined in shared attribute types
-  ❌ Model 'Customer': Attribute usage type 'baseString' is not defined in shared attribute types
-  ❌ Model 'Customer': Attribute usage type 'baseString' is not defined in shared attribute types
-  ❌ Model 'Customer': Attribute usage type 'emailAddress' is not defined in shared attribute types
-  ❌ Model 'Customer': Attribute usage type 'phoneNumber' is not defined in shared attribute types
-  ❌ Model 'Customer': Attribute usage type 'addressString' is not defined in shared attribute types
+  ℹ️ Model 'Customer' validated and registered as MCP resource for domain 'Business/CustomerManagement'
+
+📄 **CustomerContact.Behaviour.yaml**
+  ℹ️ Potential abbreviation 'BDD' found - consider using full words unless domain-specific
+  ℹ️ Model 'CustomerContact' validated and registered as MCP resource for domain 'Business/CustomerManagement'
+
+📄 **CustomerContact.Type.yaml**
+  ℹ️ Model 'CustomerContact' validated and registered as MCP resource for domain 'Business/CustomerManagement'
+
+📄 **Order.Behaviour.yaml**
+  ℹ️ Potential abbreviation 'BDD' found - consider using full words unless domain-specific
+  ℹ️ Model 'Order' validated and registered as MCP resource for domain 'Business/CustomerManagement'
 
 📄 **Order.Type.yaml**
-  ❌ Model 'Order': Attribute usage type 'primaryKey' is not defined in shared attribute types
-  ❌ Model 'Order': Attribute usage type 'baseString' is not defined in shared attribute types
-  ❌ Model 'Order': Attribute usage type 'primaryKey' is not defined in shared attribute types
-  ❌ Model 'Order': Attribute usage type 'dateField' is not defined in shared attribute types
-  ❌ Model 'Order': Attribute usage type 'baseString' is not defined in shared attribute types
-  ❌ Model 'Order': Attribute usage type 'baseString' is not defined in shared attribute types
-  ❌ Model 'Order': Attribute usage type 'longString' is not defined in shared attribute types
+  ℹ️ Model 'Order' validated and registered as MCP resource for domain 'Business/CustomerManagement'
+
+📄 **_meta.yaml**
+  ℹ️ Potential abbreviation 'BDD' found - consider using full words unless domain-specific
+  ℹ️ Potential abbreviation 'BDD' found - consider using full words unless domain-specific
 

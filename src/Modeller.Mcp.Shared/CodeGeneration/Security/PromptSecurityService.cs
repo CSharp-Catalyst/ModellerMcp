@@ -336,8 +336,8 @@ public record SecurityContext
 public record PromptValidationResult
 {
     public bool IsValid { get; init; }
-    public List<string> Issues { get; init; } = new();
-    public List<string> Warnings { get; init; } = new();
+    public List<string> Issues { get; init; } = [];
+    public List<string> Warnings { get; init; } = [];
     public DateTime ProcessedAt { get; init; }
 }
 
@@ -347,7 +347,7 @@ public record PromptValidationResult
 public record InjectionRiskAssessment
 {
     public RiskLevel Level { get; init; }
-    public List<string> RiskFactors { get; init; } = new();
+    public List<string> RiskFactors { get; init; } = [];
     public string Reason { get; init; } = string.Empty; // Reason can default to empty as it's optional
     public DateTime AssessedAt { get; init; }
 }

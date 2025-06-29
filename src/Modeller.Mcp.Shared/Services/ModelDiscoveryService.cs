@@ -126,8 +126,19 @@ public class ModelDiscoveryService
         {
             var content = File.ReadAllText(filePath);
 
-            if (content.Contains("model:") && (content.Contains("attributeUsages:") || content.Contains("behaviours:")))
-                return ModelFileType.BddModel;
+            // Check for BDD models - files containing model definitions
+            if (content.Contains("model:"))
+            {
+                bool hasAttributeUsages = content.Contains("attributeUsages:");
+                bool hasBehaviours = content.Contains("behaviours:");
+                bool hasScenarios = content.Contains("scenarios:");
+
+                // If it has model: and any of the BDD components, it's a BDD model
+                if (hasAttributeUsages || hasBehaviours || hasScenarios)
+                {
+                    return ModelFileType.BddModel;
+                }
+            }
 
             if (content.Contains("attributeTypes:"))
                 return ModelFileType.AttributeTypes;

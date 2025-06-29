@@ -3,8 +3,18 @@ summary: Customer business behaviors and scenarios
 remarks: Defines the business behaviors and BDD scenarios for customer management operations
 
 behaviours:
+  - name: createCustomer
+    summary: Creates a new customer in the system (alias for registerNewCustomer)
+    entities:
+      - Customer
+
   - name: registerNewCustomer
     summary: Registers a new customer in the system
+    entities:
+      - Customer
+    
+  - name: getCustomerByNumber
+    summary: Retrieves a customer by their business-friendly customer number
     entities:
       - Customer
     
@@ -14,7 +24,17 @@ behaviours:
       - Customer
       
   - name: deactivateCustomer
-    summary: Deactivates a customer account
+    summary: Deactivates a customer account by setting status to Inactive
+    entities:
+      - Customer
+      
+  - name: suspendCustomer
+    summary: Temporarily suspends a customer account
+    entities:
+      - Customer
+      
+  - name: activateCustomer
+    summary: Activates a customer account by setting status to Active
     entities:
       - Customer
 
@@ -25,7 +45,7 @@ scenarios:
     when:
       - The registration process is completed
     then:
-      - A new customer record is created with active status
+      - A new customer record is created with Active status
     
   - name: CustomerInformationUpdate
     given:
@@ -41,4 +61,20 @@ scenarios:
     when:
       - Deactivation is requested
     then:
-      - The customer account is marked as inactive
+      - The customer account status is changed to Inactive
+      
+  - name: CustomerAccountSuspension
+    given:
+      - An active customer account needs temporary suspension
+    when:
+      - Suspension is requested with valid reason
+    then:
+      - The customer account status is changed to Suspended
+      
+  - name: CustomerAccountReactivation
+    given:
+      - A suspended or inactive customer account exists
+    when:
+      - Reactivation is approved
+    then:
+      - The customer account status is changed to Active

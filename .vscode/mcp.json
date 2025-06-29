@@ -12,7 +12,7 @@
      "args": [
        "run",
        "--project",
-       "C:\\jjs\\set\\dev\\ModellerMcp\\src\\Modeller.McpServer\\Modeller.McpServer.csproj"
+       "src/Modeller.McpServer/Modeller.McpServer.csproj"
      ]
    }
   }

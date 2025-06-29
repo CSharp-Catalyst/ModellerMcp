@@ -27,10 +27,10 @@ public class MockLlmService : ILlmService
     public async Task<LlmResponse> GenerateCodeAsync(LlmRequest request, CancellationToken cancellationToken = default)
     {
         var startTime = DateTime.UtcNow;
-        
+
         try
         {
-            _logger.LogInformation("Generating code for model {ModelId} with prompt length {PromptLength}", 
+            _logger.LogInformation("Generating code for model {ModelId} with prompt length {PromptLength}",
                 request.ModelId, request.Prompt.Length);
 
             // Simulate processing latency
@@ -67,7 +67,7 @@ public class MockLlmService : ILlmService
                 }
             };
 
-            _logger.LogInformation("Code generation completed for model {ModelId} in {Duration}ms", 
+            _logger.LogInformation("Code generation completed for model {ModelId} in {Duration}ms",
                 request.ModelId, generationTime.TotalMilliseconds);
 
             return response;
@@ -80,7 +80,7 @@ public class MockLlmService : ILlmService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Code generation failed for model {ModelId}", request.ModelId);
-            
+
             return new LlmResponse
             {
                 Content = string.Empty,
@@ -95,22 +95,22 @@ public class MockLlmService : ILlmService
     public async Task<bool> ValidateServiceAsync(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Validating Mock LLM service availability");
-        
+
         // Simulate validation check
         await Task.Delay(100, cancellationToken);
-        
+
         return true; // Mock service is always available
     }
 
     public async Task<IEnumerable<LlmModelInfo>> GetAvailableModelsAsync(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Retrieving available Mock LLM models");
-        
+
         // Simulate API call
         await Task.Delay(50, cancellationToken);
-        
-        return new[]
-        {
+
+        return
+        [
             new LlmModelInfo
             {
                 Id = "mock-csharp-code-gen",
@@ -119,7 +119,7 @@ public class MockLlmService : ILlmService
                 Provider = "Mock",
                 MaxTokens = 8192,
                 CostPer1kTokens = 0.002m,
-                Capabilities = new[] { "code-generation", "csharp", "dotnet" },
+                Capabilities = ["code-generation", "csharp", "dotnet"],
                 IsAvailable = true,
                 LastUpdated = DateTime.UtcNow
             },
@@ -131,25 +131,25 @@ public class MockLlmService : ILlmService
                 Provider = "Mock",
                 MaxTokens = 4096,
                 CostPer1kTokens = 0.001m,
-                Capabilities = new[] { "code-generation", "text-generation", "analysis" },
+                Capabilities = ["code-generation", "text-generation", "analysis"],
                 IsAvailable = true,
                 LastUpdated = DateTime.UtcNow
             }
-        };
+        ];
     }
 
     public async Task<LlmUsageEstimate> EstimateUsageAsync(string prompt, string modelId, CancellationToken cancellationToken = default)
     {
-        _logger.LogDebug("Estimating usage for model {ModelId} with prompt length {PromptLength}", 
+        _logger.LogDebug("Estimating usage for model {ModelId} with prompt length {PromptLength}",
             modelId, prompt.Length);
-        
+
         // Simulate estimation calculation
         await Task.Delay(10, cancellationToken);
-        
+
         var promptTokens = EstimateTokenCount(prompt);
         var estimatedCompletionTokens = Math.Min(promptTokens * 2, 2000); // Estimate 2x prompt length, max 2000
         var totalTokens = promptTokens + estimatedCompletionTokens;
-        
+
         return new LlmUsageEstimate
         {
             EstimatedPromptTokens = promptTokens,
@@ -165,9 +165,11 @@ public class MockLlmService : ILlmService
     {
         // Analyze prompt to determine what kind of code to generate
         var promptLower = prompt.ToLowerInvariant();
-        
+
         if (promptLower.Contains("class") || promptLower.Contains("type"))
+        {
             return GenerateMockClassCode(prompt);
+        }
         else if (promptLower.Contains("method") || promptLower.Contains("function"))
         {
             return GenerateMockMethodCode(prompt);
@@ -176,19 +178,13 @@ public class MockLlmService : ILlmService
         {
             return GenerateMockPropertyCode(prompt);
         }
-        else if (promptLower.Contains("interface"))
-        {
-            return GenerateMockInterfaceCode(prompt);
-        }
         else
         {
-            return GenerateGenericMockCode(prompt);
+            return promptLower.Contains("interface") ? GenerateMockInterfaceCode(prompt) : GenerateGenericMockCode(prompt);
         }
     }
 
-    private string GenerateMockClassCode(string prompt)
-    {
-        return """
+    private string GenerateMockClassCode(string prompt) => """
         // Generated by Mock LLM Service
         // Based on prompt analysis for class generation
 
@@ -222,11 +218,8 @@ public class MockLlmService : ILlmService
             }
         }
         """;
-    }
 
-    private string GenerateMockMethodCode(string prompt)
-    {
-        return """
+    private string GenerateMockMethodCode(string prompt) => """
         // Generated by Mock LLM Service
         // Based on prompt analysis for method generation
 
@@ -255,11 +248,8 @@ public class MockLlmService : ILlmService
             }
         }
         """;
-    }
 
-    private string GenerateMockPropertyCode(string prompt)
-    {
-        return """
+    private string GenerateMockPropertyCode(string prompt) => """
         // Generated by Mock LLM Service
         // Based on prompt analysis for property generation
 
@@ -286,11 +276,8 @@ public class MockLlmService : ILlmService
             return $"Computed_{DateTime.UtcNow:yyyyMMddHHmmss}";
         }
         """;
-    }
 
-    private string GenerateMockInterfaceCode(string prompt)
-    {
-        return """
+    private string GenerateMockInterfaceCode(string prompt) => """
         // Generated by Mock LLM Service
         // Based on prompt analysis for interface generation
 
@@ -335,11 +322,8 @@ public class MockLlmService : ILlmService
             }
         }
         """;
-    }
 
-    private string GenerateGenericMockCode(string prompt)
-    {
-        return """
+    private string GenerateGenericMockCode(string prompt) => """
         // Generated by Mock LLM Service
         // Generic code generation based on prompt analysis
 
@@ -383,12 +367,9 @@ public class MockLlmService : ILlmService
             }
         }
         """;
-    }
 
-    private static int EstimateTokenCount(string text)
-    {
+    private static int EstimateTokenCount(string text) =>
         // Simple token estimation: roughly 4 characters per token for English text
         // This is a rough approximation - real implementations would use proper tokenizers
-        return Math.Max(1, text.Length / 4);
-    }
+        Math.Max(1, text.Length / 4);
 }

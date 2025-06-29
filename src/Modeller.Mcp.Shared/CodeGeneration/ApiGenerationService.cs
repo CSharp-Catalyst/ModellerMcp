@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
 
-using Modeller.Mcp.Shared.CodeGeneration.Prompts;
 using Modeller.Mcp.Shared.CodeGeneration.Prompts.VSA;
 using Modeller.Mcp.Shared.CodeGeneration.Security;
 using Modeller.Mcp.Shared.Services;
@@ -16,7 +15,7 @@ public interface IApiGenerationService
     /// Generate a complete Minimal API project from SDK and domain models
     /// </summary>
     Task<ApiGenerationResult> GenerateAPIAsync(ApiGenerationRequest request);
-    
+
     /// <summary>
     /// Generate the prompt that would be used for API creation
     /// </summary>
@@ -32,22 +31,22 @@ public record ApiGenerationRequest
     /// Path to the generated SDK (e.g., playschool/generated-sdk)
     /// </summary>
     public required string SdkPath { get; init; }
-    
+
     /// <summary>
     /// Path to the domain models (e.g., playschool/models/JJs/PotentialSales)
     /// </summary>
     public required string DomainPath { get; init; }
-    
+
     /// <summary>
     /// Name of the API project (e.g., "JJs.PotentialSales.Api")
     /// </summary>
     public required string ProjectName { get; init; }
-    
+
     /// <summary>
     /// Target namespace for the API (e.g., "JJs.PotentialSales.Api")
     /// </summary>
     public required string Namespace { get; init; }
-    
+
     /// <summary>
     /// Output directory for the API project
     /// </summary>
@@ -63,27 +62,27 @@ public record ApiGenerationResult
     /// Whether the generation was successful
     /// </summary>
     public bool IsSuccess { get; init; }
-    
+
     /// <summary>
     /// Generated prompt used for API creation
     /// </summary>
     public string? GeneratedPrompt { get; init; }
-    
+
     /// <summary>
     /// Path where files were generated
     /// </summary>
     public string? OutputPath { get; init; }
-    
+
     /// <summary>
     /// List of generated files
     /// </summary>
-    public List<string> GeneratedFiles { get; init; } = new();
-    
+    public List<string> GeneratedFiles { get; init; } = [];
+
     /// <summary>
     /// Error message if generation failed
     /// </summary>
     public string? ErrorMessage { get; init; }
-    
+
     public static ApiGenerationResult Success(string prompt, string outputPath, List<string> files) => new()
     {
         IsSuccess = true,
@@ -91,7 +90,7 @@ public record ApiGenerationResult
         OutputPath = outputPath,
         GeneratedFiles = files
     };
-    
+
     public static ApiGenerationResult Failure(string errorMessage) => new()
     {
         IsSuccess = false,
@@ -102,17 +101,13 @@ public record ApiGenerationResult
 /// <summary>
 /// Implementation of API generation service
 /// </summary>
-public class ApiGenerationService(
-    IVsaPromptService vsaPromptService,
-    ModelDiscoveryService modelDiscoveryService,
-    ISecureLlmService secureLlmService,
-    ILogger<ApiGenerationService> logger) : IApiGenerationService
+public class ApiGenerationService(IVsaPromptService vsaPromptService, ModelDiscoveryService modelDiscoveryService, ISecureLlmService secureLlmService, ILogger<ApiGenerationService> logger) : IApiGenerationService
 {
     public async Task<ApiGenerationResult> GenerateAPIAsync(ApiGenerationRequest request)
     {
         try
         {
-            logger.LogInformation("Starting Minimal API generation for project '{ProjectName}' from SDK '{SdkPath}'", 
+            logger.LogInformation("Starting Minimal API generation for project '{ProjectName}' from SDK '{SdkPath}'",
                 request.ProjectName, request.SdkPath);
 
             // 1. Validate SDK path exists
@@ -121,7 +116,7 @@ public class ApiGenerationService(
 
             // 2. Validate and discover domain models
             var discoveryResult = modelDiscoveryService.DiscoverModels(request.DomainPath);
-            if (discoveryResult.Errors.Any())
+            if (discoveryResult.Errors.Count > 0)
                 return ApiGenerationResult.Failure($"Failed to discover models: {string.Join("; ", discoveryResult.Errors)}");
 
             // 3. Generate the API prompt
@@ -157,12 +152,12 @@ public class ApiGenerationService(
             // 5. Save generated files to output directory
             Directory.CreateDirectory(request.OutputPath);
             var generatedFiles = new List<string>();
-            
+
             // Save the prompt and generated code for reference
             var promptPath = Path.Combine(request.OutputPath, "GeneratedPrompt.md");
             await File.WriteAllTextAsync(promptPath, prompt);
             generatedFiles.Add(promptPath);
-            
+
             var codePath = Path.Combine(request.OutputPath, "GeneratedCode.md");
             await File.WriteAllTextAsync(codePath, codeGenerationResult.Content ?? "");
             generatedFiles.Add(codePath);
@@ -184,7 +179,7 @@ public class ApiGenerationService(
         {
             // 1. Discover domain models
             var discoveryResult = modelDiscoveryService.DiscoverModels(request.DomainPath);
-            if (discoveryResult.Errors.Any())
+            if (discoveryResult.Errors.Count > 0)
                 throw new InvalidOperationException($"Failed to discover models: {string.Join(", ", discoveryResult.Errors)}");
 
             // 2. Read SDK structure to understand available components
@@ -194,7 +189,7 @@ public class ApiGenerationService(
             // 3. Read model definitions
             var modelFiles = Directory.GetFiles(request.DomainPath, "*.yaml", SearchOption.AllDirectories);
             var modelDefinitions = new List<string>();
-            
+
             foreach (var file in modelFiles)
             {
                 var content = await File.ReadAllTextAsync(file);

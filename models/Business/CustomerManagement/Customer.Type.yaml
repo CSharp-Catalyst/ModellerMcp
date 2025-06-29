@@ -51,8 +51,8 @@ attributeUsages:
     required: true
     summary: Date when the customer was registered in the system
     
-  - name: isActive
-    type: baseString
+  - name: status
+    type: CustomerStatus
     required: true
-    default: "true"
-    summary: Indicates if the customer account is active
+    default: "Active"
+    summary: Current status of the customer account

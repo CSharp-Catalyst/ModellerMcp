@@ -39,11 +39,38 @@ public class ModelStructureValidator
         {
             await ValidateModelDirectoryAsync(modelDir, cancellationToken);
         }
+        
+        // Check for namespace directories (directories that contain subdirectories with models but no direct models)
+        var allDirectories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
+        foreach (var dir in allDirectories)
+        {
+            if (!ContainsModelFiles(dir) && ContainsModelSubdirectories(dir))
+            {
+                // This is likely a namespace directory (like Business/ containing CustomerManagement/)
+                // Add an informational note instead of a warning
+                _results.Add(new ValidationResult(dir, 
+                    $"Namespace directory '{Path.GetFileName(dir)}' contains model subdirectories - this is a valid organization pattern", 
+                    ValidationSeverity.Info));
+            }
+        }
     }
 
     private bool ContainsModelFiles(string directory) =>
         Directory.GetFiles(directory, "*.yaml", SearchOption.TopDirectoryOnly).Any() ||
         Directory.GetFiles(directory, "*.yml", SearchOption.TopDirectoryOnly).Any();
+        
+    private bool ContainsModelSubdirectories(string directory)
+    {
+        try
+        {
+            var subdirs = Directory.GetDirectories(directory, "*", SearchOption.TopDirectoryOnly);
+            return subdirs.Any(subdir => ContainsModelFiles(subdir));
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
     private async Task ValidateModelDirectoryAsync(string modelDir, CancellationToken cancellationToken)
     {
