@@ -36,7 +36,7 @@ This structured format ensures that behaviours are consistently defined and test
 
 In Modeller MCP, models are defined using structured files (e.g., YAML or JSON) that describe domain concepts, attributes, behaviours, and relationships. These models act as the source of truth for code generation, documentation, and testing.
 
-#### Key Concepts:
+#### Key Concepts
 
 - **Entity**: A clearly defined object in the domain model with identity and lifecycle (e.g., User, Order)
 - **Attribute Type**: A reusable definition of a data value, including its name, data type, format, and constraints (e.g., string, email, GUID)
@@ -47,9 +47,11 @@ In Modeller MCP, models are defined using structured files (e.g., YAML or JSON) 
 
 ---
 
-### 3. Example Model Structure
+### 3. Example yaml file structures
 
-```yaml
+#### Model Type
+
+``` yaml
 model: UserAccount
 attributeUsages:
   - type: email
@@ -60,7 +62,11 @@ attributeUsages:
     default: false
     summary: Indicates whether the account is active
     remarks: Default is false until user activation occurs
+```
 
+#### Model Behaviour
+
+``` yaml
 behaviours:
   - name: activateUserAccount
     description: Activate a user account if it is inactive
@@ -80,6 +86,8 @@ scenarios:
     then:
       - UserAccount.isActive is true
 ```
+
+#### Attribute types
 
 ```yaml
 attributeTypes:

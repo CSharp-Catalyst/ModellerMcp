@@ -94,7 +94,14 @@
             "description": "Example value for this attribute type"
           }
         },
-        "required": ["name", "type"],
+        "anyOf": [
+          {
+            "required": ["name", "type"]
+          },
+          {
+            "required": ["name", "extends"]
+          }
+        ],
         "additionalProperties": false
       },
       "minItems": 1

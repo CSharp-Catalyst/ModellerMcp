@@ -273,8 +273,9 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
                 if (string.IsNullOrWhiteSpace(attributeType.Name))
                     results.Add(new ValidationResult(filePath, "Attribute type name is required", ValidationSeverity.Error));
 
-                if (string.IsNullOrWhiteSpace(attributeType.Type))
-                    results.Add(new ValidationResult(filePath, $"Attribute type '{attributeType.Name}' must specify a type", ValidationSeverity.Error));
+                // Only require type field if not extending another type (extends infers the type)
+                if (string.IsNullOrWhiteSpace(attributeType.Type) && string.IsNullOrWhiteSpace(attributeType.Extends))
+                    results.Add(new ValidationResult(filePath, $"Attribute type '{attributeType.Name}' must specify either a type or extends field", ValidationSeverity.Error));
 
                 // Validate camelCase naming
                 if (!IsCamelCase(attributeType.Name))
