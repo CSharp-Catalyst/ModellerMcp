@@ -91,17 +91,11 @@ public class VsaPromptService(ILogger<VsaPromptService> logger) : IVsaPromptServ
 
             var templateContent = await File.ReadAllTextAsync(templatePath);
 
-            var prompt = new StringBuilder();
-
-            // Add the template as the system context
-            prompt.AppendLine("# Generate Modern .NET SDK Project from Domain Models");
+            var prompt = new StringBuilder(templateContent);
             prompt.AppendLine();
-            prompt.AppendLine("## Task Overview");
-            prompt.AppendLine("Create a complete, production-ready .NET SDK project using Vertical Slice Architecture (VSA) patterns from the provided domain model definitions.");
-            prompt.AppendLine("Use the **latest stable .NET LTS version** with modern C# language features and current best practices.");
+            prompt.AppendLine("---");
             prompt.AppendLine();
-
-            prompt.AppendLine("## Project Configuration");
+            prompt.AppendLine("# Project Configuration");
             prompt.AppendLine($"**Target Namespace**: {namespaceName}");
             prompt.AppendLine($"**Primary Feature**: {primaryFeatureName}");
             prompt.AppendLine($"**All Features**: {string.Join(", ", featureNames)}");
@@ -110,23 +104,6 @@ public class VsaPromptService(ILogger<VsaPromptService> logger) : IVsaPromptServ
 
             prompt.AppendLine("## Domain Model Definitions");
             prompt.AppendLine(allModelContent.ToString());
-
-            prompt.AppendLine("## VSA Template Instructions");
-            prompt.AppendLine(templateContent);
-            prompt.AppendLine();
-
-            prompt.AppendLine("## Generation Requirements");
-            prompt.AppendLine("1. **Create complete project structure** with proper VSA organization");
-            prompt.AppendLine("2. **Generate all model files** for each feature found in the YAML definitions");
-            prompt.AppendLine("3. **Include FluentValidation** rules based on the attribute constraints");
-            prompt.AppendLine("4. **Use Result pattern** for error handling (no exceptions for business logic)");
-            prompt.AppendLine("5. **Add extension methods** for mapping between DTOs and entities");
-            prompt.AppendLine("6. **Include complete .csproj file** with latest stable .NET target framework");
-            prompt.AppendLine("7. **Add comprehensive XML documentation** for all public APIs");
-            prompt.AppendLine("8. **Follow modern .NET conventions** and latest C# language features");
-            prompt.AppendLine();
-
-            prompt.AppendLine("Generate the complete SDK project ready for production use.");
 
             return prompt.ToString();
         }

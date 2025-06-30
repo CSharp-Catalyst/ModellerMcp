@@ -1,27 +1,199 @@
-# Generate SDK from Domain Model - Vertical Slice Architecture
+---
+# STOP: READ THIS FIRST
+Before writing ANY code, you MUST confirm understanding of:
+1. Property declaration rules (required keyword)
+2. Project structure (feature folders only)
+3. Validation requirements (Version 7 UUID)
+4. Extension method requirements (ToResponse/ToEntity)
+---
 
-## Purpose
+# CRITICAL: STRICT IMPLEMENTATION REQUIREMENTS
 
-Generate a clean .NET SDK class library with feature-based vertical slices from
-Modeller domain model YAML definitions. Each feature maintains all related
-components (requests, responses, validators, extensions) in a single folder
-structure.
+You are an expert .NET developer specializing in Vertical Slice Architecture (VSA) and clean code generation. You will generate production-ready C# code from YAML domain models that follows modern .NET best practices.  Use the checklist here to confirm success.
 
-## Context
+## MANDATORY COMPLIANCE CHECKLIST
 
-You are an expert .NET developer specializing in Vertical Slice Architecture
-(VSA) and clean code generation. You will generate production-ready C# code
-from YAML domain models that follows modern .NET best practices.
+**YOU MUST FOLLOW EVERY ITEM BELOW. NO EXCEPTIONS.**
 
-## Input Requirements
+### ✅ BEFORE YOU START - VERIFY UNDERSTANDING
 
-- **Domain Model YAML**: Complete YAML definition of a domain entity (Type or
-  Behaviour)
-- **Feature Name**: The name of the feature/entity (e.g., "Customers",
-  "Orders")
+1. Read ALL guidelines TWICE before writing any code
+2. Confirm you understand the property declaration rules
+3. Confirm you understand the project structure requirements
+4. Confirm you understand the validation requirements
+
+### ✅ PROJECT STRUCTURE - EXACT REQUIREMENTS
+
+```text
+{Namespace}/
+├── GlobalUsings.cs                             # MANDATORY - Create this first
+├── {FeatureName}/                              # Feature folder (e.g., Cases/)
+│   ├── {CRUD}{EntityName}Request.cs            # If applicable, add Create, Read, Update and Delete requests
+│   ├── {CRUD}{EntityName}Response.cs           # MANDATORY - If request was added, add correspondong response
+│   ├── {CRUD}{EntityName}Validator.cs          # MANDATORY - If request was added, add correspondong validator
+│   ├── {BehaviourName}{EntityName}Request.cs   # MANDATORY
+│   ├── {BehaviourName}{EntityName}Response.cs  # MANDATORY
+│   ├── {BehaviourName}{EntityName}Validator.cs # MANDATORY - If request was added, add correspondong validator
+│   ├── {EntityName}Extensions.cs               # MANDATORY - Extension methods
+└── Common/
+    ├── ApiResult.cs                            # MANDATORY - Result pattern
+    └── ValidationExtensions.cs                 # MANDATORY
+```
+
+**Note**: All related components for a feature are organized within the feature folder (e.g., `Customers/`) to maintain vertical slice architecture.
+
+#### ✅ Special rules for CRUD READ: MUST have
+│   ├── Read{EntityName}Request.cs
+│   ├── Read{EntityName}Response.cs
+│   ├── ReadAll{EntityName}Request.cs           # MANDATORY - Must include Page, Size, Filter and Order properties
+│   ├── Read{EntityName}ListResponse.cs         # MANDATORY - A List response should only contain a subset of important required fields
+
+**❌ DO NOT CREATE:**
+- Models/ folder
+- Validators/ folder  
+- Services/ folder
+- Any technical layer folders
+
+### ✅ PROPERTY DECLARATION - MANDATORY RULES
+
+**NEVER use `= string.Empty` or default assignments for required properties**
+
+```csharp
+// ✅ CORRECT - Required non-nullable
+public required string Name { get; init; }
+public required Guid Id { get; init; }
+
+// ✅ CORRECT - Optional nullable
+public string? Description { get; init; }
+public int? OptionalCount { get; init; }
+
+// ❌ WRONG - Never do this for required fields
+public string Name { get; init; } = string.Empty;
+public Guid Id { get; init; } = Guid.NewGuid();
+```
+
+### ✅ GLOBALUSINGS.CS - MANDATORY FIRST FILE
+
+**Create this EXACT file first:**
+```csharp
+// GlobalUsings.cs
+global using System;
+global using System.Collections.Generic;
+global using System.ComponentModel.DataAnnotations;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+```
+
+### ✅ VALIDATION RULES - MANDATORY GUID VALIDATION
+
+**For ALL Guid primary keys, use this EXACT code:**
+```csharp
+RuleFor(x => x.Id)
+    .NotEmpty()
+    .Must(BeVersion7Uuid)
+    .WithMessage("Primary key must be a Version 7 UUID for optimal database performance");
+
+private static bool BeVersion7Uuid(Guid guid)
+{
+    if (guid == Guid.Empty) return false;
+    var bytes = guid.ToByteArray();
+    var versionByte = bytes[7];
+    var version = (versionByte & 0xF0) >> 4;
+    return version == 7;
+}
+```
+
+### ✅ EXTENSION METHODS - MANDATORY IMPLEMENTATIONS
+
+**MUST create ToResponse and ToEntity methods:**
+```csharp
+public static class {EntityName}Extensions
+{
+    public static {EntityName}Response ToResponse(this {EntityName} entity) => new()
+    {
+        // Map ALL properties from entity to response
+    };
+
+    public static {EntityName} ToEntity(this Create{EntityName}Request request) => new()
+    {
+        // Map ALL properties from request to entity
+    };
+}
+```
+
+### ✅ USING STATEMENTS - MANDATORY RULES
+
+**After creating GlobalUsings.cs, files should ONLY include:**
+- Project-specific namespaces
+- FluentValidation (only in validator files)
+- No System.* imports (handled by GlobalUsings)
+
+### ✅ VERIFICATION CHECKLIST
+
+Before submitting your implementation, verify:
+- [ ] GlobalUsings.cs exists and is correct
+- [ ] No `= string.Empty` in any required properties
+- [ ] All Guid primary keys have Version 7 validation
+- [ ] Extension methods exist with ToResponse/ToEntity
+- [ ] Feature folder structure (not technical folders)
+- [ ] All using statements follow rules
+- [ ] Followed the **Generate Modern .NET SDK Project using Vertical Slice patterns from Domain Models** section recommendations where possible
+
+## IMPLEMENTATION FAILURE EXAMPLES
+
+### ❌ FAILURE: Technical Folder Structure
+```
+Models/
+Validators/
+Services/
+```
+
+### ❌ FAILURE: Wrong Property Declarations
+```csharp
+public string Name { get; init; } = string.Empty;
+public Guid Id { get; init; } = Guid.NewGuid();
+```
+
+### ❌ FAILURE: Basic Guid Validation
+```csharp
+RuleFor(x => x.Id).NotEmpty(); // Missing Version 7 validation
+```
+
+### ❌ FAILURE: Missing Extension Methods
+No ToResponse/ToEntity methods created
+
+### ❌ FAILURE: Missing GlobalUsings
+Individual using statements in every file
+
+### ❌ FAILURE: Deviated from guidelines below
+Halucinated and didn't follow the guidelines in **Generate Modern .NET SDK Project** section
+
+---
+
+## Generate Modern .NET SDK Project using Vertical Slice patterns from Domain Models
+
+### Task Overview
+
+Create a complete, production-ready .NET SDK project using Vertical Slice Architecture (VSA) patterns from the provided domain model definitions.
+Use the **latest stable .NET version** with modern C# language features and current best practices.
+
+**CRITICAL:** Follow the MANDATORY COMPLIANCE CHECKLIST above. Failure to follow these rules means the implementation is incorrect and must be redone.
+
+### Project Configuration
+
+**Target Namespace**: Branch.Cases.Sdk
+**Primary Feature**: Cases
+**All Features**: Case, CaseActivity, CaseSource, CaseStatus, CaseStatusReason, CaseType, CaseTypeComplaint, Customer, Group
+**Domain Path**: c:\jjs\set\dev\mcpdemo\models\Branch\Cases
+
+### Input Requirements
+
+- **Domain Model YAML**: Complete YAML definition of a domain entity (Type or  Behaviour)
+- **Feature Name**: The name of the feature/entity (e.g., "Customers",  "Orders")
 - **Namespace**: Target namespace for the SDK (e.g., "Business.CustomerManagement.Sdk")
 
-## Architecture Principles
+### Architecture Principles
 
 - **Vertical Slice Architecture**: Each feature contains all related components
 - **Record Types**: Use C# records for immutable request/response models
@@ -31,26 +203,25 @@ from YAML domain models that follows modern .NET best practices.
 - **Feature Folders**: Group by business capability, not technical layer
 - **GlobalUsings**: Centralize common using statements to reduce boilerplate
 
-## Framework Requirements
+### Framework Requirements
 
-- **Target Framework**: .NET 8.0 LTS (Latest Long Term Support version)
-- **C# Language Version**: C# 12 or latest available for .NET 8
+- **Target Framework**: .NET Latest (Latest stable version, don't use preview versions)
+- **C# Language Version**: C# latest available for .NET Latest
 - **Nullable Reference Types**: Enabled for enhanced type safety
 - **ImplicitUsings**: Enabled to work with GlobalUsings pattern
 - **Documentation Generation**: Enable XML documentation file generation
 
-## Project Configuration
+### Project File Guide
 
 Generate a `.csproj` file with the following specifications:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>12</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <WarningsNotAsErrors>CS1591</WarningsNotAsErrors>
@@ -67,24 +238,6 @@ Generate a `.csproj` file with the following specifications:
 </Project>
 ```
 
-## GlobalUsings Configuration
-
-Create a `GlobalUsings.cs` file at the project root to include commonly used namespaces across all files:
-
-```csharp
-// GlobalUsings.cs
-global using System;
-global using System.Collections.Generic;
-global using System.ComponentModel.DataAnnotations;
-global using System.Linq;
-global using System.Threading;
-global using System.Threading.Tasks;
-// Note: FluentValidation not included globally due to ValidationResult ambiguity
-// Include FluentValidation only in validator files
-```
-
-This approach eliminates the need to include these using statements in every file, significantly reducing code duplication and maintenance overhead.
-
 ### File-Level Using Guidelines
 
 After implementing GlobalUsings, files should only include:
@@ -93,76 +246,35 @@ After implementing GlobalUsings, files should only include:
 - **Specialized imports**: Libraries with potential conflicts (e.g., `FluentValidation`, `FluentValidation.Results`)
 - **Framework-specific imports**: Specialized System namespaces not commonly used (e.g., `System.Text.Json`)
 
-### Important Notes
+#### IMPORTAANT Notes
 
 - **FluentValidation Conflict**: Do not include `FluentValidation` in GlobalUsings due to `ValidationResult` type conflicts with `System.ComponentModel.DataAnnotations.ValidationResult`
 - **Explicit Types**: Use fully qualified type names when conflicts arise (e.g., `FluentValidation.Results.ValidationResult`)
 - **Validator Files**: Include `using FluentValidation;` and `using FluentValidation.Results;` only in validator files
 - **ValidationExtensions Files**: Use type alias to resolve ValidationResult ambiguity: `using ValidationResult = FluentValidation.Results.ValidationResult;`
 
-### ValidationResult Conflict Resolution
+### Security Guidelines - IMPORTANT
 
-For files that need to work with both FluentValidation and DataAnnotations ValidationResult types (such as ValidationExtensions.cs), use a type alias:
+- **Input Validation**: Validate all inputs using FluentValidation with comprehensive rules
+- **Immutability**: Use record types for immutability and thread safety
+- **Data Exposure**: Follow principle of least privilege in property exposure
+- **XML Documentation**: Include comprehensive XML documentation for API consumers
+- **Sanitization**: Implement input sanitization for string fields to prevent injection attacks
+- **Length Limits**: Enforce maximum length constraints on all string properties
+- **Type Safety**: Use strongly-typed enums instead of magic strings where possible
+- **Nullable References**: Leverage nullable reference types to prevent null reference exceptions
+- **UUID Version 7**: Enforce Version 7 UUIDs for primary keys to ensure optimal database performance, natural ordering, and prevent timing attacks through predictable ID generation
 
-```csharp
-using FluentValidation.Results;
-using ValidationResult = FluentValidation.Results.ValidationResult;
-using Business.CustomerManagement.Sdk.Common;
+### Code Generation Guidelines
 
-namespace Business.CustomerManagement.Sdk.Common;
-
-public static class ValidationExtensions
-{
-    public static IEnumerable<string> ToErrorMessages(this ValidationResult validationResult)
-    {
-        return validationResult.Errors.Select(error => error.ErrorMessage);
-    }
-
-    public static ApiResult<T> ToApiResult<T>(this ValidationResult validationResult, T? data = default)
-    {
-        // Implementation using the FluentValidation ValidationResult type
-    }
-}
-```
-
-## Generated Structure
-
-```text
-{Namespace}/
-├── GlobalUsings.cs                      # Common using statements
-├── {FeatureName}/
-│   ├── Create{EntityName}Request.cs
-│   ├── Create{EntityName}Response.cs
-│   ├── Update{EntityName}Request.cs
-│   ├── Update{EntityName}Response.cs
-│   ├── Get{EntityName}Request.cs
-│   ├── {EntityName}Response.cs
-│   ├── {EntityName}ListResponse.cs
-│   ├── {EntityName}Extensions.cs
-│   ├── Create{EntityName}Validator.cs
-│   ├── Update{EntityName}Validator.cs
-│   └── {EntityName}Result.cs
-└── Common/
-    ├── ApiResult.cs
-    └── ValidationExtensions.cs
-```
-
-**Note**: All related components for a feature are organized within the feature
-folder (e.g., `Customers/`) to maintain vertical slice architecture. This keeps
-related request/response models, validators, and extensions together rather than
-separating them into technical layers.
-
-## Code Generation Guidelines
-
-### 1. Request Records
+#### 1. Request/Response Records
 
 ```csharp
-// Only project-specific usings needed (GlobalUsings handles System.*, etc.)
 using Business.CustomerManagement.Sdk.Common;
 
 namespace Business.CustomerManagement.Sdk.{FeatureName};
 
-public record Create{EntityName}Request
+public record {CRUD}{EntityName}Request
 {
     // Properties from YAML attributes
     // Use appropriate C# types (string, int, DateTime, etc.)
@@ -175,11 +287,15 @@ public record Create{EntityName}Request
     
     // OPTIONAL PROPERTIES: Use nullable types for optional fields
     // ✅ Good: public string? Phone { get; init; }
-    // ❌ Bad:  public string Phone { get; init; } = string.Empty;
+    // ❌ Bad:  public string Phone { get; init; }
 }
 ```
 
-#### Property Declaration Guidelines
+For YAML fields marked as `required: false` or no requirement specified:
+```csharp
+// ✅ Correct implementation
+public string? OptionalField { get; init; }
+```
 
 - **Required Non-Nullable Fields**: Use `public required string PropertyName { get; init; }`
 - **Optional Nullable Fields**: Use `public string? PropertyName { get; init; }`
@@ -187,7 +303,7 @@ public record Create{EntityName}Request
 - **Optional Value Types**: Use `public int? PropertyName { get; init; }` or provide default values
 - **Avoid `= string.Empty`**: Use `required` keyword instead for compile-time safety
 
-### 2. Response Records
+#### 2. Response Records
 
 ```csharp
 using Business.CustomerManagement.Sdk.Common;
@@ -210,7 +326,7 @@ public record {EntityName}Response
 }
 ```
 
-### 3. FluentValidation Validators
+#### 3. FluentValidation Validators
 
 ```csharp
 using FluentValidation;
@@ -253,7 +369,18 @@ public class Create{EntityName}Validator : AbstractValidator<Create{EntityName}R
 }
 ```
 
-### 4. Extension Methods
+##### Special Case - Primary Key Validation Rules
+
+When Guid fields are used as primary keys (typically Id fields), they MUST be validated as Version 7 UUIDs:
+
+**Rationale for Version 7 UUIDs:**
+
+- **Database Performance**: Time-ordered for better B-tree index performance
+- **Natural Sorting**: Chronological ordering without additional timestamp fields
+- **Reduced Fragmentation**: Sequential nature reduces database page fragmentation
+- **Modern Standard**: Latest UUID specification (RFC 4122bis) recommended approach
+
+#### 4. Extension Methods
 
 ```csharp
 public static class {EntityName}Extensions
@@ -271,7 +398,7 @@ public static class {EntityName}Extensions
 }
 ```
 
-### 5. Result Pattern
+#### 5. Result Pattern
 
 ```csharp
 public record {EntityName}Result<T> : ApiResult<T>
@@ -282,9 +409,9 @@ public record {EntityName}Result<T> : ApiResult<T>
 }
 ```
 
-## YAML Mapping Rules
+### YAML Mapping Rules
 
-### Attribute Type Mapping
+#### Attribute Type Mapping
 
 - `string` → `string`
 - `integer` → `int`
@@ -294,7 +421,7 @@ public record {EntityName}Result<T> : ApiResult<T>
 - `email` → `string` (with email validation)
 - `url` → `string` (with URL validation)
 
-### Constraint Mapping
+#### Constraint Mapping
 
 - `required: true` → C# `required` keyword + FluentValidation `.NotEmpty()`
 - `required: false` → Nullable type (e.g., `string?`)
@@ -302,132 +429,8 @@ public record {EntityName}Result<T> : ApiResult<T>
 - `minLength: X` → FluentValidation `.MinimumLength(X)`
 - `pattern: "regex"` → FluentValidation `.Matches("regex")`
 
-### Primary Key Validation Rules
-
-When Guid fields are used as primary keys (typically Id fields), they MUST be validated as Version 7 UUIDs:
-
-```csharp
-// For Create requests with Guid primary keys
-RuleFor(x => x.Id)
-    .NotEmpty()
-    .Must(BeVersion7Uuid)
-    .WithMessage("Primary key must be a Version 7 UUID for optimal database performance and ordering");
-
-// Version 7 UUID validation method (add to validator base or utility class)
-private static bool BeVersion7Uuid(Guid guid)
-{
-    if (guid == Guid.Empty) return false;
-    
-    // Version 7 UUIDs have version bits set to 0111 (7) in the 13th nibble
-    var bytes = guid.ToByteArray();
-    var versionByte = bytes[7]; // 8th byte contains version in upper nibble
-    var version = (versionByte & 0xF0) >> 4;
-    
-    return version == 7;
-}
-```
-
-**Rationale for Version 7 UUIDs:**
-- **Database Performance**: Time-ordered for better B-tree index performance
-- **Natural Sorting**: Chronological ordering without additional timestamp fields
-- **Reduced Fragmentation**: Sequential nature reduces database page fragmentation
-- **Modern Standard**: Latest UUID specification (RFC 4122bis) recommended approach
-
-### Required Field Implementation
-
-For YAML fields marked as `required: true`:
-```csharp
-// ✅ Correct implementation
-public required string RequiredField { get; init; }
-
-// ❌ Avoid this pattern
-public string RequiredField { get; init; } = string.Empty;
-```
-
-For YAML fields marked as `required: false` or no requirement specified:
-```csharp
-// ✅ Correct implementation
-public string? OptionalField { get; init; }
-```
-
-### Enum Handling
+### Enum Guidelines
 
 - Generate C# enums from YAML enum definitions
 - Use enum validation in FluentValidation
 - Include XML documentation for enum values
-
-## Security Considerations
-
-- **Input Validation**: Validate all inputs using FluentValidation with comprehensive rules
-- **Immutability**: Use record types for immutability and thread safety
-- **Data Exposure**: Follow principle of least privilege in property exposure
-- **XML Documentation**: Include comprehensive XML documentation for API consumers
-- **Sanitization**: Implement input sanitization for string fields to prevent injection attacks
-- **Length Limits**: Enforce maximum length constraints on all string properties
-- **Type Safety**: Use strongly-typed enums instead of magic strings where possible
-- **Nullable References**: Leverage nullable reference types to prevent null reference exceptions
-- **UUID Version 7**: Enforce Version 7 UUIDs for primary keys to ensure optimal database performance, natural ordering, and prevent timing attacks through predictable ID generation
-
-## Example Output
-
-Given a `Customer.Type.yaml` with:
-
-```yaml
-name: Customer
-summary: Represents a business customer entity
-attributes:
-  name:
-    type: string
-    required: true
-    maxLength: 100
-  email:
-    type: email
-    required: true
-  phone:
-    type: string
-    maxLength: 20
-  status:
-    type: CustomerStatus
-    required: true
-```
-
-Generate:
-
-1. **GlobalUsings.cs** - Common namespace imports to reduce boilerplate
-2. **CreateCustomerRequest.cs** - Input model for creating customers
-3. **CustomerResponse.cs** - Output model for customer data
-4. **CreateCustomerValidator.cs** - FluentValidation rules
-5. **CustomerExtensions.cs** - Mapping methods
-6. **Common/ApiResult.cs** - Base result pattern
-
-## Output Format
-
-Provide complete, compilable C# files with:
-
-- **Project File**: `.csproj` targeting .NET 8.0 LTS with specified configuration
-- **GlobalUsings.cs**: Common namespace imports to reduce boilerplate
-- **Proper Namespaces**: Minimal file-specific using statements leveraging GlobalUsings
-- **XML Documentation**: Comprehensive documentation for all public APIs
-- **FluentValidation Rules**: Input validation based on YAML constraints and security best practices
-- **Extension Methods**: Clean mapping methods without external dependencies
-- **Security Controls**: Input sanitization, length limits, and type safety
-- **Modern C# Features**: Records, nullable reference types, `required` keyword, pattern matching
-- **Clean Code**: Readable code following .NET conventions and VSA principles
-- **Version Control Ready**: Proper file organization and naming for source control
-
-### Required Files per Feature
-
-1. **{Feature}.csproj** - Project configuration with .NET 8.0 target
-2. **GlobalUsings.cs** - Common namespace imports
-4. **Common/ApiResult.cs** - Result pattern base class
-5. **Common/ValidationExtensions.cs** - Validation utilities (IMPORTANT: Use `using ValidationResult = FluentValidation.Results.ValidationResult;` to resolve type ambiguity)
-6. **{Feature}/{Entity}Request.cs** - Request models with validation attributes
-7. **{Feature}/{Entity}Response.cs** - Response models inheriting audit fields
-8. **{Feature}/{Entity}Validator.cs** - FluentValidation implementation
-9. **{Feature}/{Entity}Extensions.cs** - Mapping methods
-10. **{Feature}/{Entity}Result.cs** - Feature-specific result types
-
-## Usage
-
-This prompt template will be used with the Modeller MCP secure prompt
-building system to generate production-ready SDK code from domain models.

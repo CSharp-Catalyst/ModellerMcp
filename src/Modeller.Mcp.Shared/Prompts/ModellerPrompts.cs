@@ -69,6 +69,7 @@ public class ModellerPrompts(IVsaPromptService vsaPromptService, ModelPromptServ
                    $"**Validated Models Resource:** `modeller://models/domain/{domainPath}`\n\n" +
                    $"**Available Models:**\n{validatedModelsJson}\n\n" +
                    $"**SDK Generation Prompt:**\n\n{sdkPrompt}\n\n" +
+                   "  **CRITICAL**: read and understand the generated SDK prompt before proceeding.\n\n" +
                    $"💡 **Note:** This SDK generation uses previously validated model definitions available as MCP resources. " +
                    $"If no validated models are found, run the ValidateModelsPrompt first.";
         }
