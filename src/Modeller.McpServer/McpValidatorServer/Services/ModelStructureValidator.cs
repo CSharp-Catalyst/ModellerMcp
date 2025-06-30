@@ -217,25 +217,42 @@ public class ModelStructureValidator
             return;
         }
 
+        // Skip validation for project/domain folders that primarily contain subdirectories
+        // These are organizational folders, not model definition folders
+        var hasSubdirectories = Directory.GetDirectories(modelDir, "*", SearchOption.TopDirectoryOnly).Length > 0;
+        var hasMinimalYamlFiles = yamlFiles.Count <= 1; // Only metadata or no files
+        
+        if (hasSubdirectories && hasMinimalYamlFiles)
+        {
+            // This is likely a domain/project folder containing subdomains
+            return;
+        }
+
         var hasTypeFile = yamlFiles.Any(f => Path.GetFileNameWithoutExtension(f).EndsWith(".Type"));
         var hasBehaviourFile = yamlFiles.Any(f => Path.GetFileNameWithoutExtension(f).EndsWith(".Behaviour") ||
                                                   Path.GetFileNameWithoutExtension(f).EndsWith(".Behavior"));
 
-        if (!hasTypeFile)
+        // Only suggest .Type files for directories that appear to be model definition directories
+        if (!hasTypeFile && yamlFiles.Count > 0 && !hasSubdirectories)
         {
             _results.Add(new ValidationResult(modelDir,
                 "Directory should contain at least one .Type.yaml file",
                 ValidationSeverity.Info));
         }
 
-        if (yamlFiles.Count > 1 && !hasBehaviourFile)
+        // Only suggest .Behaviour separation for model definition directories with multiple model files
+        if (yamlFiles.Count > 1 && !hasBehaviourFile && !hasSubdirectories)
         {
-            _results.Add(new ValidationResult(modelDir,
-                "Directory with multiple files should separate behaviors into .Behaviour.yaml files",
-                ValidationSeverity.Info));
+            var modelFiles = yamlFiles.Where(f => !Path.GetFileName(f).StartsWith("_meta", StringComparison.OrdinalIgnoreCase)).ToList();
+            if (modelFiles.Count > 1)
+            {
+                _results.Add(new ValidationResult(modelDir,
+                    "Directory with multiple model files should separate behaviors into .Behaviour.yaml files",
+                    ValidationSeverity.Info));
+            }
         }
     }
-
+    
     private static bool IsPascalCase(string? input)
     {
         if (string.IsNullOrEmpty(input))

@@ -239,27 +239,47 @@ As domains scale, centralised model files become harder to maintain. To support 
 
 ```bash
 /models/
-  ProjectName/                  # Top-level project or solution name
-    Organisation/              # 2nd level: bounded context / domain
-      Sites/                   # 3rd level: feature or entity grouping
+  ProjectName/                  # Top-level project or solution name (organizational)
+    Organisation/              # 2nd level: bounded context / domain (organizational)
+      Sites/                   # 3rd level: feature or entity grouping (contains models)
         Site.Type.yaml         # Entity and attribute usage definition
         Site.Behaviour.yaml    # Behaviour definitions for this model
-    Cases/
-      Case.Type.yaml
+        _meta.yaml             # Optional metadata for this context
+    Cases/                     # Another bounded context (organizational)
+      Case.Type.yaml           # Model definition files
       Case.Behaviour.yaml
-    Shared/
-      ValueTypes/
+      _meta.yaml
+    Shared/                    # Shared components (organizational)
+      ValueTypes/              # Value type definitions (contains models)
         Address.yaml
-      Enums/
+        Money.yaml
+      Enums/                   # Enum definitions (contains enums)
         Priority.yaml
-      Attributes.yaml
+        Status.yaml
+      AttributeTypes/          # Shared attribute type definitions
+        CommonAttributes.yaml
 ```
 
-#### Conventions
+#### Folder Types and Conventions
 
-- \`\`: Contains the structure and attribute usages
-- \`\`: Contains behaviours and optional BDD-style scenarios
-- **Value types and enums** should reside in shared folders
+**Organizational Folders** (ProjectName, Organisation, Cases, Shared):
+
+- Contain subfolders and optional `_meta.yaml` metadata
+- Do not typically contain model definition files directly
+- Structure the project hierarchy and bounded contexts
+
+**Model Definition Folders** (Sites, ValueTypes, Enums, AttributeTypes):
+
+- Contain the actual YAML model files
+- Should have `.Type.yaml` files for entity definitions
+- Should have `.Behaviour.yaml` files for behavior definitions when behaviors exist
+- Value types typically don't have behaviors (they're used by entities that have behaviors)
+
+**File Conventions**:
+
+- `.Type.yaml`: Contains the structure and attribute usages
+- `.Behaviour.yaml`: Contains behaviours and optional BDD-style scenarios
+- **Value types and enums** should reside in shared folders and typically don't have behaviors
 
 #### Naming Conventions
 
