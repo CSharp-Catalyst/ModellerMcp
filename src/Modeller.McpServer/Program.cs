@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 using Modeller.Mcp.Shared;
 using Modeller.Mcp.Shared.CodeGeneration;
 using Modeller.Mcp.Shared.CodeGeneration.Prompts.VSA;
-using Modeller.Mcp.Shared.Services;
-using Modeller.Mcp.Shared.Resources;
 using Modeller.Mcp.Shared.CodeGeneration.Security;
-using Modeller.McpServer.McpValidatorServer;
-using Modeller.McpServer.McpValidatorServer.Services;
+using Modeller.Mcp.Shared.Resources;
+using Modeller.Mcp.Shared.Services;
 
 var builder = Host.CreateApplicationBuilder(args);
 

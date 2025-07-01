@@ -68,7 +68,7 @@ public class ModellerPromptTools(ModelPromptService promptService)
             result += $"**Name:** `{prompt.Name}`\n";
             result += $"**Description:** {prompt.Description}\n\n";
 
-            if (prompt.Arguments.Any())
+            if (prompt.Arguments.Count != 0)
             {
                 result += "**Parameters:**\n";
                 foreach (var arg in prompt.Arguments)

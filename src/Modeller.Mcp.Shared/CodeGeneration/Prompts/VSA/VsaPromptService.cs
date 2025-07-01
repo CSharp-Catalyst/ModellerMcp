@@ -54,7 +54,7 @@ public class VsaPromptService(ILogger<VsaPromptService> logger) : IVsaPromptServ
                 .Concat(Directory.GetFiles(domainFolderPath, "*.yml", SearchOption.TopDirectoryOnly))
                 .ToList();
 
-            if (!yamlFiles.Any())
+            if (yamlFiles.Count == 0)
                 throw new InvalidOperationException($"No YAML model files found in domain folder: {domainFolderPath}");
 
             // Read all model files and combine them

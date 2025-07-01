@@ -192,7 +192,7 @@ public class PromptSecurityService(
 
         return Task.FromResult(new PromptValidationResult
         {
-            IsValid = !issues.Any(),
+            IsValid = issues.Count == 0,
             Issues = issues,
             Warnings = warnings,
             ProcessedAt = DateTime.UtcNow

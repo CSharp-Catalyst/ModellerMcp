@@ -63,7 +63,7 @@ public class PromptAuditLogger : IPromptAuditLogger
                 _logger.LogInformation("Prompt validation completed for model {ModelId} with risk level {RiskLevel}",
                     entry.ModelId, entry.InjectionRisk?.Level.ToString() ?? "Unknown");
 
-                if (entry.ValidationResult?.Issues.Any() == true)
+                if (entry.ValidationResult?.Issues.Count != 0 == true)
                 {
                     _logger.LogWarning("Prompt validation issues detected: {Issues}",
                         string.Join(", ", entry.ValidationResult.Issues));

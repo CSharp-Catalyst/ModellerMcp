@@ -1,9 +1,6 @@
-using Modeller.Mcp.Shared;
 using Modeller.Mcp.Shared.Models;
 using Modeller.Mcp.Shared.Resources;
 using Modeller.Mcp.Shared.Services;
-using Modeller.McpServer.McpValidatorServer;
-using Modeller.McpServer.McpValidatorServer.Services;
 
 namespace Modeller.McpServer.Tests.Unit;
 
@@ -22,7 +19,7 @@ public class ValidationToResourceIntegrationTests
         var tempPath = Path.GetTempPath();
         var testDir = Path.Combine(tempPath, "TestModels");
         Directory.CreateDirectory(testDir);
-        
+
         var modelFilePath = Path.Combine(testDir, "TestModel.Type.yaml");
         var yamlContent = @"
 model: TestModel

@@ -15,7 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{208BA388-4
 		docs\bdd_model_definition.md = docs\bdd_model_definition.md
 		docs\BDD_Model_User_Guide.md = docs\BDD_Model_User_Guide.md
 		docs\code-generation-design.md = docs\code-generation-design.md
-		docs\documentation-update-summary.md = docs\documentation-update-summary.md
 		docs\llms-full.md = docs\llms-full.md
 		docs\modeller-mcp-prompts-guide.md = docs\modeller-mcp-prompts-guide.md
 		docs\security-implementation-status.md = docs\security-implementation-status.md
@@ -34,10 +33,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{E1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomerManagement", "CustomerManagement", "{6194A28E-A847-AA1A-06D7-947FAB42F425}"
 	ProjectSection(SolutionItems) = preProject
-		models\Business\CustomerManagement\Customer.Type.yaml = models\Business\CustomerManagement\Customer.Type.yaml
 		models\Business\CustomerManagement\Customer.Behaviour.yaml = models\Business\CustomerManagement\Customer.Behaviour.yaml
-		models\Business\CustomerManagement\Order.Type.yaml = models\Business\CustomerManagement\Order.Type.yaml
+		models\Business\CustomerManagement\Customer.Type.yaml = models\Business\CustomerManagement\Customer.Type.yaml
 		models\Business\CustomerManagement\Order.Behaviour.yaml = models\Business\CustomerManagement\Order.Behaviour.yaml
+		models\Business\CustomerManagement\Order.Type.yaml = models\Business\CustomerManagement\Order.Type.yaml
 		models\Business\CustomerManagement\_meta.yaml = models\Business\CustomerManagement\_meta.yaml
 	EndProjectSection
 EndProject
@@ -65,6 +64,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "schemas", "schemas", "{0F30
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modeller.Mcp.Shared", "src\Modeller.Mcp.Shared\Modeller.Mcp.Shared.csproj", "{B33852B6-0EE4-4016-A4EF-AD9DC5FFEF51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modeller.Mcp.Templates.VerticalSlice", "src\Modeller.Mcp.Templates\Modeller.Mcp.Templates.VerticalSlice\Modeller.Mcp.Templates.VerticalSlice.csproj", "{DE193651-FA11-4203-93A3-124C48E62B5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +84,10 @@ Global
 		{B33852B6-0EE4-4016-A4EF-AD9DC5FFEF51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B33852B6-0EE4-4016-A4EF-AD9DC5FFEF51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B33852B6-0EE4-4016-A4EF-AD9DC5FFEF51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE193651-FA11-4203-93A3-124C48E62B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE193651-FA11-4203-93A3-124C48E62B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE193651-FA11-4203-93A3-124C48E62B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE193651-FA11-4203-93A3-124C48E62B5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +101,7 @@ Global
 		{C926E18D-B622-FB75-26C1-06F8A475EF41} = {C951D638-4FFA-F4FE-67E4-52C696A4B909}
 		{1AB74070-FDEE-DBD6-881C-277AB0D06711} = {C951D638-4FFA-F4FE-67E4-52C696A4B909}
 		{B33852B6-0EE4-4016-A4EF-AD9DC5FFEF51} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{DE193651-FA11-4203-93A3-124C48E62B5C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DE251E56-8C32-4D16-BF83-46C0B5290797}

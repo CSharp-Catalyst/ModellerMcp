@@ -17,116 +17,12 @@ You are an expert .NET developer specializing in Vertical Slice Architecture (VS
 
 ### ✅ BEFORE YOU START - VERIFY UNDERSTANDING
 
-1. Read ALL guidelines before writing any code
-2. Confirm you understand the critical rules
-3. Confirm you understand the mandatory rules
+1. Read ALL guidelines TWICE before writing any code
+2. Confirm you understand the Critical rules
+3. Confirm you understand the Mandatory rules
+4. Confirm you understand the prompt
 
-### ✅ PROJECT STRUCTURE - EXACT REQUIREMENTS
-
-```text
-{Namespace}/
-├── GlobalUsings.cs                             # MANDATORY - Create this first
-├── {FeatureName}/                              # Feature folder (e.g., Cases/)
-│   ├── {CRUD}{EntityName}Request.cs            # If applicable, add Create, Read, Update and Delete requests
-│   ├── {CRUD}{EntityName}Response.cs           # MANDATORY - If request was added, add correspondong response
-│   ├── {CRUD}{EntityName}Validator.cs          # MANDATORY - If request was added, add correspondong validator
-│   ├── {BehaviourName}{EntityName}Request.cs   # MANDATORY
-│   ├── {BehaviourName}{EntityName}Response.cs  # MANDATORY
-│   ├── {BehaviourName}{EntityName}Validator.cs # MANDATORY - If request was added, add correspondong validator
-│   ├── {EntityName}Extensions.cs               # MANDATORY - Extension methods
-└── Common/
-    ├── ApiResult.cs                            # MANDATORY - Result pattern
-    └── ValidationExtensions.cs                 # MANDATORY
-```
-
-**Note**: All related components for a feature are organized within the feature folder (e.g., `Customers/`) to maintain vertical slice architecture.
-
-#### ✅ Special rules for CRUD READ: MUST have
-│   ├── Read{EntityName}Request.cs
-│   ├── Read{EntityName}Response.cs
-│   ├── ReadAll{EntityName}Request.cs           # MANDATORY - Must include Page, Size, Filter and Order properties
-│   ├── Read{EntityName}ListResponse.cs         # MANDATORY - A List response should only contain a subset of important required fields
-
-**❌ DO NOT CREATE:**
-- Models/ folder
-- Validators/ folder  
-- Services/ folder
-- Any technical layer folders
-
-### ✅ PROPERTY DECLARATION - MANDATORY RULES
-
-**NEVER use `= string.Empty` or default assignments for required properties**
-
-```csharp
-// ✅ CORRECT - Required non-nullable
-public required string Name { get; init; }
-public required Guid Id { get; init; }
-
-// ✅ CORRECT - Optional nullable
-public string? Description { get; init; }
-public int? OptionalCount { get; init; }
-
-// ❌ WRONG - Never do this for required fields
-public string Name { get; init; } = string.Empty;
-public Guid Id { get; init; } = Guid.NewGuid();
-```
-
-### ✅ GLOBALUSINGS.CS - MANDATORY FIRST FILE
-
-**Create this EXACT file first:**
-```csharp
-// GlobalUsings.cs
-global using System;
-global using System.Collections.Generic;
-global using System.ComponentModel.DataAnnotations;
-global using System.Linq;
-global using System.Threading;
-global using System.Threading.Tasks;
-```
-
-### ✅ VALIDATION RULES - MANDATORY GUID VALIDATION
-
-**For ALL Guid primary keys, use this EXACT code:**
-```csharp
-RuleFor(x => x.Id)
-    .NotEmpty()
-    .Must(BeVersion7Uuid)
-    .WithMessage("Primary key must be a Version 7 UUID for optimal database performance");
-
-private static bool BeVersion7Uuid(Guid guid)
-{
-    if (guid == Guid.Empty) return false;
-    var bytes = guid.ToByteArray();
-    var versionByte = bytes[7];
-    var version = (versionByte & 0xF0) >> 4;
-    return version == 7;
-}
-```
-
-### ✅ EXTENSION METHODS - MANDATORY IMPLEMENTATIONS
-
-**MUST create ToResponse and ToEntity methods:**
-```csharp
-public static class {EntityName}Extensions
-{
-    public static {EntityName}Response ToResponse(this {EntityName} entity) => new()
-    {
-        // Map ALL properties from entity to response
-    };
-
-    public static {EntityName} ToEntity(this Create{EntityName}Request request) => new()
-    {
-        // Map ALL properties from request to entity
-    };
-}
-```
-
-### ✅ USING STATEMENTS - MANDATORY RULES
-
-**After creating GlobalUsings.cs, files should ONLY include:**
-- Project-specific namespaces
-- FluentValidation (only in validator files)
-- No System.* imports (handled by GlobalUsings)
+{{Rules go here}}
 
 ### ✅ VERIFICATION CHECKLIST
 

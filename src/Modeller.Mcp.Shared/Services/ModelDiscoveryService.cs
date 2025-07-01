@@ -22,7 +22,7 @@ public class ModelDiscoveryService
             foreach (var modelPath in potentialModelPaths.Where(d => Directory.Exists(d)))
                 ScanDirectory(modelPath, result);
 
-            if (!result.ModelDirectories.Any())
+            if (result.ModelDirectories.Count == 0)
                 ScanForYamlFiles(rootPath, result);
         }
         catch (Exception ex)
@@ -41,7 +41,7 @@ public class ModelDiscoveryService
                 .Concat(Directory.GetFiles(directory, "*.yml", SearchOption.AllDirectories))
                 .ToList();
 
-            if (!yamlFiles.Any()) return;
+            if (yamlFiles.Count == 0) return;
 
             var modelDir = new ModelDirectory
             {
@@ -96,7 +96,7 @@ public class ModelDiscoveryService
                 .Where(f => !f.Contains("bin") && !f.Contains("obj") && !f.Contains("node_modules"))
                 .ToList();
 
-            if (yamlFiles.Any())
+            if (yamlFiles.Count != 0)
             {
                 result.LooseFiles.AddRange(yamlFiles.Select(f => new ModelFileInfo
                 {

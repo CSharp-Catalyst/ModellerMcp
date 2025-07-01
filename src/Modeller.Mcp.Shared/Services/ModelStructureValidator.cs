@@ -2,7 +2,7 @@ using Modeller.Mcp.Shared.Models;
 
 using System.Text.RegularExpressions;
 
-namespace Modeller.McpServer.McpValidatorServer.Services;
+namespace Modeller.Mcp.Shared.Services;
 
 public class ModelStructureValidator
 {
@@ -29,7 +29,7 @@ public class ModelStructureValidator
             .Where(dir => ContainsModelFiles(dir))
             .ToList();
 
-        if (!modelDirectories.Any())
+        if (modelDirectories.Count == 0)
         {
             _results.Add(new ValidationResult(rootPath, "No model directories found", ValidationSeverity.Warning));
             return;
@@ -39,7 +39,7 @@ public class ModelStructureValidator
         {
             await ValidateModelDirectoryAsync(modelDir, cancellationToken);
         }
-        
+
         // Check for namespace directories (directories that contain subdirectories with models but no direct models)
         var allDirectories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
         foreach (var dir in allDirectories)
@@ -48,8 +48,8 @@ public class ModelStructureValidator
             {
                 // This is likely a namespace directory (like Business/ containing CustomerManagement/)
                 // Add an informational note instead of a warning
-                _results.Add(new ValidationResult(dir, 
-                    $"Namespace directory '{Path.GetFileName(dir)}' contains model subdirectories - this is a valid organization pattern", 
+                _results.Add(new ValidationResult(dir,
+                    $"Namespace directory '{Path.GetFileName(dir)}' contains model subdirectories - this is a valid organization pattern",
                     ValidationSeverity.Info));
             }
         }
@@ -58,7 +58,7 @@ public class ModelStructureValidator
     private bool ContainsModelFiles(string directory) =>
         Directory.GetFiles(directory, "*.yaml", SearchOption.TopDirectoryOnly).Any() ||
         Directory.GetFiles(directory, "*.yml", SearchOption.TopDirectoryOnly).Any();
-        
+
     private bool ContainsModelSubdirectories(string directory)
     {
         try
@@ -133,10 +133,8 @@ public class ModelStructureValidator
     {
         var fileName = Path.GetFileNameWithoutExtension(file);
 
-        if(fileName is not null and "_meta")
-        {
+        if (fileName is not null and "_meta")
             return;
-        }
 
         // Check for PascalCase
         if (!IsPascalCase(fileName))
@@ -150,13 +148,13 @@ public class ModelStructureValidator
         var fileDirectory = Path.GetDirectoryName(file);
         var dirName = Path.GetFileName(fileDirectory);
         var parentDir = Path.GetFileName(Path.GetDirectoryName(fileDirectory));
-        
+
         // Check if this is a shared component directory (Enums or AttributeTypes, direct or under Shared)
         var isEnums = dirName?.Equals("Enums", StringComparison.OrdinalIgnoreCase) == true;
         var isAttributeTypes = dirName?.Equals("AttributeTypes", StringComparison.OrdinalIgnoreCase) == true;
         var isUnderShared = parentDir?.Equals("Shared", StringComparison.OrdinalIgnoreCase) == true;
-        var isSharedComponent = isEnums || isAttributeTypes || (isUnderShared && (isEnums || isAttributeTypes));
-        
+        var isSharedComponent = isEnums || isAttributeTypes || isUnderShared && (isEnums || isAttributeTypes);
+
         // Check for recommended suffixes (but skip for shared component files)
         if (!isSharedComponent && fileName != null &&
             !fileName.EndsWith(".Type") && !fileName.EndsWith(".Behaviour") &&
@@ -178,8 +176,8 @@ public class ModelStructureValidator
         var isEnums = dirName.Equals("Enums", StringComparison.OrdinalIgnoreCase);
 
         // Also handle Shared/AttributeTypes and Shared/Enums, with null check for parentDir
-        var isSharedAttributeTypes = isShared || (parentDir != null && parentDir.Equals("Shared", StringComparison.OrdinalIgnoreCase) && dirName.Equals("AttributeTypes", StringComparison.OrdinalIgnoreCase));
-        var isSharedEnums = isShared || (parentDir != null && parentDir.Equals("Shared", StringComparison.OrdinalIgnoreCase) && dirName.Equals("Enums", StringComparison.OrdinalIgnoreCase));
+        var isSharedAttributeTypes = isShared || parentDir != null && parentDir.Equals("Shared", StringComparison.OrdinalIgnoreCase) && dirName.Equals("AttributeTypes", StringComparison.OrdinalIgnoreCase);
+        var isSharedEnums = isShared || parentDir != null && parentDir.Equals("Shared", StringComparison.OrdinalIgnoreCase) && dirName.Equals("Enums", StringComparison.OrdinalIgnoreCase);
 
         if (isAttributeTypes || isEnums || isSharedAttributeTypes || isSharedEnums)
         {
@@ -221,12 +219,10 @@ public class ModelStructureValidator
         // These are organizational folders, not model definition folders
         var hasSubdirectories = Directory.GetDirectories(modelDir, "*", SearchOption.TopDirectoryOnly).Length > 0;
         var hasMinimalYamlFiles = yamlFiles.Count <= 1; // Only metadata or no files
-        
+
         if (hasSubdirectories && hasMinimalYamlFiles)
-        {
             // This is likely a domain/project folder containing subdomains
             return;
-        }
 
         var hasTypeFile = yamlFiles.Any(f => Path.GetFileNameWithoutExtension(f).EndsWith(".Type"));
         var hasBehaviourFile = yamlFiles.Any(f => Path.GetFileNameWithoutExtension(f).EndsWith(".Behaviour") ||
@@ -252,7 +248,7 @@ public class ModelStructureValidator
             }
         }
     }
-    
+
     private static bool IsPascalCase(string? input)
     {
         if (string.IsNullOrEmpty(input))

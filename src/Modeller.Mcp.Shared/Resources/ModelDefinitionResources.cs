@@ -42,7 +42,7 @@ public class ModelDefinitionResources
             .Select(kvp => new { ModelName = kvp.Key.Split(':')[1], Definition = kvp.Value })
             .ToList();
 
-        if (!domainModels.Any())
+        if (domainModels.Count == 0)
         {
             // Try to discover models in the domain
             var discoveryResult = _modelDiscoveryService.DiscoverModels(domainPath);

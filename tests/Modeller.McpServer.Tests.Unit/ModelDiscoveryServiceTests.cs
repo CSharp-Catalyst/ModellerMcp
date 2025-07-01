@@ -1,5 +1,4 @@
 ﻿using Modeller.Mcp.Shared.Services;
-using Modeller.McpServer.McpValidatorServer.Services;
 
 namespace Modeller.McpServer.Tests.Unit;
 

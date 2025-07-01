@@ -261,7 +261,7 @@ public class ApiGenerationService(ModelDiscoveryService modelDiscoveryService, I
             .Where(f => f.Type == ModelFileType.BddModel && f.Name.Contains(".Type."))
             .ToList();
 
-        if (bddFiles.Any())
+        if (bddFiles.Count != 0)
         {
             // Extract entity name from filename like "Customer.Type.yaml"
             var firstBddFile = bddFiles.First();

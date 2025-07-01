@@ -6,6 +6,6 @@ public class ModelDiscoveryResult
     public List<ModelFileInfo> LooseFiles { get; set; } = [];
     public List<string> Errors { get; set; } = [];
 
-    public bool HasModels => ModelDirectories.Any() || LooseFiles.Any();
+    public bool HasModels => ModelDirectories.Count != 0 || LooseFiles.Count != 0;
     public int TotalFileCount => ModelDirectories.Sum(d => d.ModelGroups.Sum(g => g.Files.Count)) + LooseFiles.Count;
 }

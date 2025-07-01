@@ -1,7 +1,6 @@
 ﻿using Modeller.Mcp.Shared;
 using Modeller.Mcp.Shared.Models;
 using Modeller.Mcp.Shared.Resources;
-using Modeller.McpServer.McpValidatorServer.Services;
 
 using System.Text.RegularExpressions;
 
@@ -10,7 +9,7 @@ using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace Modeller.McpServer.McpValidatorServer;
+namespace Modeller.Mcp.Shared.Services;
 
 public class YamlSchemaValidator(ModelStructureValidator structureValidator, ModelDefinitionResources modelResources) : IMcpModelValidator
 {
@@ -33,26 +32,20 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
             return ModelFileType.Metadata;
         }
         if (fileName.Equals("copilot-instructions.md", StringComparison.OrdinalIgnoreCase))
-        {
             return ModelFileType.CopilotInstructions;
-        }
         if (extension.Equals(".md", StringComparison.OrdinalIgnoreCase))
-        {
             return ModelFileType.UserDocumentation;
-        }
 
         // Check content patterns
         if (yaml.Contains("model:"))
         {
-            bool hasAttributeUsages = yaml.Contains("attributeUsages:");
-            bool hasBehaviours = yaml.Contains("behaviours:");
-            bool hasScenarios = yaml.Contains("scenarios:");
+            var hasAttributeUsages = yaml.Contains("attributeUsages:");
+            var hasBehaviours = yaml.Contains("behaviours:");
+            var hasScenarios = yaml.Contains("scenarios:");
 
             // If it has model: and any of the BDD components, it's a BDD model
             if (hasAttributeUsages || hasBehaviours || hasScenarios)
-            {
                 return ModelFileType.BddModel;
-            }
         }
 
         if (yaml.Contains("attributeTypes:"))
@@ -74,9 +67,7 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
             // Determine solution root for loading shared attribute types
             var solutionPath = FindSolutionRoot(filePath);
             if (!string.IsNullOrEmpty(solutionPath))
-            {
                 await LoadSharedAttributeTypesAsync(solutionPath, cancellationToken);
-            }
 
             if (Directory.Exists(filePath))
             {
@@ -212,9 +203,7 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
             // Validate model name matches file name
             var actualFileName = Path.GetFileNameWithoutExtension(filePath);
             if (!actualFileName.StartsWith(model.Model, StringComparison.OrdinalIgnoreCase))
-            {
                 results.Add(new ValidationResult(filePath, $"Model name '{model.Model}' should match start of file name", ValidationSeverity.Warning));
-            }
 
             // Check for behaviors defined in type files
             var fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -259,9 +248,7 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
             List<AttributeTypeDefinition> attributeTypes;
 
             if (attributeTypesWrapper?.AttributeTypes != null)
-            {
                 attributeTypes = attributeTypesWrapper.AttributeTypes;
-            }
             else
             {
                 // Fallback: try to deserialize as direct list
@@ -395,9 +382,7 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
 
             // Validate that the attribute type exists in shared attribute types
             if (!string.IsNullOrWhiteSpace(usage.Type) && _sharedAttributeTypes != null && !_sharedAttributeTypes.ContainsKey(usage.Type))
-            {
                 results.Add(new ValidationResult(filePath, $"Model '{modelName}': Attribute usage type '{usage.Type}' is not defined in shared attribute types", ValidationSeverity.Error));
-            }
 
             // Validate camelCase naming for attribute names
             if (!string.IsNullOrWhiteSpace(usage.Name) && !IsCamelCase(usage.Name))
@@ -526,9 +511,7 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
                                 foreach (var attrType in attributeTypesWrapper.AttributeTypes)
                                 {
                                     if (!string.IsNullOrWhiteSpace(attrType.Name))
-                                    {
                                         sharedAttributeTypes[attrType.Name] = attrType;
-                                    }
                                 }
                             }
                         }
@@ -624,9 +607,7 @@ public class YamlSchemaValidator(ModelStructureValidator structureValidator, Mod
             
             // Remove the filename from the segments
             if (segments.Length > 0 && segments[segments.Length - 1].Contains('.'))
-            {
                 segments = segments.Take(segments.Length - 1).ToArray();
-            }
             
             // Join the remaining segments to form the domain path
             return string.Join("/", segments);

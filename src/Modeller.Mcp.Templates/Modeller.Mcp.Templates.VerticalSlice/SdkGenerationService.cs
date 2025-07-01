@@ -1,10 +1,4 @@
-using Microsoft.Extensions.Logging;
-
-using Modeller.Mcp.Shared.CodeGeneration.Prompts.VSA;
-using Modeller.Mcp.Shared.CodeGeneration.Security;
-using Modeller.Mcp.Shared.Services;
-
-namespace Modeller.Mcp.Shared.CodeGeneration;
+namespace Modeller.Mcp.Templates.VerticalSlice;
 
 /// <summary>
 /// Service for generating SDK code from domain models

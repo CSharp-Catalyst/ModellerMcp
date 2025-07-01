@@ -25,7 +25,7 @@ public class ValidationTool(ModelDiscoveryService discoveryService, IMcpModelVal
         {
             var discoveryResult = discoveryService.DiscoverModels(solutionPath);
 
-            if (discoveryResult.Errors.Any())
+            if (discoveryResult.Errors.Count != 0)
             {
                 var errorSummary = "❌ **Discovery Errors:**\n";
                 foreach (var error in discoveryResult.Errors)
@@ -53,7 +53,7 @@ public class ValidationTool(ModelDiscoveryService discoveryService, IMcpModelVal
             var summary = $"🔍 **Model Discovery Results for:** {Path.GetFileName(solutionPath)}\n\n";
             summary += $"**Total Files Found:** {discoveryResult.TotalFileCount}\n\n";
 
-            if (discoveryResult.ModelDirectories.Any())
+            if (discoveryResult.ModelDirectories.Count != 0)
             {
                 summary += "📁 **Structured Model Directories:**\n";
                 foreach (var modelDir in discoveryResult.ModelDirectories)
@@ -93,7 +93,7 @@ public class ValidationTool(ModelDiscoveryService discoveryService, IMcpModelVal
                 }
             }
 
-            if (discoveryResult.LooseFiles.Any())
+            if (discoveryResult.LooseFiles.Count != 0)
             {
                 summary += "\n📄 **Individual Model Files:**\n";
                 var groupedLooseFiles = discoveryResult.LooseFiles.GroupBy(f => Path.GetDirectoryName(f.Path));
@@ -133,7 +133,7 @@ public class ValidationTool(ModelDiscoveryService discoveryService, IMcpModelVal
         {
             var response = await validator.ValidateAsync(solutionPath, cancellationToken);
 
-            if (!response.Results.Any())
+            if (response.Results.Count == 0)
                 return "✅ Validation completed successfully - no issues found.";
 
             var errorCount = response.Results.Count(r => r.Severity == ValidationSeverity.Error);
@@ -225,7 +225,7 @@ public class ValidationTool(ModelDiscoveryService discoveryService, IMcpModelVal
 
             var response = await validator.ValidateAsync(domainPath, cancellationToken);
 
-            if (!response.Results.Any())
+            if (response.Results.Count == 0)
                 return $"✅ Domain validation completed successfully for '{Path.GetFileName(domainPath)}' - no issues found.";
 
             var errorCount = response.Results.Count(r => r.Severity == ValidationSeverity.Error);
