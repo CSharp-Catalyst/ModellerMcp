@@ -1,73 +1,64 @@
 ﻿# Modeller MCP - Intelligent Domain Modeling & Code Generation
 
-AI-Powered Domain Modeling with LLM-Driven SDK & API Generation
-
----
-
 ## Overview
 
-Modeller MCP is an advanced domain modeling and code generation platform
-that combines Behaviour-Driven Development (BDD) principles with Large Language
-Model (LLM) intelligence. Transform your domain models into production-ready
-modern .NET SDKs and Minimal APIs using Vertical Slice Architecture (VSA) patterns.
+Modeller MCP is a cutting-edge platform designed to streamline domain modeling and accelerate code generation by
+leveraging Behaviour-Driven Development practices alongside the power of Large Language Models. It enables developers to
+effortlessly transform structured domain definitions into robust, production-ready .NET SDKs and Minimal APIs, all
+architected with modern best practices such as the Vertical Slice Architecture. This integration of AI-driven automation
+and rigorous validation tools helps ensure code quality, security, and maintainability at scale.
 
 ### Key Capabilities
 
-🤖 **LLM-Driven SDK Generation**: Generate complete .NET SDKs from domain models using AI  
-� **Minimal API Generation**: Create full API projects that integrate with generated SDKs  
-�📋 **Domain Model Validation**: Comprehensive YAML schema validation and business rule checking  
+🤖 **LLM-Driven Code Generation**: Generate complete .NET projects from domain models using AI  
+📋 **Domain Model Validation**: Comprehensive schema validation and business rule checking  
 🔄 **Intelligent Code Modification**: Update existing code while preserving custom developer changes  
-🎯 **Vertical Slice Architecture**: Generate complete feature slices with models, validators, and services  
-📊 **Model Context Protocol**: Integrate with VS Code, GitHub Copilot, and other AI development tools  
+🎯 **Vertical Slice Architecture**: Generate complete feature slices using custom prompts  
+📊 **Model Context Protocol**: Integrate with VS Code, GitHub Copilot, Claude desktop and other AI development tools  
 🛡️ **Safety & Quality**: Built-in security guards, validation pipelines, and rollback capabilities
-
----
 
 ## Architecture
 
 ### Current State (Production-Ready)
 
+- ✅ **YAML Schema Creation**: Prompts and tools to help build domain models
+- ✅ **VS Code Integration**: IntelliSense and schema support for model authoring
 - ✅ **YAML Schema Validation**: Comprehensive validation of domain models
 - ✅ **Business Rule Checking**: Validation of model constraints and relationships  
 - ✅ **MCP Integration**: Model Context Protocol server for AI tool integration
 - ✅ **Prompt-Based Analysis**: AI-powered model analysis and recommendations
-- ✅ **VS Code Integration**: IntelliSense and schema support for model authoring
 - ✅ **Security Framework**: Enterprise-grade security for LLM interactions
 - ✅ **Audit Logging**: Comprehensive audit trails for compliance and monitoring
 - ✅ **Secure Code Generation**: LLM-driven code generation with security controls
+
+#### Prompt Templates
 - ✅ **SDK Generation**: Complete .NET SDK generation from domain models
 - ✅ **Minimal API Generation**: Full API projects with SDK integration
 
 ### Advanced Features (Ready for Integration)
 
-- ✅ **Intelligent Code Generation**: Transform models into production-ready
-  .NET code
-- ✅ **Security Context Validation**: Multi-level security validation and
-  sanitization
-- ✅ **Prompt Injection Prevention**: Advanced protection against malicious
-  prompts
-- ✅ **Immutable Response Tracking**: Tamper-proof recording of all LLM
-  interactions
-- ✅ **Post-Generation Validation**: Automated validation of generated code
-  quality
+- ✅ **Intelligent Code Generation**: Transform models into .NET code
+- ✅ **Security Context Validation**: Multi-level security validation and sanitization
+- ✅ **Prompt Injection Prevention**: Advanced protection against malicious prompts
+- ✅ **Immutable Response Tracking**: Tamper-proof recording of all LLM interactions
+- ✅ **Post-Generation Validation**: Automated validation of generated code quality
 - ✅ **Enterprise Audit Support**: Full audit trails for regulatory compliance
-
----
 
 ## Quick Start
 
 ### Prerequisites
 
-- .NET SDK (latest stable LTS version) or later
-- Visual Studio Code (recommended)
-- YAML extension for VS Code
-- Git for version control
+- Visual Studio Code (recommended[^1])
+- .NET SDK (latest stable)
+- **YAML** extension for VS Code
+
+[^1] It does work in other IDEs but the experience is still best in VS Code.
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/CSharp-Catalyst/ModellerMcp.git
 cd ModellerMcp
 
 # Build the MCP server
@@ -76,44 +67,39 @@ dotnet build src/Modeller.McpServer
 # Run the MCP server
 dotnet run --project src/Modeller.McpServer
 ```
+Alternate start is to open the `.vscode/mcp.json` file in vs code and click start
+
+![img_1.png](img_1.png)
 
 ### Basic Usage
 
-#### 1. Model Validation
+#### 1. Finding and validating model definitions
+
+Using Github Copilot and the `/` command.  Alternately, just type (or talk) asking it to perform the thing you want.  The `/` commands just build a prompt for you. 
+
+![img_2.png](img_2.png)
 
 ```bash
 # Discover all models in your project
-dotnet run --project src/Modeller.McpServer -- DiscoverModels --solutionPath "."
+/mcp.Modeller.DiscoverModelPrompt
 
 # Validate a specific domain
-dotnet run --project src/Modeller.McpServer -- ValidateDomain --domainPath "models/Business/CustomerManagement"
-
-# Validate project structure
-dotnet run --project src/Modeller.McpServer -- ValidateStructure --modelsPath "models"
+Validate the structure and models you just found
 ```
+You are using the power of the LLM models, they interpret the request using the available tools, and then perform the action.
 
-#### 2. AI-Powered Analysis (via MCP)
-
-Use with VS Code and GitHub Copilot:
-
-```text
-@Modeller analyze_model --modelPath "models/Business/CustomerManagement/Customer.Type.yaml"
-@Modeller review_domain --domainPath "models/Business/CustomerManagement"
-@Modeller create_template --modelType "Type" --domain "Sales"
-```
-
-#### 3. SDK Generation
+#### 2. SDK Code Generation
 
 ```bash
 # Generate complete .NET SDK from domain models
-@Modeller GenerateSDK --domainPath "models/Business/CustomerManagement" --featureName "CustomerManagement" --namespaceName "Business.CustomerManagement.Sdk" --outputPath "./generated-sdk"
+Generate the SDK project from the models you have validated
 ```
 
-#### 4. Minimal API Generation
+#### 3. Minimal API Generation
 
 ```bash
 # Generate complete Minimal API project that uses the generated SDK
-@Modeller GenerateMinimalAPI --sdkPath "./generated-sdk" --domainPath "models/Business/CustomerManagement" --projectName "CustomerManagement.Api" --namespaceName "CustomerManagement.Api" --outputPath "./generated-api"
+Using the SDK and the validated models create a minimal api
 ```
 
 ---
@@ -138,18 +124,6 @@ ModellerMcp/
 │       ├── CodeGeneration/         # SDK and API generation services
 │       ├── Tools/                  # MCP tools for validation and generation
 │       └── Services/               # Core business services
-├── generated-sdk/                  # Generated SDK output (example)
-│   ├── CustomerManagement.Sdk.csproj
-│   ├── Models/                     # Generated entity models
-│   ├── Validators/                 # FluentValidation validators
-│   ├── Enums/                      # Strongly-typed enumerations
-│   └── Common/                     # Result patterns and utilities
-├── generated-api/                  # Generated API output (example)
-│   ├── CustomerManagement.Api.csproj
-│   ├── Program.cs                  # Minimal API setup
-│   ├── Data/                       # Entity Framework context
-│   ├── Services/                   # Business services
-│   └── Endpoints/                  # REST API endpoints
 ├── tests/                          # Unit and integration tests
 ├── docs/                           # Documentation
 │   ├── code-generation-design.md   # LLM-driven code generation design
@@ -158,8 +132,6 @@ ModellerMcp/
 │   └── modeller-mcp-prompts-guide.md
 └── schemas/                        # JSON schemas for validation
 ```
-
----
 
 ## Development Workflow
 
@@ -171,27 +143,26 @@ ModellerMcp/
 
 ### 2. AI-Powered Analysis
 
-- Leverage MCP integration with VS Code and GitHub Copilot
+- Leverage the MCP tools with VS Code and GitHub Copilot
 - Get intelligent suggestions for model improvements
 - Analyze cross-model consistency and best practices
 
-### 3. SDK & API Generation
+### 3. Code Generation
 
-- Generate complete .NET SDKs from domain models with security controls
-- Create Minimal API projects that integrate with generated SDKs
-- LLM-driven code generation with comprehensive security framework
+- Generate LLM Prompts for code generation
+- Use the prompts for LLM-driven code generation
 - Enterprise-grade audit logging and compliance tracking
 - Multi-level security validation and prompt injection prevention
-- Use Vertical Slice Architecture patterns
+- Use any supported prompt packages (I'm using my Vertical Slice Architecture sample)
 - Maintain developer customizations during updates
-
----
 
 ## Model Definition Best Practices
 
+The validation tools and supplied documents (bdd_model_definitions.md) will provide good guidance  
+
+Some considations:
 - **Naming**: Use PascalCase for types, camelCase for attributes
-- **Structure**: Separate entity types (`.Type.yaml`) and behaviours
-  (`.Behaviour.yaml`)
+- **Structure**: Separate entity types (`.Type.yaml`) and behaviours (`.Behaviour.yaml`)
 - **Reusability**: Leverage shared attribute types and enums
 - **Documentation**: Provide clear summaries and descriptions
 - **Validation**: Use BDD scenarios for business rules

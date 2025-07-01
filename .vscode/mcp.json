@@ -1,10 +1,5 @@
 {
-  "inputs": [
-    // {"type": "promptString", "id": "analyze_model", "description": "Analyze a specific Modeller model definition for potential issues and best practices"},
-    // {"type": "promptString", "id": "review_domain", "description": "Review all models within a specific domain for consistency and compliance"},
-    // {"type": "promptString", "id": "create_model_template", "description": "Generate a template for a new Modeller model based on requirements"},
-    // {"type": "promptString", "id": "migration_guide", "description": "Generate guidance for migrating models between versions or updating structure"}
-  ],
+  "inputs": [],
   "servers": {
    "Modeller": {
      "type": "stdio",
